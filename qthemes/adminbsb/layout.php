@@ -26,7 +26,6 @@ Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery-sparkline/jquery.sparkline.js');
 
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/admin.js');
-//Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/pages/index.js');
 //Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/demo.js');
 
 Q()->render->registerDir(Q()->rootDir.'../adminbsb/images', 'images');

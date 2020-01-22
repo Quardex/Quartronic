@@ -33,6 +33,7 @@ namespace quarsintex\quartronic\qcore {
         protected function getConnectedParams()
         {
             return [
+                'returnRender' => &self::$Q->returnRender,
                 'webDir' => &self::$Q->webDir,
                 'webPath' => &self::$Q->webPath,
             ];
@@ -153,7 +154,7 @@ namespace quarsintex\quartronic\qcore {
 
             $this->sources->export();
 
-            if (self::$Q->returnRender) {
+            if ($this->returnRender) {
                 return $output;
             } else {
                 echo $output;

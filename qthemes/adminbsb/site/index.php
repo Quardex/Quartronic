@@ -1,3 +1,5 @@
+<?php Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/pages/index.js')?>
+
 <div class="block-header">
     <h2>DASHBOARD</h2>
 </div>

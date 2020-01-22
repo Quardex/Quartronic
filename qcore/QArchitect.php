@@ -31,6 +31,10 @@ class QArchitect extends QSource
     return isset($this->_Q->$name) ? $this->_Q->$name : parent::__get($name);
   }
 
+  function __isset($name) {
+    return  property_exists($this->_Q, $name);
+  }
+
   function getUnit($name, $params=[])
   {
     $arguments = $attributes = [];

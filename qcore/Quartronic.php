@@ -5,15 +5,16 @@ use PDO;
 
 class Quartronic extends QSource
 {
-  protected $rootDir = __DIR__.'/../';
   protected $_dbList;
+
+  protected $mode;
+  protected $returnRender;
+
   protected $db;
   protected $request;
   protected $router;
   protected $render;
   protected $urlManager;
-  protected $mode;
-  protected $returnRender = false;
 
   const MODE_CONSOLE = 'console';
   const MODE_WEB = 'web';
@@ -21,9 +22,15 @@ class Quartronic extends QSource
   protected $params = [
     'dbSettingsType' => 0,
     'dbDir' => __DIR__.'/../q.db',
-    'webDir' => '/',
+    'returnRender' => false,
+    'webDir' => '',
     'webPath' =>  '/',
   ];
+
+  function getRootDir()
+  {
+      return __DIR__.'/../';
+  }
 
   function getWebDir()
   {
@@ -76,7 +83,7 @@ class Quartronic extends QSource
   }
 
   function getVersion() {
-    return '0.0.26';
+    return '0.0.28';
   }
 }
 

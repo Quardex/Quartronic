@@ -105,10 +105,9 @@ class QSource
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter() !== null;
-        } elseif ($name[0] !== '_' && isset($this->$name)) {
+        } elseif ($name[0]!='_' && isset($this->$name)) {
             return $this->$name !== null;
         }
-
         return false;
     }
 
