@@ -8,7 +8,6 @@ class Quartronic extends QSource
   protected $_dbList;
 
   protected $mode;
-  protected $returnRender;
 
   protected $db;
   protected $request;
@@ -25,6 +24,7 @@ class Quartronic extends QSource
     'returnRender' => false,
     'webDir' => '',
     'webPath' =>  '/',
+    'appDir' => '',
   ];
 
   function getRootDir()
@@ -67,7 +67,6 @@ class Quartronic extends QSource
       if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
       $this->render = self::$Q->getUnit('render');
       $this->urlManager = self::$Q->getUnit('urlManager');
-      $this->returnRender = isset($params['return']) ? $params['return'] : null;
       $this->mode = isset($params['mode']) ? $params['mode'] : null;
       switch ($this->mode) {
           case self::MODE_CONSOLE:
@@ -83,7 +82,7 @@ class Quartronic extends QSource
   }
 
   function getVersion() {
-    return '0.0.29';
+    return '0.0.30';
   }
 }
 

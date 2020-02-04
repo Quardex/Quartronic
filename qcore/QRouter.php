@@ -4,8 +4,18 @@ namespace quarsintex\quartronic\qcore;
 class QRouter extends QSource
 {
     protected $controller;
-  	protected $appDir = '';
  	protected $route;
+
+    protected function getConnectedParams()
+    {
+        return [
+            'returnRender' => &self::$Q->params['returnRender'],
+            'appDir' => &self::$Q->params['appDir'],
+            'webPath' => &self::$Q->webPath,
+            'mode' => &self::$Q->mode,
+            'rootDir' => &self::$Q->rootDir,
+        ];
+    }
 
     public function getRouteDir($key = '') {
         $list = [
@@ -30,15 +40,22 @@ class QRouter extends QSource
     function execute($route)
     {
         if (!is_array($route)) $route = explode('/', $route);
-        if (empty($route[0])) $route[0] = $this->getDefaultController(self::$Q->mode);
+        if (empty($route[0])) $route[0] = $this->getDefaultController($this->mode);
         if (empty($route[1])) $route[1] = 'index';
         $this->route = strtolower(implode('/', $route));
         $routeDir = $this->getRouteDir(self::$Q->mode);
         $controllerName = ucfirst($route[0]).'Controller';
-        $controllerClass = '\\quarsintex\\quartronic\\'.$routeDir.'\\'.$controllerName;
-        if ($this->appDir) $routeDir = $this->appDir.'/'.$routeDir;
+        $controllerClass = $routeDir.'\\'.$controllerName;
+        if ($this->appDir) {
+            $routeDir = $this->appDir.'/'.$routeDir;
+            $controllerClass = basename($this->appDir).'\\'.$controllerClass;
+        } else {
+            $controllerClass = '\\quarsintex\\quartronic\\' . $controllerClass;
+        }
         if (self::$Q->mode == self::$Q->getConst('MODE_CONSOLE')) \quarsintex\quartronic\qcore\QConsoleController::init();
-        if (file_exists(self::$Q->rootDir.$routeDir.'/'.$controllerName.'.php')) {
+        $controllerPath = $this->rootDir.$routeDir.'/'.$controllerName.'.php';
+        if (file_exists($controllerPath)) {
+            if (!class_exists($controllerClass)) require_once($controllerPath);
             $this->controller = new $controllerClass(ucfirst($route[1]));
             $methodName = 'act' . $this->controller->action;
             if (method_exists($this->controller, $methodName)) {

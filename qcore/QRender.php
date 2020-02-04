@@ -22,6 +22,7 @@ namespace quarsintex\quartronic\qcore {
         protected $_sources;
 
         public $layout = 'layout';
+        public $tplExtension = 'php';
         public $content;
 
         const POSITION_HEAD_BEGIN = 0;
@@ -33,15 +34,21 @@ namespace quarsintex\quartronic\qcore {
         protected function getConnectedParams()
         {
             return [
-                'returnRender' => &self::$Q->returnRender,
+                'returnRender' => &self::$Q->params['returnRender'],
+                'appDir' => &self::$Q->params['appDir'],
                 'webDir' => &self::$Q->webDir,
                 'webPath' => &self::$Q->webPath,
+                'rootDir' => &self::$Q->rootDir,
             ];
         }
 
         function getViewDir()
         {
-            if (!$this->_viewDir) $this->_viewDir = self::$Q->rootDir . 'qthemes/adminbsb/';
+            if (!$this->_viewDir) {
+                $this->_viewDir = $this->rootDir;
+                if ($this->appDir) $this->_viewDir.= $this->appDir.'/';
+                $this->_viewDir.= 'qthemes/adminbsb/';
+            }
             return $this->_viewDir;
         }
 
@@ -145,11 +152,11 @@ namespace quarsintex\quartronic\qcore {
             }
 
             ob_start();
-            include($this->viewDir . $view . '.php');
+            include($this->viewDir . $view .'.'. $this->tplExtension);
             $this->content = ob_get_clean();
 
             ob_start();
-            include($this->viewDir . $this->layout . '.php');
+            include($this->viewDir . $this->layout.'.php');
             $output = ob_get_clean();
 
             $this->sources->export();
