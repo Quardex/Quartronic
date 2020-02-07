@@ -17,7 +17,12 @@ class QUrlManager extends QSource
             $url = $this->webPath . substr($section, 1);
         } else {
             $url = $this->currentUrl;
-            if ($url[strlen($url)-1] != '/') $url.= '/';
+            if ($section[0] == '.') {
+                $section = preg_replace('/^./', '', $section);
+            }
+            elseif ($url[strlen($url)-1] != '/') {
+                $url = str_replace(array_pop(explode('/', $url)), '', $url);
+            }
             $url.= $section;
         }
         if ($params) $url.= '?'.http_build_query($params);

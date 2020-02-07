@@ -1,3 +1,22 @@
+<?php Q()->render->registerJs('deleteAlert', "
+$(function () {
+    $('.js-sweetalert a.swal').on('click', function () {
+        var self = this;
+        swal({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this imaginary file!',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, delete it!',
+            closeOnConfirm: true,
+        }, function () {
+            document.location = $(self).data('link');
+        });
+        return false;
+    });
+});");
+?>
 <div class="block-header">
     <h2>Model CRUD</h2>
 </div>
@@ -5,12 +24,12 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card" style="position: relative">
-            <div style="position:absolute; z-index:10; top:11px; right:11px">
-              <a href="<?=Q()->urlManager->route('add')?>" type="button" class="btn btn-success waves-effect">
-                <i class="material-icons">add_circle</i>
-                <span>Add</span>
-              </a>
-            </div>
+                <div style="position:absolute; z-index:10; top:11px; right:11px">
+                    <a href="<?=Q()->urlManager->route('add')?>" type="button" class="btn btn-success waves-effect">
+                        <i class="material-icons">add_circle</i>
+                        <span>Add</span>
+                    </a>
+                </div>
             <div class="header">
                 <h2><?=$title?></h2>
             </div>
@@ -32,10 +51,10 @@
                             foreach ($model->fields as $item) {
                                 echo '<td>'.$item.'</td>';
                             }
-                            echo '<td style="width:100px">'.
-                                '<a href="'.Q()->urlManager->route('view', $model->primaryKey).'"><i class="material-icons">visibility</i></a>&nbsp;'.
-                                '<a href="'.Q()->urlManager->route('edit', $model->primaryKey).'"><i class="material-icons">edit</i></a>&nbsp;'.
-                                '<a href="'.Q()->urlManager->route('delete', $model->primaryKey).'"><i class="material-icons">delete</i></a>'.
+                            echo '<td class="js-sweetalert" style="width:100px">'.
+                                '<a href="'.Q()->urlManager->route('./view', $model->primaryKey).'"><i class="material-icons">visibility</i></a>&nbsp;'.
+                                '<a href="'.Q()->urlManager->route('./edit', $model->primaryKey).'"><i class="material-icons">edit</i></a>&nbsp;'.
+                                '<a class="swal" href="'.Q()->urlManager->route('./delete', $model->primaryKey).'" data-type="confirm" data-link="'.Q()->urlManager->route('./delete', $model->primaryKey).'"><i class="material-icons">delete</i></a>'.
                                 '</td>';
                             echo '</tr>';
                         }

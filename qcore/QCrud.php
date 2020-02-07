@@ -35,9 +35,9 @@ class QCrud extends QSource
 
   }
 
-  function read()
+  function view()
   {
-
+      return $this->crud->model->getAll(self::$Q->request->request);
   }
 
   function update()

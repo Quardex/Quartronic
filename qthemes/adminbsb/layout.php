@@ -8,6 +8,7 @@ Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/style.css', self::POS
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/themes/all-themes.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/materialize.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/sweetalert/sweetalert.css', self::POSITION_HEAD_BEGIN);
 
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
@@ -24,6 +25,7 @@ Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.categories.js');
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.time.js');
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery-sparkline/jquery.sparkline.js');
+Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/sweetalert/sweetalert.min.js');
 
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/admin.js');
 //Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/demo.js');
@@ -342,7 +344,7 @@ Answer GitHub questions
                     &copy; 2019 - 2020 <b>Quartronic CMS</b> v.<?=Q()->version?>
                 </div>
                 <div class="version copyright">
-                    <a href="javascript:void(0);">AdminBSB - Material Design</a>
+                    Designed by <a target="_blank" href="https://gurayyarar.github.io/AdminBSBMaterialDesign">AdminBSB - Material Design</a>
 </div>
             </div>
             <!-- #Footer -->

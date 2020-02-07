@@ -24,12 +24,29 @@ class QCrudController extends QController
 
   function actView()
   {
-      echo 123;
+      $model = get_class($this->crud->model)::find(self::$Q->request->request);
+      return self::$Q->render->run('widgets/crud/view', [
+          'title' => basename(get_class($this->crud->model)),
+          'model' => $model,
+      ]);
   }
 
-  function actEdit()
+  function actCreate()
   {
+      if (self::$Q->request->post) {
+          $this->crud->create(self::$Q->request->request);
+          $this->redirect(self::$Q->request->referer);
+      }
+      $this->crud->create(self::$Q->request->request);
+  }
 
+  function actUpdate()
+  {
+      if (self::$Q->request->post) {
+          $this->crud->update(self::$Q->request->request);
+          $this->redirect(self::$Q->request->referer);
+      }
+      $this->crud->edit(self::$Q->request->request);
   }
 
   function actDelete()
