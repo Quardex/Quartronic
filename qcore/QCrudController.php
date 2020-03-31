@@ -6,10 +6,17 @@ class QCrudController extends QController
   protected $model;
   protected $crud;
 
-  function __construct($action, $model = null)
+    /**
+     * QCrudController constructor.
+     * @param $action
+     * @param null $model
+     */
+    function __construct($action, $model = null)
   {
-    parent::__construct($action);
-    $this->model = $model ? $model : static::MODEL;
+    parent::__construct(ucfirst($action[1]));
+
+    if (defined('static::MODEL')) $this->model = static::MODEL;
+    $this->model = $model ? $model : 'Q'.ucfirst($action[0]);
     $this->crud = new \quarsintex\quartronic\qcore\QCrud($this->model);
   }
 
@@ -18,41 +25,57 @@ class QCrudController extends QController
       return self::$Q->render->run('widgets/crud/list', [
           'title' => basename(get_class($this->crud->model)),
           'crud' => $this->crud,
-          'countAll' => get_class($this->crud->model)::countAll(),
+          'countAll' => $this->crud->model->countAll(),
       ]);
   }
 
   function actView()
   {
-      $model = get_class($this->crud->model)::find(self::$Q->request->request);
+      $model = $this->crud->view(self::$Q->request->request);
+      if (empty($model->id)) throw new \NotFoundException;
+
       return self::$Q->render->run('widgets/crud/view', [
           'title' => basename(get_class($this->crud->model)),
           'model' => $model,
       ]);
   }
 
-  function actCreate()
+  function actAdd()
   {
       if (self::$Q->request->post) {
           $this->crud->create(self::$Q->request->request);
-          $this->redirect(self::$Q->request->referer);
+          $this->redirect(self::$Q->urlManager->route('./'));
       }
-      $this->crud->create(self::$Q->request->request);
+      $this->crud->model->scenario = 'create';
+      return self::$Q->render->run('widgets/crud/create', [
+          'title' => basename(get_class($this->crud->model)),
+          'model' => $this->crud->model,
+      ]);
   }
 
-  function actUpdate()
+  function actEdit()
   {
       if (self::$Q->request->post) {
           $this->crud->update(self::$Q->request->request);
-          $this->redirect(self::$Q->request->referer);
+          $this->redirect(self::$Q->urlManager->route('./view',['id'=>$this->crud->model->id]));
       }
-      $this->crud->edit(self::$Q->request->request);
+
+      $model = $this->crud->model->find(self::$Q->request->request);
+      if (empty($model->id)) throw new \NotFoundException;
+
+      $model->scenario = 'update';
+      return self::$Q->render->run('widgets/crud/update', [
+          'title' => basename(get_class($this->crud->model)),
+          'model' => $model,
+      ]);
   }
 
   function actDelete()
   {
       $this->crud->delete(self::$Q->request->request);
-      $this->redirect(self::$Q->request->referer);
+      $backUrl = self::$Q->request->referer;
+      if (strpos($backUrl, 'view') !== false) $backUrl = self::$Q->urlManager->route('./index');
+      $this->redirect($backUrl);
   }
 
 }

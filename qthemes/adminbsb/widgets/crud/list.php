@@ -24,12 +24,12 @@ $(function () {
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card" style="position: relative">
-                <div style="position:absolute; z-index:10; top:11px; right:11px">
-                    <a href="<?=Q()->urlManager->route('add')?>" type="button" class="btn btn-success waves-effect">
-                        <i class="material-icons">add_circle</i>
-                        <span>Add</span>
-                    </a>
-                </div>
+            <div style="position:absolute; z-index:10; top:11px; right:11px">
+                <a href="<?=Q()->urlManager->route('add')?>" type="button" class="btn btn-success waves-effect">
+                    <i class="material-icons">add_circle</i>
+                    <span>Add</span>
+                </a>
+            </div>
             <div class="header">
                 <h2><?=$title?></h2>
             </div>
@@ -52,9 +52,9 @@ $(function () {
                                 echo '<td>'.$item.'</td>';
                             }
                             echo '<td class="js-sweetalert" style="width:100px">'.
-                                '<a href="'.Q()->urlManager->route('./view', $model->primaryKey).'"><i class="material-icons">visibility</i></a>&nbsp;'.
-                                '<a href="'.Q()->urlManager->route('./edit', $model->primaryKey).'"><i class="material-icons">edit</i></a>&nbsp;'.
-                                '<a class="swal" href="'.Q()->urlManager->route('./delete', $model->primaryKey).'" data-type="confirm" data-link="'.Q()->urlManager->route('./delete', $model->primaryKey).'"><i class="material-icons">delete</i></a>'.
+                                '<a href="'.Q()->urlManager->route('view', $model->primaryKey).'"><i class="material-icons">visibility</i></a>&nbsp;'.
+                                '<a href="'.Q()->urlManager->route('edit', $model->primaryKey).'"><i class="material-icons">edit</i></a>&nbsp;'.
+                                '<a class="swal" href="'.Q()->urlManager->route('delete', $model->primaryKey).'" data-type="confirm" data-link="'.Q()->urlManager->route('delete', $model->primaryKey).'"><i class="material-icons">delete</i></a>'.
                                 '</td>';
                             echo '</tr>';
                         }

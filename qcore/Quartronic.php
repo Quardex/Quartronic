@@ -62,7 +62,7 @@ class Quartronic extends QSource
     if (file_exists($file)) unlink($file);
   }
 
-    function run($params=[])
+  function run($params=[])
   {
       if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
       $this->render = self::$Q->getUnit('render');
@@ -82,7 +82,7 @@ class Quartronic extends QSource
   }
 
   function getVersion() {
-    return '0.0.31';
+    return '0.1.0';
   }
 }
 

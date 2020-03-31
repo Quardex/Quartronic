@@ -26,13 +26,13 @@ $(function () {
         <div class="card">
             <div class="header js-sweetalert">
                 <div style="float:right; margin: -9px -9px 0 0">
-                    <button class="btn btn-danger waves-effect" data-type="confirm" data-link="<?=Q()->urlManager->route('delete',['id'=>$model->id])?>">
+                    <button class="btn btn-danger waves-effect" data-type="confirm" data-link="<?=Q()->urlManager->route('./delete',['id'=>$model->id])?>">
                         <i class="material-icons">delete</i>
                         <span>Delete</span>
                     </button>
                 </div>
                 <div style="float:right; margin: -9px 10px 0 0">
-                    <a href="<?=Q()->urlManager->route('edit',['id'=>$model->id])?>" type="button" class="btn btn-primary waves-effect">
+                    <a href="<?=Q()->urlManager->route('./edit',['id'=>$model->id])?>" type="button" class="btn btn-primary waves-effect">
                         <i class="material-icons">edit</i>
                         <span>Edit</span>
                     </a>

@@ -3,160 +3,207 @@ namespace quarsintex\quartronic\qcore;
 
 class QModel extends QSource
 {
-  protected $_fields = [];
-  protected $_structure = [];
-  protected $_fieldList = [];
-  protected $_primaryKeys = [];
-  protected $_query = [];
-  protected $new = true;
+    public $scenario = '';
 
-  function __construct()
-  {
-     $this->loadStructure();
-  }
+    protected $_table;
+    protected $_fields = [];
+    protected $_structure = [];
+    protected $_rules = [];
+    protected $_fieldList = [];
+    protected $_primaryKeys = [];
+    protected $_query = [];
+    protected $new = true;
+    protected $errors = '';
 
-  function getTable()
-  {
-      return static::TABLE;
-  }
+    function __construct($table = null)
+    {
+      if (defined('static::TABLE')) $this->_table = static::TABLE;
+      if ($table) $this->_table = $table;
+      $this->loadRules();
+      $this->loadStructure();
+    }
 
-  function getPrimaryKey() {
+    function getTable()
+    {
+      return isset($this) ? $this->_table : static::TABLE;
+    }
+
+    function getPrimaryKey() {
       $pk = [];
       $primaryKeys = $this->_primaryKeys ? $this->_primaryKeys : $this->fieldList;
       foreach ($primaryKeys as $name) {
           $pk[$name] = $this->_fields[$name];
       }
       return $pk;
-  }
+    }
 
-  function getPrimaryKeys2SqlString()
-  {
+    function getPrimaryKeys2SqlString()
+    {
       $pkv = $this->primaryKey;
       $str = [];
       foreach ($pkv as $name => $value) {
           $str[] = $name.' = "'.$value.'"';
       }
       return implode(' AND ', $str);
-  }
+    }
 
-  protected function loadStructure()
-  {
-      $fields = self::$Q->db->query("PRAGMA table_info(".$this->table.");");
+    protected function loadStructure()
+    {
+      $fields = self::$Q->db->query("PRAGMA table_info(`".$this->table."`);");
       foreach ($fields as $field) {
-        $this->_structure[$field['name']] = $field['type'];
+        $this->_structure[$field['name']] = [
+            'type' => $field['type'],
+            'not_null' => $field['notnull'],
+            'default' => $field['dflt_value'],
+            'required' => $this->isRequiredField($field['name'], $field['notnull'])
+        ];
         if ($field['pk']) $this->_primaryKeys[] = $field['name'];
       }
-  }
+    }
 
-  function __get($name)
-  {
+    protected function loadRules() {
+      foreach ($this->rules as $rule) {
+        foreach (explode(',', $rule[0]) as $name) {
+            $fileds[$name] = $name;
+        };
+        $this->_rules[$rule[1]] = $fileds;
+      }
+    }
+
+    protected function getRules() {
+      return [];
+    }
+
+    protected function isRequiredField($field, $isRequired) {
+      return isset($this->_rules['required']) && isset($this->_rules['required'][$field]) ? $this->_rules['required'][$field] : $isRequired;
+    }
+    function getStructure() {
+      return $this->_structure;
+    }
+
+    function __get($name)
+    {
       if (array_key_exists($name, $this->_structure)) {
         return $this->_fields[$name];
       }
       return parent::__get($name);
-  }
+    }
 
-  function __set($name, $value)
-  {
+    function __set($name, $value)
+    {
       array_key_exists($name, $this->_structure) ?
           $this->_fields[$name] = $value :
           parent::__set($name, $value);
-  }
+    }
 
-  function __isset($name)
-  {
+    function __isset($name)
+    {
     if (isset($this->_structure[$name])) {
         return true;
     }
     return parent::__isset($name);
-  }
+    }
 
-  function getFieldList()
-  {
+    function getFieldList()
+    {
       if (!$this->_fieldList) $this->_fieldList = array_keys($this->_structure);
       return $this->_fieldList;
-  }
+    }
 
-  function getFields()
-  {
+    function getFields()
+    {
     return $this->_fields;
-  }
+    }
 
-  function setFields($fields)
-  {
+    function setFields($fields)
+    {
       foreach ($fields as $name => $value) {
         if (array_key_exists($name, $this->_structure)) $this->$name = $value;
       }
-  }
+    }
 
-  static function query($mode='from')
-  {
-      return self::$Q->db->$mode(static::TABLE);
-  }
+    function query($mode='from')
+    {
+        return self::$Q->db->$mode(static::getTable());
+    }
 
-  function getQuery($mode='from') {
-      if (empty($this->_query[$mode])) {
-          $this->_query[$mode] = self::query($mode);
-      }
-      return $this->_query[$mode];
-  }
+    function getQuery($mode='from') {
+        return $this->query($mode);
+    }
 
-  protected function insert()
-  {
-    self::query('insertInto')->values($this->_fields)->execute();
-  }
+    protected function insert()
+    {
+        foreach ($this->_primaryKeys as $fieldName) {
+          if (array_key_exists($fieldName, $this->_fields) && !$this->_fields[$fieldName]) unset($this->_fields[$fieldName]);
+        }
+        $this->query('insertInto')->values($this->_fields)->execute();
+    }
 
-  protected function update()
-  {
-    self::query('update')->set($this->_fields)->where($this->primaryKeys2SqlString)->execute();
-  }
+    protected function update()
+    {
+        $this->query('update')->set($this->_fields)->where($this->primaryKeys2SqlString)->execute();
+    }
 
-  function delete()
-  {
-    self::query('deleteFrom')->where($this->primaryKeys2SqlString)->execute();
-  }
+    function delete()
+    {
+        $this->query('deleteFrom')->where($this->primaryKeys2SqlString)->execute();
+    }
 
-  function save()
-  {
-    $this->new ? $this->insert() : $this->update();
-  }
+    function save()
+    {
+        $this->new ? $this->insert() : $this->update();
+    }
 
-  static function find($where='')
-  {
-      $row = self::query()->where($where)->fetch();
-      if ($row) {
-          $model = new static();
-          $model->fields = $row;
-          $model->new = false;
-          return $model;
-      }
-      return null;
-  }
+    function find($where='')
+    {
+        $row = static::query()->where($where)->fetch();
+        if ($row) {
+            $model = new static(static::getTable());
+            $model->fields = $row;
+            $model->new = false;
+            return $model;
+        }
+        return null;
+    }
 
-  static function prepareModels($allRows) {
-      $models = [];
-      foreach ($allRows as $row) {
-          $model = new static();
+    function findByPk($where='')
+    {
+        $pkWhere = $where;
+        if (is_array($where)) {
+            $pkWhere = [];
+            $pks = (isset($this) ? $this : new static)->_primaryKeys;
+            foreach ($pks as $fieldName) {
+                if (array_key_exists($fieldName, $where)) $pkWhere[$fieldName] = $where[$fieldName];
+            }
+        }
+        return isset($this) ? $this->find($pkWhere) : static::find($pkWhere);
+    }
+
+    function prepareModels($allRows) {
+        $models = [];
+        foreach ($allRows as $row) {
+          $model = new static(static::getTable());
           $model->fields = $row;
           $model->new = false;
           $models[] = $model;
-      }
-      return $models;
-  }
+        }
+        return $models;
+    }
 
-  static function findAll($where='')
-  {
-      return self::prepareModels(self::query()->where($where)->fetchAll());
-  }
+    function findAll($where='')
+    {
+        return $this->prepareModels(static::query()->where($where)->fetchAll());
+    }
 
-  function getAll($where='') {
-      return self::prepareModels($this->query->where($where)->fetchAll());
-  }
+    function getAll($where='') {
+        return $this->findAll($where);
+    }
 
-  static function countAll() {
-      $result = self::query()->select(null)->select('count(*)')->fetch();
-      return $result['count(*)'];
-  }
+    function countAll() {
+        $query = isset($this) ? $this->query : static::query();
+        $result = $query->select(null)->select('count(*)')->fetch();
+        return $result['count(*)'];
+    }
 
 }
 

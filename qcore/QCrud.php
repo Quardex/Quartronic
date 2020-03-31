@@ -1,16 +1,30 @@
 <?php
 namespace quarsintex\quartronic\qcore;
 
+use yii\db\Exception;
+
 class QCrud extends QSource
 {
   protected $model;
   public $page = 1;
   public $limit = 10;
 
-  function __construct($model)
+    protected function getConnectedParams()
+    {
+        return [
+            'rootDir' => &self::$Q->rootDir,
+        ];
+    }
+
+  function __construct($modelName)
   {
-      $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$model;
-      $this->model = new $modelClass;
+      $controllerPath = $this->rootDir . 'qmodels/' . $modelName . '.php';
+      if (file_exists($controllerPath)) {
+          $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
+          $this->model = new $modelClass;
+      } else {
+          $this->model = new \quarsintex\quartronic\qcore\QModel(strtolower($modelName));
+      }
       $this->page = intval(self::$Q->request->getParam('page', $this->page));
   }
 
@@ -30,27 +44,40 @@ class QCrud extends QSource
       return $model->all;
   }
 
-  function create()
+  function create($params)
   {
-
+      $this->model->fields = $params;
+      $this->model->save();
   }
 
-  function view()
+  function view($params)
   {
-      return $this->crud->model->getAll(self::$Q->request->request);
+      if (empty($params['id'])) return null;
+      return $this->model->find($params);
   }
 
-  function update()
+  function update($params)
   {
-
+      if (empty($params['id'])) return null;
+      $this->model = $this->model->findByPk($params);
+      $this->model->fields = $params;
+      $this->model->save();
   }
 
   function delete($params)
   {
-      var_dump($params);
+      if (empty($params['id'])) return null;
+      $this->model = $this->model->findByPk($params);
+      $this->model->delete();
   }
 
-  static function createTable() {
+  static function getAutoStructure() {
+     return [
+        'user' => [],
+        'group' => [],
+        'role' => [],
+        'section' => [],
+     ];
   }
 }
 

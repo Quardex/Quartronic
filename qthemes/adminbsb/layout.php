@@ -4,11 +4,11 @@ Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/css/boo
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/node-waves/waves.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/animate-css/animate.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/morrisjs/morris.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/themes/all-themes.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/materialize.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/sweetalert/sweetalert.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
 
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
 Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
@@ -95,7 +95,7 @@ Q()->render->registerDir(Q()->rootDir.'../adminbsb/images', 'images');
                 <a class="navbar-brand" href="<?=Q()->urlManager->route('/')?>">Quartronic CMS</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" style="display:none">
                     <!-- Call Search -->
                     <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
@@ -299,11 +299,11 @@ Answer GitHub questions
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="<?=$this->sources->assetsPath?>images/user.png" width="48" height="48" alt="User" />
+                    <img src="https://i1.sndcdn.com/avatars-000160000025-vq31vm-t500x500.jpg" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
+                    <div class="email">&nbsp;</div>
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Andrew Quardex</div>
-                    <div class="email">quardex@mail.ru</div>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -322,8 +322,8 @@ Answer GitHub questions
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MAIN NAVIGATION</li>
-                    <li class="active">
+                    <li class="header">MENU</li>
+                    <li><!-- class="active"-->
                         <a href="<?=Q()->urlManager->route('/')?>">
                             <i class="material-icons">home</i>
                             <span>Home</span>
@@ -331,8 +331,26 @@ Answer GitHub questions
                     </li>
                     <li>
                         <a href="<?=Q()->urlManager->route('/user')?>">
-                            <i class="material-icons">supervisor_account</i>
+                            <i class="material-icons">perm_identity</i>
                             <span>Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?=Q()->urlManager->route('/group')?>">
+                            <i class="material-icons">supervisor_account</i>
+                            <span>Groups</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?=Q()->urlManager->route('/role')?>">
+                            <i class="material-icons">recent_actors</i>
+                            <span>Roles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?=Q()->urlManager->route('/section')?>">
+                            <i class="material-icons">view_module</i>
+                            <span>Sections</span>
                         </a>
                     </li>
                 </ul>

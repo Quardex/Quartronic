@@ -6,6 +6,9 @@ class QController extends QSource
     protected $action;
 
     function __construct($action) {
+        if (is_array($action)) {
+            $action = ucfirst($action[1]);
+        }
         $this->action = $action;
     }
 
