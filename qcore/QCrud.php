@@ -73,11 +73,36 @@ class QCrud extends QSource
 
   static function getAutoStructure() {
      return [
-        'user' => [],
-        'group' => [],
-        'role' => [],
-        'section' => [],
+        'user' => '
+			CREATE TABLE IF NOT EXISTS `quser` (
+			  id INTEGER PRIMARY KEY,
+			  username VARCHAR,
+			  passhash VARCHAR
+			)',
+        'group' => '
+			CREATE TABLE IF NOT EXISTS `qgroup` (
+			  id integer PRIMARY KEY AUTOINCREMENT,
+			  name varchar
+			)',
+        'role' => '
+			CREATE TABLE IF NOT EXISTS `qrole` (
+			  id integer PRIMARY KEY AUTOINCREMENT,
+			  name varchar
+			)',
+        'section' => '
+			CREATE TABLE IF NOT EXISTS `qsection` (
+			  id integer PRIMARY KEY AUTOINCREMENT,
+			  name varchar
+			)',
      ];
+  }
+
+  static function autostructDB() {
+     foreach (self::getAutoStructure() as $name => $sql) {
+         echo 'Preparing table for crud section "'.$name.'"...';
+         self::$Q->db->exec($sql);
+         echo "\nSuccess!\n\n";
+     }
   }
 }
 

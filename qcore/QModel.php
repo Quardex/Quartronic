@@ -192,7 +192,7 @@ class QModel extends QSource
 
     function findAll($where='')
     {
-        return $this->prepareModels(static::query()->where($where)->fetchAll());
+        return static::prepareModels(static::query()->where($where)->fetchAll());
     }
 
     function getAll($where='') {
