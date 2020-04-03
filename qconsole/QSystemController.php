@@ -21,6 +21,10 @@ class QSystemController extends \quarsintex\quartronic\qcore\QConsoleController
                 break;
         }
     }
+
+    function actRestructDB() {
+        \quarsintex\quartronic\qcore\QCrud::autostructDB();
+    }
 }
 
 ?>

@@ -99,9 +99,9 @@ class QCrud extends QSource
 
   static function autostructDB() {
      foreach (self::getAutoStructure() as $name => $sql) {
-         echo 'Preparing table for crud section "'.$name.'"...';
+         echo "\n".'Preparing table for crud section "'.$name.'"...';
          self::$Q->db->exec($sql);
-         echo "\nSuccess!\n\n";
+         echo "\nSuccess!\n";
      }
   }
 }

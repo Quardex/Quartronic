@@ -52,6 +52,7 @@ namespace quarsintex\quartronic\qcore {
 
         function execute($route)
         {
+            $route = str_replace($this->webPath, '', '/'.$route);
             if (!is_array($route)) $route = explode('/', $route);
             if (empty($route[0])) $route[0] = $this->getDefaultController($this->mode);
             if (empty($route[1])) $route[1] = 'index';

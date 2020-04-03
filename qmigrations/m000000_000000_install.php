@@ -15,7 +15,7 @@ class m000000_000000_install extends  \quarsintex\quartronic\qmodels\qmigration
 			  apply_time DATETIME DEFAULT CURRENT_TIMESTAMP
 			)
 		');
-		echo "\nSuccess!\n\n";
+		echo "\nSuccess!\n";
 
         QCrud::autostructDB();
 	}
@@ -26,7 +26,7 @@ class m000000_000000_install extends  \quarsintex\quartronic\qmodels\qmigration
             echo "\n";
             echo 'Dropping table "q'.$name.'"...';
             self::$Q->db->exec('DROP TABLE IF EXISTS `q'.$name.'`');
-            echo "\nSuccess!\n\n";
+            echo "\nSuccess!\n";
         }
 	}
 }
