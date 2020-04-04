@@ -4,7 +4,7 @@ namespace quarsintex\quartronic\qconsole;
 class QSystemController extends \quarsintex\quartronic\qcore\QConsoleController
 {
     function actIndex() {
-        return 'OK';
+        echo 'OK';
     }
 
     function actMigrate() {

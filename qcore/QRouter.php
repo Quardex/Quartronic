@@ -52,7 +52,7 @@ namespace quarsintex\quartronic\qcore {
 
         function execute($route)
         {
-            $route = str_replace($this->webPath, '', '/'.$route);
+            if ($this->mode != self::$Q->getConst('MODE_CONSOLE')) $route = str_replace($this->webPath, '', '/'.$route);
             if (!is_array($route)) $route = explode('/', $route);
             if (empty($route[0])) $route[0] = $this->getDefaultController($this->mode);
             if (empty($route[1])) $route[1] = 'index';
@@ -66,8 +66,10 @@ namespace quarsintex\quartronic\qcore {
             } else {
                 $controllerClass = '\\quarsintex\\quartronic\\' . $controllerClass;
             }
-            if (self::$Q->mode == self::$Q->getConst('MODE_CONSOLE')) \quarsintex\quartronic\qcore\QConsoleController::init();
+            if ($this->mode == self::$Q->getConst('MODE_CONSOLE')) \quarsintex\quartronic\qcore\QConsoleController::init();
             $controllerPath = $this->rootDir . $routeDir . '/' . $controllerName . '.php';
+            var_dump($controllerPath);
+            var_dump(file_exists($controllerPath));
             if (file_exists($controllerPath) || $this->checkAutoRoute($controllerClass, $route)) {
                 if (!class_exists($controllerClass)) require_once($controllerPath);
                 $this->controller = new $controllerClass($route);
