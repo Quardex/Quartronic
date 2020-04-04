@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-require_once(__DIR__.'/../yii2-quartronic-demo/vendor/autoload.php');
+require_once(__DIR__.'/../../autoload.php');
 
 $Q = new \quarsintex\quartronic\qcore\Quartronic;
 $Q->run([
