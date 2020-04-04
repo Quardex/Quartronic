@@ -143,21 +143,28 @@ namespace quarsintex\quartronic\qcore {
             return $output;
         }
 
-        public function run($view, $data = [])
+        public function run($view = '', $data = [], $layout = null)
         {
-            $this->view = $view;
+            if ($view) $this->view = $view;
+            if (isset($layout)) $this->layout = $layout;
 
             foreach ($data as $var => $value) {
                 $$var = $value;
             }
 
-            ob_start();
-            include($this->viewDir . $view .'.'. $this->tplExtension);
-            $this->content = ob_get_clean();
+            if ($this->view) {
+                ob_start();
+                include($this->viewDir . $this->view . '.' . $this->tplExtension);
+                $this->content = ob_get_clean();
+            }
 
-            ob_start();
-            include($this->viewDir . $this->layout.'.php');
-            $output = ob_get_clean();
+            if ($this->layout) {
+                ob_start();
+                include($this->viewDir . $this->layout . '.php');
+                $output = ob_get_clean();
+            } else {
+                $output = $this->content;
+            }
 
             $this->sources->export();
 
@@ -166,6 +173,10 @@ namespace quarsintex\quartronic\qcore {
             } else {
                 echo $output;
             }
+        }
+
+        public function runPartial($view, $data = []) {
+            $this->run($view, $data, '');
         }
 
         public function widget($name, $params = [])

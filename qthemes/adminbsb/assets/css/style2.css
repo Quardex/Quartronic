@@ -1,0 +1,13 @@
+.sidebar .user-info {
+    background: url(../images2/panel-bg.jpg) no-repeat no-repeat;
+    background-position: -1px -10px;
+    background-size: 132%;
+}
+
+.sidebar .user-info {
+    border-top: 1px solid #134e5a;
+}
+
+.sidebar .user-info .image img {
+    border: 2px solid #0d4558;
+}

@@ -32,6 +32,9 @@ Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/admin.js');
 
 Q()->render->registerDir(Q()->rootDir.'../adminbsb/images', 'images');
 
+Q()->render->registerCssFile(Q()->rootDir.'qthemes/adminbsb/assets/css/style2.css');
+Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'images2');
+
 ?>
 
 <!DOCTYPE html>
@@ -87,7 +90,7 @@ Q()->render->registerDir(Q()->rootDir.'../adminbsb/images', 'images');
     </div>
     <!-- #END# Search Bar -->
     <!-- Top Bar -->
-    <nav class="navbar" style="background-color: rgb(0, 188, 212)">
+    <nav class="navbar" style="background-color: rgb(1, 1, 1)">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
