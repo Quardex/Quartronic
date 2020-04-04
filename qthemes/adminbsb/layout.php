@@ -56,7 +56,7 @@ Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'images2
 <?=Q()->render->attachResources(self::POSITION_HEAD_END)?>
 </head>
 
-<body class="theme-red">
+<body class="theme-cyan">
 <?=Q()->render->attachResources(self::POSITION_BODY_BEGIN)?>
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
