@@ -6,6 +6,8 @@ namespace {
 
 namespace quarsintex\quartronic\qcore {
 
+    use function Spatie\SslCertificate\length;
+
     class QRouter extends QSource
     {
         protected $controller;
@@ -52,7 +54,7 @@ namespace quarsintex\quartronic\qcore {
 
         function execute($route)
         {
-            if ($this->mode != self::$Q->getConst('MODE_CONSOLE')) $route = str_replace($this->webPath, '', '/'.$route);
+            if ($this->mode != self::$Q->getConst('MODE_CONSOLE') && strpos('/'.$route, $this->webPath) === 0) $route = substr($route, strlen($this->webPath)-1);
             if (!is_array($route)) $route = explode('/', $route);
             if (empty($route[0])) $route[0] = $this->getDefaultController($this->mode);
             if (empty($route[1])) $route[1] = 'index';

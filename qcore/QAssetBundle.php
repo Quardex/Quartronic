@@ -76,27 +76,26 @@ class QAssetBundle extends QSource
     public function export()
     {
         $webDir = $this->assetsDir;
-        if (!file_exists($webDir)) {
-            if (file_exists($dirname = dirname($webDir))) $this->rmdir($dirname);
-            while ((!isset($c) && ($c=0) || $c++ < 20) && !file_exists($webDir)) {
-                @mkdir($webDir, 0777, true);
-                usleep(50);
-            }
-            foreach ($this->_fileList as $subPath => $sourcePath) {
-                $curTargetPath = $webDir . $subPath;
-                if (!file_exists($curTargetPath)) {
-                    if (!file_exists($dirname = dirname($curTargetPath))) {
-                        @mkdir($dirname, 0777, true);
-                    }
-                    copy($sourcePath, $curTargetPath);
+        if (!file_exists($webDir) && file_exists($dirname = dirname($webDir))) $this->rmdir($dirname);
+        while ((!isset($c) && ($c=0) || $c++ < 20) && !file_exists($webDir)) {
+            @mkdir($webDir, 0777, true);
+            usleep(50);
+        }
+        foreach ($this->_fileList as $subPath => $sourcePath) {
+            $curTargetPath = $webDir . $subPath;
+            if (!file_exists($curTargetPath)) {
+                if (!file_exists($dirname = dirname($curTargetPath))) {
+                    @mkdir($dirname, 0777, true);
                 }
-            }
-            foreach ($this->_dirList as $subPath => $sourcePath) {
-                $curTargetPath = $webDir . $subPath;
-                if (!file_exists($curTargetPath)) {
-                    $this->copydir($sourcePath, $curTargetPath);
-                }
+                copy($sourcePath, $curTargetPath);
             }
         }
+        foreach ($this->_dirList as $subPath => $sourcePath) {
+            $curTargetPath = $webDir . $subPath;
+            if (!file_exists($curTargetPath)) {
+                $this->copydir($sourcePath, $curTargetPath);
+            }
+        }
+
     }
 }

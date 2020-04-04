@@ -36,7 +36,6 @@ Q()->render->registerCssFile(Q()->rootDir.'qthemes/adminbsb/assets/css/style2.cs
 Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'images2');
 
 ?>
-
 <!DOCTYPE html>
 <html>
 
