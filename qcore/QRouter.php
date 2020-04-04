@@ -68,8 +68,6 @@ namespace quarsintex\quartronic\qcore {
             }
             if ($this->mode == self::$Q->getConst('MODE_CONSOLE')) \quarsintex\quartronic\qcore\QConsoleController::init();
             $controllerPath = $this->rootDir . $routeDir . '/' . $controllerName . '.php';
-            var_dump($controllerPath);
-            var_dump(file_exists($controllerPath));
             if (file_exists($controllerPath) || $this->checkAutoRoute($controllerClass, $route)) {
                 if (!class_exists($controllerClass)) require_once($controllerPath);
                 $this->controller = new $controllerClass($route);
