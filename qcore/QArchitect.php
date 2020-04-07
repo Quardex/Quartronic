@@ -13,6 +13,7 @@ class QArchitect extends QSource
       'consoleRequest' => '\quarsintex\quartronic\qcore\QConsoleRequest',
       'webRequest' => '\quarsintex\quartronic\qcore\QWebRequest',
       'urlManager' => '\quarsintex\quartronic\qcore\QUrlManager',
+      'api' => '\quarsintex\quartronic\qcore\QApi',
     ];
   }
 

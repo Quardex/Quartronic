@@ -44,7 +44,7 @@ Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'images2
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Welcome To | Bootstrap Based Admin Template - Material Design</title>
+    <title>Quartronic CMS</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -92,7 +92,7 @@ Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'images2
     <nav class="navbar" style="background-color: rgb(1, 1, 1)">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a style="display: none" href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
                 <a class="navbar-brand" href="<?=Q()->urlManager->route('/')?>">Quartronic CMS</a>
             </div>
@@ -305,17 +305,19 @@ Answer GitHub questions
                 </div>
                 <div class="info-container">
                     <div class="email">&nbsp;</div>
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Andrew Quardex</div>
+                    <?php if (!empty(Q()->user->username)): ?>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=Q()->user->username?></div>
+                    <?php endif; ?>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                            <!--li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                            <li-- role="separator" class="divider"></li-->
+                            <li><a id="logout" href="<?=Q()->urlManager->route('/site/logout')?>"><i class="material-icons">input</i>Sign Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -365,7 +367,7 @@ Answer GitHub questions
                 </div>
                 <div class="version copyright">
                     Designed by <a target="_blank" href="https://gurayyarar.github.io/AdminBSBMaterialDesign">AdminBSB - Material Design</a>
-</div>
+                </div>
             </div>
             <!-- #Footer -->
         </aside>

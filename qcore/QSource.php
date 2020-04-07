@@ -90,7 +90,7 @@ class QSource
 
     public function __call($closure, $args)
     {
-        throw new \Exception('Calling unknown method: ' . get_class($this) . "::$name()");
+        throw new \Exception('Calling unknown method: ' . get_class($this) . "::$closure()");
     }
 
     private function getPubKey() {

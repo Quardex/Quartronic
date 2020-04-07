@@ -14,7 +14,7 @@ class QWebRequest extends QSource
     protected $get;
     protected $post;
     protected $request;
-    protected $cookies;
+    protected $cookie;
 
     function __construct()
     {
@@ -29,7 +29,7 @@ class QWebRequest extends QSource
         $this->get = $_GET;
         $this->post = $_POST;
         $this->request = $_REQUEST;
-        $this->cookies = $_COOKIE;
+        $this->cookie = $_COOKIE;
     }
 
     function getParam($name, $default)

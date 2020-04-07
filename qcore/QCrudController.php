@@ -40,10 +40,11 @@ class QCrudController extends QController
       ]);
   }
 
-  function actAdd()
+  function actAdd($modelData = [])
   {
-      if (self::$Q->request->post) {
-          $this->crud->create(self::$Q->request->request);
+      if (!$modelData) $modelData = self::$Q->request->post;
+      if ($modelData) {
+          $this->crud->create($modelData);
           $this->redirect(self::$Q->urlManager->route('./'));
       }
       $this->crud->model->scenario = 'create';

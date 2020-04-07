@@ -14,6 +14,8 @@ class Quartronic extends QSource
   protected $router;
   protected $render;
   protected $urlManager;
+  protected $api;
+  protected $user;
 
   const MODE_CONSOLE = 'console';
   const MODE_WEB = 'web';
@@ -25,6 +27,7 @@ class Quartronic extends QSource
     'webDir' => '',
     'webPath' =>  '/',
     'appDir' => '',
+    'requireAuth' => true,
   ];
 
   function getRootDir()
@@ -42,6 +45,11 @@ class Quartronic extends QSource
       return $this->params['webPath'];
   }
 
+  function defineUser($user)
+  {
+      $this->user = $user;
+  }
+
   function __construct($params=[])
   {
     self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this);
@@ -54,6 +62,7 @@ class Quartronic extends QSource
       ));
     $this->db = self::$Q->getUnit('db', [$this->_dbList[$this->params['dbSettingsType']]]);
     $this->router = self::$Q->getUnit('router');
+    $this->api = self::$Q->getUnit('api');
   }
 
   function __destruct()
@@ -82,7 +91,7 @@ class Quartronic extends QSource
   }
 
   function getVersion() {
-    return '0.1.8';
+    return '0.2.0';
   }
 }
 

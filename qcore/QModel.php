@@ -13,7 +13,7 @@ class QModel extends QSource
     protected $_primaryKeys = [];
     protected $_query = [];
     protected $new = true;
-    protected $errors = '';
+    protected $errors = [];
 
     function __construct($table = null)
     {

@@ -73,34 +73,37 @@ class QCrud extends QSource
 
   static function getAutoStructure() {
      return [
-        'user' => '
+        'user' => ['sql' => '
 			CREATE TABLE IF NOT EXISTS `quser` (
 			  id INTEGER PRIMARY KEY,
 			  username VARCHAR,
+			  email VARCHAR,
 			  passhash VARCHAR
-			)',
-        'group' => '
+			);
+			INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (1,"Quardex", "megasounds@mail.ru", "$2y$10$4BjY5DHZuqngI3/JlnRH/egyCqiNy88YBx6cjUCnVaWNxhji1dwAG");
+			INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (2,"Quardex", "admin@mail.com", "$2y$10$RneSIIYPJL/J5InEStZx9upSe01XFppg9dqhD19H8N.u0NBfq4Si.");'],
+        'group' => ['sql' => '
 			CREATE TABLE IF NOT EXISTS `qgroup` (
 			  id integer PRIMARY KEY AUTOINCREMENT,
 			  name varchar
-			)',
-        'role' => '
+			)'],
+        'role' => ['sql' => '
 			CREATE TABLE IF NOT EXISTS `qrole` (
 			  id integer PRIMARY KEY AUTOINCREMENT,
 			  name varchar
-			)',
-        'section' => '
+			)'],
+        'section' => ['sql' => '
 			CREATE TABLE IF NOT EXISTS `qsection` (
 			  id integer PRIMARY KEY AUTOINCREMENT,
 			  name varchar
-			)',
+			)'],
      ];
   }
 
   static function autostructDB() {
-     foreach (self::getAutoStructure() as $name => $sql) {
+     foreach (self::getAutoStructure() as $name => $struct) {
          echo "\n".'Preparing table for crud section "'.$name.'"...';
-         self::$Q->db->exec($sql);
+         self::$Q->db->exec($struct['sql']);
          echo "\nSuccess!\n";
      }
   }
