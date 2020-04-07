@@ -25,7 +25,7 @@ class QModel extends QSource
 
     function getTable()
     {
-      return isset($this) ? $this->_table : static::TABLE;
+      return $this->_table;
     }
 
     function getPrimaryKey() {
@@ -124,7 +124,7 @@ class QModel extends QSource
 
     function query($mode='from')
     {
-        return self::$Q->db->$mode(static::getTable());
+        return self::$Q->db->$mode($this->getTable());
     }
 
     function getQuery($mode='from') {
@@ -154,11 +154,15 @@ class QModel extends QSource
         $this->new ? $this->insert() : $this->update();
     }
 
-    function find($where='')
+    static function find($where='') {
+        return (new static)->search($where);
+    }
+
+    function search($where='')
     {
-        $row = static::query()->where($where)->fetch();
+        $row = $this->query()->where($where)->fetch();
         if ($row) {
-            $model = new static(static::getTable());
+            $model = new static($this->getTable());
             $model->fields = $row;
             $model->new = false;
             return $model;
@@ -166,7 +170,12 @@ class QModel extends QSource
         return null;
     }
 
-    function findByPk($where='')
+    static function findByPk($where='')
+    {
+        return (new static)->searchByPk($where);
+    }
+
+    function searchByPk($where='')
     {
         $pkWhere = $where;
         if (is_array($where)) {
@@ -182,7 +191,7 @@ class QModel extends QSource
     function prepareModels($allRows) {
         $models = [];
         foreach ($allRows as $row) {
-          $model = new static(static::getTable());
+          $model = new static($this->getTable());
           $model->fields = $row;
           $model->new = false;
           $models[] = $model;
@@ -190,13 +199,13 @@ class QModel extends QSource
         return $models;
     }
 
-    function findAll($where='')
+    static function findAll($where='')
     {
-        return static::prepareModels(static::query()->where($where)->fetchAll());
+        return (new static)->getAll($where);
     }
 
     function getAll($where='') {
-        return $this->findAll($where);
+        return $this->prepareModels(static::query()->where($where)->fetchAll());
     }
 
     function countAll() {
@@ -204,7 +213,6 @@ class QModel extends QSource
         $result = $query->select(null)->select('count(*)')->fetch();
         return $result['count(*)'];
     }
-
 }
 
 ?>

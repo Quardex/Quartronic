@@ -31,7 +31,7 @@ class QCrudController extends QController
 
   function actView()
   {
-      $model = $this->crud->view(self::$Q->request->request);
+      $model = $this->crud->read(self::$Q->request->request);
       if (empty($model->id)) throw new \NotFoundException;
 
       return self::$Q->render->run('widgets/crud/view', [
@@ -45,7 +45,7 @@ class QCrudController extends QController
       if (!$modelData) $modelData = self::$Q->request->post;
       if ($modelData) {
           $this->crud->create($modelData);
-          $this->redirect(self::$Q->urlManager->route('./'));
+          $this->redirect('./');
       }
       $this->crud->model->scenario = 'create';
       return self::$Q->render->run('widgets/crud/create', [
@@ -58,10 +58,10 @@ class QCrudController extends QController
   {
       if (self::$Q->request->post) {
           $this->crud->update(self::$Q->request->request);
-          $this->redirect(self::$Q->urlManager->route('./view',['id'=>$this->crud->model->id]));
+          $this->redirect(self::$Q->urlManager->route('./view', ['id'=>$this->crud->model->id]), true);
       }
 
-      $model = $this->crud->model->find(self::$Q->request->request);
+      $model = $this->crud->read(self::$Q->request->request);
       if (empty($model->id)) throw new \NotFoundException;
 
       $model->scenario = 'update';
@@ -76,7 +76,7 @@ class QCrudController extends QController
       $this->crud->delete(self::$Q->request->request);
       $backUrl = self::$Q->request->referer;
       if (strpos($backUrl, 'view') !== false) $backUrl = self::$Q->urlManager->route('./index');
-      $this->redirect($backUrl);
+      $this->redirect($backUrl,true);
   }
 
 }

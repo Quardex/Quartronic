@@ -50,16 +50,16 @@ class QCrud extends QSource
       $this->model->save();
   }
 
-  function view($params)
+  function read($params)
   {
       if (empty($params['id'])) return null;
-      return $this->model->find($params);
+      return $this->model->search($params);
   }
 
   function update($params)
   {
       if (empty($params['id'])) return null;
-      $this->model = $this->model->findByPk($params);
+      $this->model = $this->model->searchByPk($params);
       $this->model->fields = $params;
       $this->model->save();
   }
@@ -67,7 +67,7 @@ class QCrud extends QSource
   function delete($params)
   {
       if (empty($params['id'])) return null;
-      $this->model = $this->model->findByPk($params);
+      $this->model = $this->model->searchByPk($params);
       $this->model->delete();
   }
 
