@@ -81,7 +81,7 @@ class QCrud extends QSource
 			  passhash VARCHAR
 			);
 			INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (1,"Quardex", "megasounds@mail.ru", "$2y$10$4BjY5DHZuqngI3/JlnRH/egyCqiNy88YBx6cjUCnVaWNxhji1dwAG");
-			INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (2,"Quardex", "admin@mail.com", "$2y$10$RneSIIYPJL/J5InEStZx9upSe01XFppg9dqhD19H8N.u0NBfq4Si.");'],
+			INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (2,"Admin", "admin@mail.com", "$2y$10$RneSIIYPJL/J5InEStZx9upSe01XFppg9dqhD19H8N.u0NBfq4Si.");'],
         'group' => ['sql' => '
 			CREATE TABLE IF NOT EXISTS `qgroup` (
 			  id integer PRIMARY KEY AUTOINCREMENT,
