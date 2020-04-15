@@ -68,7 +68,7 @@ class QCrud extends QSource
   {
       if (empty($params['id'])) return null;
       $this->model = $this->model->searchByPk($params);
-      $this->model->delete();
+      if ($this->model) $this->model->delete();
   }
 
   static function getAutoStructure() {
@@ -92,7 +92,7 @@ class QCrud extends QSource
 			  id integer PRIMARY KEY AUTOINCREMENT,
 			  name varchar
 			)'],
-        'section' => ['sql' => '
+         'section' => ['sql' => '
 			CREATE TABLE IF NOT EXISTS `qsection` (
 			  id integer PRIMARY KEY AUTOINCREMENT,
 			  name varchar

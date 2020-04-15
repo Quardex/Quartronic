@@ -4,8 +4,8 @@ namespace quarsintex\quartronic\qcore;
 class QConsoleController extends QController
 {
     static function init() {
-        echo "\nQuartronic CMS Console v.".self::$Q->version."\n";
-        echo '-------------------------'.preg_replace('/./', '-', self::$Q->version)."\n";
+        echo "\nQuartronic CMS Console | v.".self::$Q->version."\n";
+        echo '---------------------------'.preg_replace('/./', '-', self::$Q->version)."\n";
     }
 
     function __construct($action) {

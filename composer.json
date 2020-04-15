@@ -12,7 +12,8 @@
     "require": {
         "php": ">=7.0",
         "envms/fluentpdo": "dev-master",
-        "quardex/adminbsb": "dev-master"
+        "quardex/adminbsb": "dev-master",
+        "quardex/quartronic-updater": "dev-master"
     },
     "autoload": {
         "psr-4": {

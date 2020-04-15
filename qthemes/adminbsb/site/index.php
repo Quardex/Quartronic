@@ -1,26 +1,71 @@
+<?php
+
+Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/waitme/waitMe.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/waitme/waitMe.js');
+
+Q()->render->registerCss('deleteAlert', "
+.waitMe_container .waitMe .waitMe_text {
+    margin: 10px 0 0;
+}
+.waitMe_container .waitMe * {
+    font-size: 12px;
+}
+.waitMe_container .waitMe_progress.rotation > div {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}");
+
+Q()->render->registerJs('deleteAlert', "
+$(function () {
+    initLoading();
+});
+
+//Init Loading
+function initLoading() {
+    $('#update-button').on('click', function () {
+
+        var \$loading = $(this).parents('.card').waitMe({
+            effect: 'rotation',
+            text: 'Updating...',
+            bg: 'rgba(1,1,1,0.9)',
+            color: '#00BCD4'
+        });
+
+        $.ajax({
+          url: \"./update\",
+        }).done(function( data ) {
+            location.reload();
+        });
+    });
+}");
+
+?>
+
 <div class="block-header">
     <h2>DASHBOARD</h2>
 </div>
 
-<!-- Widgets -->
-<?php if (\quarsintex\quartronic\qcore\QUpdater::checkVersion() > Q()->version) : ?>
+<?php if (($v = Q()->lastVersion) > Q()->version) : ?>
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="info-box bg-light-green hover-expand-effect">
+        <div class="info-box bg-light-green hover-expand-effect card">
             <div class="icon">
                 <i class="material-icons">info</i>
             </div>
             <div class="content">
-                <div class="text">NEW VERSION IS AVAILABLE</div>
-                <div class="text">Please run "<b>composer update</b>" from the concole</div>
+                <div class="text">NEW VERSION IS AVAILABLE: <b><?=$v?></b></div>
+                <div class="text">Please press button "<b>UPDATE</b>" or run "<b>composer update</b>" from the concole</div>
                 <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"></div>
             </div>
-        </div>
+            <div style="position: absolute; right: 21px; top: 21px; z-index:100">
+                <button id="update-button" type="button" class="btn bg-teal btn-block btn-lg waves-effect" data-toggle="cardloading" style="outline-width: 0px !important; user-select: auto !important;">UPDATE</button>
+            </div>
+         </div>
     </div>
 </div>
 <?php endif ?>
-<!-- #END# Widgets -->
-<!-- CPU Usage -->
+
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
@@ -37,4 +82,3 @@
         </div>
     </div>
 </div>
-<!-- #END# CPU Usage -->

@@ -180,12 +180,12 @@ class QModel extends QSource
         $pkWhere = $where;
         if (is_array($where)) {
             $pkWhere = [];
-            $pks = (isset($this) ? $this : new static)->_primaryKeys;
+            $pks = $this->_primaryKeys;
             foreach ($pks as $fieldName) {
                 if (array_key_exists($fieldName, $where)) $pkWhere[$fieldName] = $where[$fieldName];
             }
         }
-        return isset($this) ? $this->find($pkWhere) : static::find($pkWhere);
+        return $this->search($pkWhere);
     }
 
     function prepareModels($allRows) {

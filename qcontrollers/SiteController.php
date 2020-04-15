@@ -1,4 +1,5 @@
 <?php
+
 namespace quarsintex\quartronic\qcontrollers;
 
 class SiteController extends \quarsintex\quartronic\qcore\QController
@@ -17,6 +18,14 @@ class SiteController extends \quarsintex\quartronic\qcore\QController
     function act500() {
         return self::$Q->render->run('',[],'500');
     }
+
+    public function actUpdate() {
+        \quarsintex\quartronic\qcore\QUpdater::run();
+    }
+
+//    function actCheckUpdating() {
+//       return self::$Q->render->runPartial('', ['content' => file_exists(self::$Q->rootDir.'update.lock') ? '1' : '0']);
+//    }
 }
 
 ?>

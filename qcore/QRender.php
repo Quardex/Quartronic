@@ -156,6 +156,8 @@ namespace quarsintex\quartronic\qcore {
                 ob_start();
                 include($this->viewDir . $this->view . '.' . $this->tplExtension);
                 $this->content = ob_get_clean();
+            } else {
+                $this->content = $content;
             }
 
             if ($this->layout) {

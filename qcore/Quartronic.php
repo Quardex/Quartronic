@@ -1,12 +1,8 @@
 <?php
 namespace quarsintex\quartronic\qcore;
 
-use PDO;
-
 class Quartronic extends QSource
 {
-  protected $_dbList;
-
   protected $mode;
 
   protected $db;
@@ -21,8 +17,6 @@ class Quartronic extends QSource
   const MODE_WEB = 'web';
 
   protected $params = [
-    'dbSettingsType' => 0,
-    'dbDir' => __DIR__.'/../q.db',
     'returnRender' => false,
     'webDir' => '',
     'webPath' =>  '/',
@@ -52,17 +46,11 @@ class Quartronic extends QSource
 
   function __construct($params=[])
   {
-    self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this);
-    if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
-    $this->_dbList[] = new \PDO('sqlite:' . $this->params['dbDir'],null,null,
-      array(
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-      ));
-    $this->db = self::$Q->getUnit('db', [$this->_dbList[$this->params['dbSettingsType']]]);
-    $this->router = self::$Q->getUnit('router');
-    $this->api = self::$Q->getUnit('api');
+      self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this);
+      if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
+      $this->db = self::$Q->getUnit('db');
+      $this->router = self::$Q->getUnit('router');
+      $this->api = self::$Q->getUnit('api');
   }
 
   function __destruct()
@@ -91,8 +79,16 @@ class Quartronic extends QSource
   }
 
   function getVersion() {
-    return '0.2.3';
+      return '0.2.4';
   }
+
+  function getLastVersion()
+  {
+      $text = file_get_contents('https://raw.githubusercontent.com/Quardex/Quartronic/master/qcore/Quartronic.php');
+      preg_match('/getVersion\(\)[^\']*\'([^\']*)\'/m', $text, $found);
+      return isset($found[1]) ? $found[1] : 0;
+  }
+
 }
 
 ?>
