@@ -83,7 +83,7 @@ class QAssetBundle extends QSource
         }
         foreach ($this->_fileList as $subPath => $sourcePath) {
             $curTargetPath = $webDir . $subPath;
-            if (!file_exists($curTargetPath)) {
+            if (!file_exists($curTargetPath) || isset(self::$Q->request->get['refresh'])) {
                 if (!file_exists($dirname = dirname($curTargetPath))) {
                     @mkdir($dirname, 0777, true);
                 }

@@ -55,10 +55,10 @@ function initLoading() {
             </div>
             <div class="content">
                 <div class="text">NEW VERSION IS AVAILABLE: <b><?=$v?></b></div>
-                <div class="text">Please press button "<b>UPDATE</b>" or run "<b>composer update</b>" from the concole</div>
+                <div class="text for-hide">Please press button "<b>UPDATE</b>" or run "<b>composer update</b>" from the concole</div>
                 <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"></div>
             </div>
-            <div style="position: absolute; right: 21px; top: 21px; z-index:100">
+            <div class="update-wrapper">
                 <button id="update-button" type="button" class="btn bg-teal btn-block btn-lg waves-effect" data-toggle="cardloading" style="outline-width: 0px !important; user-select: auto !important;">UPDATE</button>
             </div>
          </div>

@@ -24,7 +24,7 @@ $(function () {
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card" style="position: relative">
-            <div style="position:absolute; z-index:10; top:11px; right:11px">
+            <div style="position:absolute; z-index:1; top:11px; right:11px">
                 <a href="<?=Q()->urlManager->route('add')?>" type="button" class="btn btn-success waves-effect">
                     <i class="material-icons">add_circle</i>
                     <span>Add</span>

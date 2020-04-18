@@ -32,8 +32,8 @@ Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/admin.js');
 
 Q()->render->registerDir(Q()->rootDir.'../adminbsb/images', 'images');
 
-Q()->render->registerCssFile(Q()->rootDir.'qthemes/adminbsb/assets/css/style2.css');
-Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'images2');
+Q()->render->registerCssFile(Q()->rootDir.'qthemes/adminbsb/assets/css/qstyle.css');
+Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'qimages');
 
 ?>
 <!DOCTYPE html>

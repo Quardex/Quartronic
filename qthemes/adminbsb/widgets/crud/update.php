@@ -5,7 +5,7 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
-            <div style="position:absolute; z-index:10; top:11px; right:11px">
+            <div style="position:absolute; z-index:1; top:11px; right:11px">
                 <a href="<?=Q()->urlManager->route('./index')?>" type="button" class="btn btn-info waves-effect">
                     <i class="material-icons">list</i>
                     <span>List</span>
