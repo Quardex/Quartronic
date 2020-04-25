@@ -10,7 +10,7 @@ class QMigration extends \quarsintex\quartronic\qcore\QModel
         parent::loadStructure();
         if (!$this->_structure) {
             $this->_structure['name'] = 'TEXT';
-            $this->_structure['apply_time'] = 'TEXT';
+            $this->_structure['applied_at'] = 'TIMESTAMP';
         }
     }
 }

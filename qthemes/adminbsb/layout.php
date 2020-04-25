@@ -36,6 +36,18 @@ Q()->render->registerCssFile(Q()->rootDir.'qthemes/adminbsb/assets/css/qstyle.cs
 Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'qimages');
 
 ?>
+
+<?php Q()->render->registerJs('logout', "
+$(function () {
+    $('#logout').on('click', function () {
+        $.post($(this).attr('href')).always(function() {
+          location.reload();
+        });
+        return false;
+    });
+});");
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -355,6 +367,12 @@ Answer GitHub questions
                         <a href="<?=Q()->urlManager->route('/section')?>">
                             <i class="material-icons">view_module</i>
                             <span>Sections</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?=Q()->urlManager->route('/news')?>">
+                            <i class="material-icons">art_track</i>
+                            <span>News</span>
                         </a>
                     </li>
                 </ul>

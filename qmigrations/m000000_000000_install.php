@@ -12,7 +12,7 @@ class m000000_000000_install extends  \quarsintex\quartronic\qmodels\qmigration
 		self::$Q->db->exec('
 			CREATE TABLE IF NOT EXISTS `qmigration` (
 			  name VARCHAR,
-			  apply_time DATETIME DEFAULT CURRENT_TIMESTAMP
+			  applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 			)
 		');
 		echo "\nSuccess!\n";

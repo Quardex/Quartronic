@@ -103,7 +103,7 @@ class QMigrator extends QSource
 
             if ($mode == 'up') {
               $migrationModel->name = $migration;
-              $migrationModel->apply_time = time();
+              $migrationModel->applied_at = time();
               $migrationModel->save();
             } else {
               $migrationModel = $className::find(['name'=>$migration]);
