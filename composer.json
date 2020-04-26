@@ -1,5 +1,5 @@
 {
-    "name": "quarsintex/quartronic",
+    "name": "quardex/quartronic",
     "description": "Framework agnostic CMS",
     "type": "project",
     "authors": [
@@ -14,7 +14,7 @@
         "php": ">=7.0",
         "envms/fluentpdo": "dev-master",
         "quardex/adminbsb": "dev-master",
-        "quarsintex/quartronic-updater": "dev-master"
+        "quardex/quartronic-updater": "dev-master"
     },
     "autoload": {
         "psr-4": {
