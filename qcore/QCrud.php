@@ -101,6 +101,7 @@ class QCrud extends QSource
 			CREATE TABLE IF NOT EXISTS `qnews` (
 			  id integer PRIMARY KEY AUTOINCREMENT,
 			  title varchar,
+			  short_text text,
 			  text text,
 			  created_at timestamp
 			)'],
