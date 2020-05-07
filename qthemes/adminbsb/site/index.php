@@ -1,5 +1,7 @@
 <?php
 
+use quarsintex\quartronic\qcore\QUpdater;
+
 Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/waitme/waitMe.css', self::POSITION_HEAD_BEGIN);
 Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/waitme/waitMe.js');
 
@@ -46,7 +48,7 @@ function initLoading() {
     <h2>DASHBOARD</h2>
 </div>
 
-<?php if ((Q()->ver2int($v = Q()->lastVersion)) > Q()->ver2int()) : ?>
+<?php if ((QUpdater::ver2int($v = Q()->lastVersion)) > QUpdater::ver2int(Q()->version)) : ?>
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="info-box bg-light-green hover-expand-effect card">
