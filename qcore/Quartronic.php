@@ -73,7 +73,14 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.11';
+        return '0.2.12';
+    }
+
+    function ver2int($v=0)
+    {
+        if (!$v) $v = $this->getVersion();
+        $v = explode('.', $v);
+        return $v[0]*100000 + $v[1]*1000 + $v[2];
     }
 
     function getLastVersion()
