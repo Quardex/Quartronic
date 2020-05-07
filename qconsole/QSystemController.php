@@ -1,14 +1,15 @@
 <?php
-
 namespace quarsintex\quartronic\qconsole;
 
 class QSystemController extends \quarsintex\quartronic\qcore\QConsoleController
 {
-    function actIndex() {
-        echo 'OK';
+    function actIndex()
+    {
+        echo 'Ready';
     }
 
-    function actMigrate() {
+    function actMigrate()
+    {
         global $argv;
         if (empty($argv[2])) $argv[2] = '';
         $migrator = new \quarsintex\quartronic\qcore\QMigrator();
@@ -22,11 +23,13 @@ class QSystemController extends \quarsintex\quartronic\qcore\QConsoleController
         }
     }
 
-    function actRestructDB() {
+    function actRestructDB()
+    {
         \quarsintex\quartronic\qcore\QCrud::autostructDB();
     }
 
-    function actUpdate() {
+    function actUpdate()
+    {
         if (self::$Q->db->checkInit()) self::$Q->db->close();
         for ($i=0; $i<101; $i++) {
             echo "Preparing: ".$i."%\r";
@@ -34,14 +37,7 @@ class QSystemController extends \quarsintex\quartronic\qcore\QConsoleController
         }
         echo "\n";
         echo "Start updating...\n";
-        file_put_contents(self::$Q->rootDir.'update.lock', 1);
-        \quarsintex\quartronic\qcore\QUpdater::run(self::$Q->rootDir.'../../../');
-    }
-
-    function __destruct() {
-        if ($this->action == 'update') {
-            unlink(self::$Q->rootDir.'update.lock');
-        }
+        \quarsintex\quartronic\qcore\QUpdater::run(self::$Q->qRootDir.'../../../');
     }
 }
 

@@ -1,10 +1,11 @@
 <?php
 namespace quarsintex\quartronic\qcore;
 
-class QGlobalCallback extends QSource
+class QGlobalSingleton extends QSource
 {
     static function app() {
         return self::$Q;
     }
 }
+
 ?>

@@ -1,31 +1,31 @@
 <?php
-
 namespace quarsintex\quartronic\qcontrollers;
 
 class SiteController extends \quarsintex\quartronic\qcore\QController
 {
-    function actIndex() {
+    function actIndex()
+    {
         return self::$Q->render->run('site/index');
     }
-    function actLogout() {
+    function actLogout()
+    {
         return $this->redirect('/user/signout');
     }
 
-    function act404() {
+    function act404()
+    {
         return self::$Q->render->run('',[],'404');
     }
 
-    function act500() {
+    function act500()
+    {
         return self::$Q->render->run('',[],'500');
     }
 
-    public function actUpdate() {
+    public function actUpdate()
+    {
         \quarsintex\quartronic\qcore\QUpdater::run();
     }
-
-//    function actCheckUpdating() {
-//       return self::$Q->render->runPartial('', ['content' => file_exists(self::$Q->rootDir.'update.lock') ? '1' : '0']);
-//    }
 }
 
 ?>

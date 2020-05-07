@@ -1,5 +1,4 @@
 <?php
-
 namespace quarsintex\quartronic\qcore;
 
 use PDO;

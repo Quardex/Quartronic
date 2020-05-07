@@ -1,5 +1,4 @@
 <?php
-
 namespace quarsintex\quartronic\qwidgets;
 
 class Pagination extends \quarsintex\quartronic\qcore\QWidget

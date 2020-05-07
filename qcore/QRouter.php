@@ -1,11 +1,11 @@
 <?php
-
-namespace {
+namespace
+{
     class NotFoundException extends Exception {}
 }
 
-namespace quarsintex\quartronic\qcore {
-
+namespace quarsintex\quartronic\qcore
+{
     use function Spatie\SslCertificate\length;
 
     class QRouter extends QSource
@@ -13,14 +13,14 @@ namespace quarsintex\quartronic\qcore {
         protected $controller;
         protected $route;
 
-        protected function getConnectedParams()
+        protected function getConnectedProperties()
         {
             return [
                 'returnRender' => &self::$Q->params['returnRender'],
                 'appDir' => &self::$Q->params['appDir'],
                 'webPath' => &self::$Q->webPath,
                 'mode' => &self::$Q->mode,
-                'rootDir' => &self::$Q->rootDir,
+                'qRootDir' => &self::$Q->qRootDir,
             ];
         }
 
@@ -49,7 +49,7 @@ namespace quarsintex\quartronic\qcore {
             } catch (\NotFoundException $e) {
                 header($_SERVER['SERVER_PROTOCOL'] . " 404 Not Found");
                 return (new \quarsintex\quartronic\qcontrollers\SiteController('404'))->act404();
-              }
+            }
         }
 
         function execute($route)
@@ -69,7 +69,7 @@ namespace quarsintex\quartronic\qcore {
                 $controllerClass = '\\quarsintex\\quartronic\\' . $controllerClass;
             }
             if ($this->mode == self::$Q->getConst('MODE_CONSOLE')) \quarsintex\quartronic\qcore\QConsoleController::init();
-            $controllerPath = $this->rootDir . $routeDir . '/' . $controllerName . '.php';
+            $controllerPath = $this->qRootDir . $routeDir . '/' . $controllerName . '.php';
             if (file_exists($controllerPath) || $this->checkAutoRoute($controllerClass, $route)) {
                 if (!class_exists($controllerClass)) require_once($controllerPath);
                 $this->controller = new $controllerClass($route);
@@ -96,7 +96,8 @@ namespace quarsintex\quartronic\qcore {
             }
         }
 
-        function checkAutoRoute(&$controllerClass, &$route) {
+        function checkAutoRoute(&$controllerClass, &$route)
+        {
             foreach (\quarsintex\quartronic\qcore\QCrud::getAutoStructure() as $section => $data) {
                 if ($section == $route[0]) {
                     $controllerClass = '\\quarsintex\\quartronic\\qcore\\QCrudController';

@@ -13,7 +13,8 @@ class QUnit extends QSource
         $this->_params = $params;
     }
 
-    protected function init() {
+    protected function init()
+    {
         $arguments = $attributes = [];
         foreach ($this->_params as $key => $value)
             is_int($key) ? $arguments[] = $value : $attributes[$key] = $value;
@@ -31,7 +32,8 @@ class QUnit extends QSource
         return $this->_unit;
     }
 
-    public function checkInit() {
+    public function checkInit()
+    {
         return !empty($this->_unit);
     }
 
@@ -40,7 +42,8 @@ class QUnit extends QSource
         return call_user_func_array([$this->getUnit(), $name], $arguments);
     }
 
-    function __isset($name) {
+    function __isset($name)
+    {
         return isset($this->getUnit()->$name);
     }
 
@@ -48,57 +51,54 @@ class QUnit extends QSource
     {
         return $this->getUnit()->$name;
     }
-
-//    function __set($name, $value)
-//    {
-//        return $this->getUnit()->$name = $value;
-//    }
 }
 
 class QArchitect extends QSource
 {
-  protected $_Q;
+    protected $_Q;
 
-  function getArchitecture() {
-    return [
-      'db' => '\quarsintex\quartronic\qcore\QPdo',
-      'router' => '\quarsintex\quartronic\qcore\QRouter',
-      'render' => '\quarsintex\quartronic\qcore\QRender',
-      'consoleRequest' => '\quarsintex\quartronic\qcore\QConsoleRequest',
-      'webRequest' => '\quarsintex\quartronic\qcore\QWebRequest',
-      'urlManager' => '\quarsintex\quartronic\qcore\QUrlManager',
-      'api' => '\quarsintex\quartronic\qcore\QApi',
-    ];
-  }
+    function getArchitecture()
+    {
+        return [
+            'db' => '\quarsintex\quartronic\qcore\QPdo',
+            'router' => '\quarsintex\quartronic\qcore\QRouter',
+            'render' => '\quarsintex\quartronic\qcore\QRender',
+            'consoleRequest' => '\quarsintex\quartronic\qcore\QConsoleRequest',
+            'webRequest' => '\quarsintex\quartronic\qcore\QWebRequest',
+            'urlManager' => '\quarsintex\quartronic\qcore\QUrlManager',
+            'api' => '\quarsintex\quartronic\qcore\QApi',
+        ];
+    }
 
-  function __construct($Q)
-  {
-    $this->_Q = $Q;
-  }
+    function __construct($Q)
+    {
+        $this->_Q = $Q;
+    }
 
-  function __call($name, $arguments=[])
-  {
-    return call_user_func_array([$this->_Q, $name], $arguments);
-  }
+    function __call($name, $arguments=[])
+    {
+        return call_user_func_array([$this->_Q, $name], $arguments);
+    }
 
-  function __get($name)
-  {
-    return isset($this->_Q->$name) ? $this->_Q->$name : parent::__get($name);
-  }
+    function __get($name)
+    {
+        return isset($this->_Q->$name) ? $this->_Q->$name : parent::__get($name);
+    }
 
-  function __isset($name) {
-    return  property_exists($this->_Q, $name);
-  }
+    function __isset($name)
+    {
+        return  property_exists($this->_Q, $name);
+    }
 
-  function getUnit($name, $params=[])
-  {
-    return new QUnit($this->architecture[$name], $params);
-  }
+    function getUnit($name, $params=[])
+    {
+        return new QUnit($this->architecture[$name], $params);
+    }
 
-
-  function getConst($name) {
-    return constant(get_class($this->_Q).'::'.$name);
-  }
+    function getConst($name)
+    {
+        return constant(get_class($this->_Q).'::'.$name);
+    }
 }
 
 ?>

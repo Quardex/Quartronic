@@ -16,18 +16,21 @@ class QAssetBundle extends QSource
         $this->webPath = $webPath;
     }
 
-    public function getAssetsSubDir() {
+    public function getAssetsSubDir()
+    {
         return 'qassets/' . self::$Q->version . '/';
     }
 
-    public function getAssetsDir() {
+    public function getAssetsDir()
+    {
         if (!$this->_assetsDir) {
             $this->_assetsDir = $this->webDir.$this->assetsSubDir;
         }
         return $this->_assetsDir;
     }
 
-    public function getAssetsPath() {
+    public function getAssetsPath()
+    {
         if (!$this->_assetsPath) {
             $this->_assetsPath = $this->webPath.$this->assetsSubDir;
         }
@@ -49,7 +52,8 @@ class QAssetBundle extends QSource
         return $list;
     }
 
-    protected function copydir($from, $to, $rewrite = true) {
+    protected function copydir($from, $to, $rewrite = true)
+    {
         if (is_dir($from)) {
             @mkdir($to);
             $d = dir($from);
@@ -64,7 +68,8 @@ class QAssetBundle extends QSource
         }
     }
 
-    protected function rmdir($dir) {
+    protected function rmdir($dir)
+    {
         if ($objs = glob($dir."/*")) {
             foreach($objs as $obj) {
                 is_dir($obj) ? $this->rmdir($obj) : unlink($obj);

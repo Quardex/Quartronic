@@ -1,5 +1,5 @@
-<?php Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery-validation/jquery.validate.js')?>
-<?php Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/pages/forms/form-validation.js')?>
+<?php Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery-validation/jquery.validate.js')?>
+<?php Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/js/pages/forms/form-validation.js')?>
 
 <form id="form_validation" method="POST">
 

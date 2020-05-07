@@ -7,7 +7,6 @@ class QConsoleRequest extends QSource
     protected $params;
     protected $time;
 
-
     function __construct()
     {
         global $argv;
@@ -23,7 +22,6 @@ class QConsoleRequest extends QSource
         }
         if (!empty($this->params[0])) $this->route = $this->params[0];
     }
-
 }
 
 ?>

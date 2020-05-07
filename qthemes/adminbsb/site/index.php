@@ -1,7 +1,7 @@
 <?php
 
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/waitme/waitMe.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/waitme/waitMe.js');
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/waitme/waitMe.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/waitme/waitMe.js');
 
 Q()->render->registerCss('deleteAlert', "
 .waitMe_container .waitMe .waitMe_text {

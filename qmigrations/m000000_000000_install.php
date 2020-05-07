@@ -2,8 +2,9 @@
 namespace quarsintex\quartronic\qmigrations;
 
 use quarsintex\quartronic\qcore\QCrud;
+use quarsintex\quartronic\qmodels\QMigration;
 
-class m000000_000000_install extends  \quarsintex\quartronic\qmodels\qmigration
+class m000000_000000_install extends QMigration
 {
 	public function up()
 	{
@@ -30,3 +31,5 @@ class m000000_000000_install extends  \quarsintex\quartronic\qmodels\qmigration
         }
 	}
 }
+
+?>

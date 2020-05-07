@@ -3,7 +3,7 @@ namespace quarsintex\quartronic\qcore;
 
 class QUrlManager extends QSource
 {
-    protected function getConnectedParams()
+    protected function getConnectedProperties()
     {
         return [
             'webPath' => &self::$Q->webPath,
@@ -36,4 +36,5 @@ class QUrlManager extends QSource
         return $url;
     }
 }
+
 ?>

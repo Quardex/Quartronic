@@ -5,7 +5,7 @@ class QController extends QSource
 {
     protected $action;
 
-    protected function getConnectedParams()
+    protected function getConnectedProperties()
     {
         return [
             'requireAuth' => &self::$Q->params['requireAuth'],
@@ -13,7 +13,8 @@ class QController extends QSource
         ];
     }
 
-    function __construct($action) {
+    function __construct($action)
+    {
         if (is_array($action)) {
             $action = $action[1];
         }
@@ -35,7 +36,8 @@ class QController extends QSource
         $this->action = $action;
     }
 
-    function redirect($target, $raw = false) {
+    function redirect($target, $raw = false)
+    {
         if (!$raw) $target = self::$Q->urlManager->route($target);
         header('Location: '.$target, true, 302);
         exit;

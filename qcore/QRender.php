@@ -1,16 +1,16 @@
 <?php
-
-namespace {
+namespace
+{
     function Q()
     {
         static $Q;
-        if (!$Q) $Q = new \quarsintex\quartronic\qcore\QGlobalCallback;
+        if (!$Q) $Q = new \quarsintex\quartronic\qcore\QGlobalSingleton;
         return $Q::app();
     }
 }
 
-namespace quarsintex\quartronic\qcore {
-
+namespace quarsintex\quartronic\qcore
+{
     class QRender extends QSource
     {
         protected $_js;
@@ -30,22 +30,21 @@ namespace quarsintex\quartronic\qcore {
         const POSITION_BODY_BEGIN = 2;
         const POSITION_BODY_END = 3;
 
-
-        protected function getConnectedParams()
+        protected function getConnectedProperties()
         {
             return [
                 'returnRender' => &self::$Q->params['returnRender'],
                 'appDir' => &self::$Q->params['appDir'],
                 'webDir' => &self::$Q->webDir,
                 'webPath' => &self::$Q->webPath,
-                'rootDir' => &self::$Q->rootDir,
+                'qRootDir' => &self::$Q->qRootDir,
             ];
         }
 
         function getViewDir()
         {
             if (!$this->_viewDir) {
-                $this->_viewDir = $this->rootDir;
+                $this->_viewDir = $this->qRootDir;
                 if ($this->appDir) $this->_viewDir.= $this->appDir.'/';
                 $this->_viewDir.= 'qthemes/adminbsb/';
             }
@@ -177,7 +176,8 @@ namespace quarsintex\quartronic\qcore {
             }
         }
 
-        public function runPartial($view, $data = []) {
+        public function runPartial($view, $data = [])
+        {
             $this->run($view, $data, '');
         }
 
@@ -190,4 +190,5 @@ namespace quarsintex\quartronic\qcore {
 
     }
 }
+
 ?>

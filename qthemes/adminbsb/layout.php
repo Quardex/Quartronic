@@ -1,39 +1,39 @@
 <?php
 
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/css/bootstrap.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/node-waves/waves.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/animate-css/animate.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/morrisjs/morris.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/themes/all-themes.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/materialize.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/sweetalert/sweetalert.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap/css/bootstrap.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/node-waves/waves.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/animate-css/animate.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/morrisjs/morris.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/css/themes/all-themes.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/css/materialize.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/sweetalert/sweetalert.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
 
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/bootstrap-select/js/bootstrap-select.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/node-waves/waves.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery-countto/jquery.countTo.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/raphael/raphael.min.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/morrisjs/morris.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/chartjs/Chart.bundle.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.resize.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.pie.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.categories.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/flot-charts/jquery.flot.time.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery-sparkline/jquery.sparkline.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/sweetalert/sweetalert.min.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap-select/js/bootstrap-select.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/node-waves/waves.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery-countto/jquery.countTo.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/raphael/raphael.min.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/morrisjs/morris.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/chartjs/Chart.bundle.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/flot-charts/jquery.flot.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/flot-charts/jquery.flot.resize.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/flot-charts/jquery.flot.pie.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/flot-charts/jquery.flot.categories.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/flot-charts/jquery.flot.time.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery-sparkline/jquery.sparkline.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/sweetalert/sweetalert.min.js');
 
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/admin.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/js/admin.js');
 //Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/demo.js');
 
-Q()->render->registerDir(Q()->rootDir.'../adminbsb/images', 'images');
+Q()->render->registerDir(Q()->qRootDir.'../adminbsb/images', 'images');
 
-Q()->render->registerCssFile(Q()->rootDir.'qthemes/adminbsb/assets/css/qstyle.css');
-Q()->render->registerDir(Q()->rootDir.'qthemes/adminbsb/assets/images', 'qimages');
+Q()->render->registerCssFile(Q()->qRootDir.'qthemes/adminbsb/assets/css/qstyle.css');
+Q()->render->registerDir(Q()->qRootDir.'qthemes/adminbsb/assets/images', 'qimages');
 
 ?>
 

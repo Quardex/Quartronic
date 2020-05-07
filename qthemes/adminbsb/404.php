@@ -1,12 +1,12 @@
 ﻿<?php
 
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
-Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/plugins/node-waves/waves.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/node-waves/waves.js');
 
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/bootstrap/css/bootstrap.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/plugins/node-waves/waves.css', self::POSITION_HEAD_BEGIN);
-Q()->render->registerCssFile(Q()->rootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap/css/bootstrap.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/node-waves/waves.css', self::POSITION_HEAD_BEGIN);
+Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
 
 ?>
 <!DOCTYPE html>
