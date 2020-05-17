@@ -1,7 +1,5 @@
 .sidebar .user-info {
-    background: url(../qimages/panel-bg.jpg) no-repeat no-repeat;
-    background-position: -1px -10px;
-    background-size: 132%;
+    background: url(../qimages/panel-bg.png) no-repeat no-repeat;
 }
 
 .sidebar .user-info {

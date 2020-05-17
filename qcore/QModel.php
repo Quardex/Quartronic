@@ -163,6 +163,7 @@ class QModel extends QSource
 
     static function find($where='')
     {
+        if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
         return (new static)->search($where);
     }
 
@@ -180,6 +181,7 @@ class QModel extends QSource
 
     static function findByPk($where='')
     {
+        if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
         return (new static)->searchByPk($where);
     }
 
@@ -210,6 +212,7 @@ class QModel extends QSource
 
     static function findAll($where='')
     {
+        if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
         return (new static)->getAll($where);
     }
 

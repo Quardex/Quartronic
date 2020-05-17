@@ -10,6 +10,7 @@ class Quartronic extends QSource
     protected $router;
     protected $render;
     protected $urlManager;
+    protected $export;
 
     protected $user;
 
@@ -50,6 +51,7 @@ class Quartronic extends QSource
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
         $this->db = self::$Q->getUnit('db');
         $this->router = self::$Q->getUnit('router');
+        $this->export = self::$Q->getUnit('export');
     }
 
     function run($params=[])
@@ -73,7 +75,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.13';
+        return '0.2.14';
     }
 
     function getLastVersion()

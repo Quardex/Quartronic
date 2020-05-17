@@ -102,6 +102,7 @@ class QCrud extends QSource
             'news' => ['sql' => '
                 CREATE TABLE IF NOT EXISTS `qnews` (
                     id integer PRIMARY KEY AUTOINCREMENT,
+                    alias varchar,
                     title varchar,
                     short_text text,
                     text text,
