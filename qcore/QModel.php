@@ -167,9 +167,9 @@ class QModel extends QSource
         return (new static)->search($where);
     }
 
-    function search($where='')
+    function search($params='')
     {
-        $row = $this->query()->where($where)->fetch();
+        $row = $this->prepareQuery($params)->fetch();
         if ($row) {
             $model = new static($this->getTable());
             $model->fields = $row;
@@ -195,7 +195,7 @@ class QModel extends QSource
                 if (array_key_exists($fieldName, $where)) $pkWhere[$fieldName] = $where[$fieldName];
             }
         }
-        return $this->search($pkWhere);
+        return $this->search(['where'=>$pkWhere]);
     }
 
     function prepareModels($allRows)
@@ -216,9 +216,9 @@ class QModel extends QSource
         return (new static)->getAll($where);
     }
 
-    function getAll($where='')
+    function getAll($params='')
     {
-        return $this->prepareModels(static::query()->where($where)->fetchAll());
+        return $this->prepareModels($this->prepareQuery($params)->fetchAll());
     }
 
     function countAll()
@@ -226,6 +226,23 @@ class QModel extends QSource
         $query = isset($this) ? $this->query : static::query();
         $result = $query->select(null)->select('count(*)')->fetch();
         return $result['count(*)'];
+    }
+
+    protected function prepareQuery($params, $query=null)
+    {
+        if (!is_array($params)) $params['where'] = $params;
+        if (!$query) $query = $this->query();
+        foreach ($params as $param => $value) {
+            if ($param === 0) {
+                $method = $params[0];
+                unset($params[0]);
+                $query->$method($params);
+                break;
+            } else {
+                $query->$param($value);
+            }
+        }
+        return $query;
     }
 }
 

@@ -54,7 +54,7 @@ class QCrud extends QSource
     function read($params)
     {
         if (empty($params['id'])) return null;
-        return $this->model->search($params);
+        return $this->model->searchByPk($params);
     }
 
     function update($params)

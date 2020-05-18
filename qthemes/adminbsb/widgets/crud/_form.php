@@ -8,7 +8,7 @@
             echo '
                 <div class="form-group form-float">
                     <div class="form-line">
-                        <input type="text" class="form-control" name="'.$field.'" value="'.$model->$field.'"'.($model->structure[$field]['required'] ? ' required':'').'>
+                        <input type="text" class="form-control" name="'.$field.'" value="'.htmlspecialchars($model->$field).'"'.($model->structure[$field]['required'] ? ' required':'').'>
                         <label class="form-label">'.mb_convert_case(str_replace('_', ' ', $field), MB_CASE_TITLE, "UTF-8").'</label>
                     </div>
                     <!--label id="id-error" class="error" for="'.$field.'">This field is required.</label-->
