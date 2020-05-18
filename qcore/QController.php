@@ -25,7 +25,7 @@ class QController extends QSource
             $needAuth = true;
             if ($qtoken) {
                 list($username, $userhash) = explode('|', base64_decode($qtoken));
-                $user = \quarsintex\quartronic\qmodels\QUser::find(['username'=>$username]);
+                $user = \quarsintex\quartronic\qmodels\QUser::find(['where','username'=>$username]);
                 if ($user->passhash == $userhash) {
                     self::$Q->defineUser($user);
                     $needAuth = false;
