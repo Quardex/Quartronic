@@ -183,7 +183,7 @@ namespace quarsintex\quartronic\qcore
 
         public function widget($name, $params = [])
         {
-            $className = 'quarsintex\\quartronic\\qwidgets\\' . $name;
+            $className = '\\quarsintex\\quartronic\\qwidgets\\' . $name;
             $widget = new $className($params);
             echo $widget->render();
         }
