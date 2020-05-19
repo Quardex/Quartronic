@@ -18,7 +18,7 @@ class QCrudController extends QController
     function actIndex()
     {
         return self::$Q->render->run('widgets/crud/list', [
-            'title' => basename(get_class($this->crud->model)),
+            'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'crud' => $this->crud,
             'countAll' => $this->crud->model->countAll(),
         ]);
