@@ -10,7 +10,7 @@ class QWidget extends QSource
         foreach ($params as $param => $value) {
             $this->$param = $value;
         }
-        $this->name = basename(static::class);
+        $this->name = basename(str_replace('\\', '/', static::class));
         $this->run();
     }
 
