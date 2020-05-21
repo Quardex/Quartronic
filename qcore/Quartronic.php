@@ -11,6 +11,7 @@ class Quartronic extends QSource
     protected $render;
     protected $urlManager;
     protected $export;
+    protected $externManager;
 
     protected $user;
 
@@ -21,6 +22,8 @@ class Quartronic extends QSource
         'webDir' => '',
         'webPath' =>  '/',
         'appDir' => '',
+        'configDir' => __DIR__.'/../../../../config/',
+        'runtimeDir' => __DIR__.'/../../../../runtime/',
         'returnRender' => false,
         'requireAuth' => true,
     ];
@@ -32,24 +35,26 @@ class Quartronic extends QSource
 
     function getWebDir()
     {
-        return $this->params['webDir'];
+        return $this->router->webDir;
     }
 
     function getWebPath()
     {
-        return $this->params['webPath'];
+        return $this->router->webPath;
     }
 
     function getAppDir()
     {
-        return $this->params['appDir'];
+        return $this->router->appDir;
     }
 
     function __construct($params=[])
     {
-        self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this);
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
+        $customArchitecture = isset($this->params['customArchitecture']) ? $this->params['customArchitecture'] : [];
+        self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this, $customArchitecture);
         $this->db = self::$Q->getUnit('db');
+        ($this->externManager = self::$Q->getUnit('externManager'))->initExtDirs();
         $this->router = self::$Q->getUnit('router');
         $this->export = self::$Q->getUnit('export');
     }
@@ -75,7 +80,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.20';
+        return '0.2.21';
     }
 
     function getLastVersion()

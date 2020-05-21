@@ -56,8 +56,9 @@ class QUnit extends QSource
 class QArchitect extends QSource
 {
     protected $_Q;
+    protected $_architecture;
 
-    function getArchitecture()
+    function getDefaultArchitecture()
     {
         return [
             'db' => '\quarsintex\quartronic\qcore\QPdo',
@@ -66,14 +67,20 @@ class QArchitect extends QSource
             'consoleRequest' => '\quarsintex\quartronic\qcore\QConsoleRequest',
             'webRequest' => '\quarsintex\quartronic\qcore\QWebRequest',
             'urlManager' => '\quarsintex\quartronic\qcore\QUrlManager',
-            'api' => '\quarsintex\quartronic\qcore\QApi',
             'export' => '\quarsintex\quartronic\qcore\QExport',
+            'externManager' => '\quarsintex\quartronic\qcore\QExternManager',
         ];
     }
 
-    function __construct($Q)
+    function getArchitecture()
+    {
+        return $this->_architecture;
+    }
+
+    function __construct($Q, $customArchitecture=[])
     {
         $this->_Q = $Q;
+        $this->_architecture = array_merge($this->getDefaultArchitecture(), $customArchitecture);
     }
 
     function __call($name, $arguments=[])

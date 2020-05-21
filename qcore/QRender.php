@@ -34,10 +34,10 @@ namespace quarsintex\quartronic\qcore
         {
             return [
                 'returnRender' => &self::$Q->params['returnRender'],
-                'appDir' => &self::$Q->params['appDir'],
-                'webDir' => &self::$Q->webDir,
-                'webPath' => &self::$Q->webPath,
-                'qRootDir' => &self::$Q->qRootDir,
+                'appDir' => &self::$Q->router->appDir,
+                'webDir' => &self::$Q->router->webDir,
+                'webPath' => &self::$Q->router->webPath,
+                'qRootDir' => &self::$Q->router->qRootDir,
             ];
         }
 

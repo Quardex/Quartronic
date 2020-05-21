@@ -18,9 +18,11 @@ namespace quarsintex\quartronic\qcore
             return [
                 'returnRender' => &self::$Q->params['returnRender'],
                 'appDir' => &self::$Q->params['appDir'],
-                'webPath' => &self::$Q->webPath,
+                'webPath' => &self::$Q->params['webPath'],
+                'webDir' => &self::$Q->params['webDir'],
+                'configDir' => &self::$Q->externManager->configDir,
+                'runtimeDir' => &self::$Q->externManager->runtimeDir,
                 'mode' => &self::$Q->mode,
-                'qRootDir' => &self::$Q->qRootDir,
             ];
         }
 
@@ -105,6 +107,15 @@ namespace quarsintex\quartronic\qcore
                 }
             }
             return false;
+        }
+
+        function getQRootDir()
+        {
+            return __DIR__.'/../';
+        }
+
+        public function initExtDirs()
+        {
         }
     }
 }
