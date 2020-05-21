@@ -25,7 +25,7 @@ class QSystemController extends \quarsintex\quartronic\qcore\QConsoleController
 
     function actRestructDB()
     {
-        \quarsintex\quartronic\qcore\QCrud::autostructDB();
+        \quarsintex\quartronic\qcore\QCrud::restructDB();
     }
 
     function actUpdate()

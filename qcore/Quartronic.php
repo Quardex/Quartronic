@@ -5,6 +5,7 @@ class Quartronic extends QSource
 {
     protected $mode;
 
+    protected $sysDB;
     protected $db;
     protected $request;
     protected $router;
@@ -53,7 +54,8 @@ class Quartronic extends QSource
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
         $customArchitecture = isset($this->params['customArchitecture']) ? $this->params['customArchitecture'] : [];
         self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this, $customArchitecture);
-        $this->db = self::$Q->getUnit('db');
+        $this->sysDB = self::$Q->getUnit('db', ['sqlite:'.$this->params['runtimeDir'].'q.db:sys']);
+        $this->db = false ? self::$Q->getUnit('db') : $this->sysDB;
         ($this->externManager = self::$Q->getUnit('externManager'))->initExtDirs();
         $this->router = self::$Q->getUnit('router');
         $this->export = self::$Q->getUnit('export');
@@ -80,7 +82,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.22';
+        return '0.2.23';
     }
 
     function getLastVersion()
