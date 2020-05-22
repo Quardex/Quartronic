@@ -100,12 +100,13 @@ namespace quarsintex\quartronic\qcore
 
         function checkAutoRoute(&$controllerClass, &$route)
         {
-            foreach (\quarsintex\quartronic\qcore\QCrud::getAutoStructure() as $section => $data) {
-                if ($section == $route[0]) {
-                    $controllerClass = '\\quarsintex\\quartronic\\qcore\\QCrudController';
-                    return true;
+            if ($this->mode == self::$Q->getConst('MODE_WEB'))
+                foreach (\quarsintex\quartronic\qcore\QCrud::getAutoStructure() as $section => $data) {
+                    if ($section == $route[0]) {
+                        $controllerClass = '\\quarsintex\\quartronic\\qcore\\QCrudController';
+                        return true;
+                    }
                 }
-            }
             return false;
         }
 
