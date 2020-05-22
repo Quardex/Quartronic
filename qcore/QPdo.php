@@ -17,9 +17,11 @@ class QPdo extends \Envms\FluentPDO\Query
     {
         if (!is_object($pdo)) {
             $parts = explode(':', $pdo);
-            $isSysDB = array_shift($parts) == 'sqlite' && array_pop($parts) == 'sys';
-            $dbExist = $isSysDB ? file_exists(implode(':', $parts)) : true;;
-            $pdo = new \PDO($pdo,null,null,
+            $dbType = array_shift($parts);
+            $isSysDB = $dbType == 'sqlite' && array_pop($parts) == 'sys';
+            $dbFile = preg_replace('/^'.$dbType.':|:sys$/', '', $pdo);
+            $dbExist = $isSysDB ? file_exists($dbFile) : true;;
+            $pdo = new \PDO($dbType.':'.$dbFile,null,null,
                 array(
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
