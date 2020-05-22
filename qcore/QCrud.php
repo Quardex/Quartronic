@@ -37,9 +37,11 @@ class QCrud extends QSource
         $configPath = self::$Q->router->configDir.'qcrud.php';
         $configFromFile = file_exists($configPath) ? include($configPath) : null;
         $configFromDB = [];
-        foreach ((new QModel('qcrud'))->all as $model) {
-            $configFromDB[$model->name] = $model->fields;
-        }
+        try {
+            foreach ((new QModel('qcrud'))->all as $model) {
+                $configFromDB[$model->name] = $model->fields;
+            }
+        } catch (\Exception $e) {}
         return array_merge($configFromFile, $configFromDB);
     }
 
