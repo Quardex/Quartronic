@@ -35,9 +35,7 @@ Q()->render->registerDir(Q()->qRootDir.'../adminbsb/images', 'images');
 Q()->render->registerCssFile(Q()->qRootDir.'qthemes/adminbsb/assets/css/qstyle.css');
 Q()->render->registerDir(Q()->qRootDir.'qthemes/adminbsb/assets/images', 'qimages');
 
-?>
-
-<?php Q()->render->registerJs('logout', "
+Q()->render->registerJs('logout', "
 $(function () {
     $('#logout').on('click', function () {
         $.post($(this).attr('href')).always(function() {
@@ -47,7 +45,6 @@ $(function () {
     });
 });");
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -367,6 +364,12 @@ Answer GitHub questions
                         <a href="<?=Q()->urlManager->route('/section')?>">
                             <i class="material-icons">view_module</i>
                             <span>Sections</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?=Q()->urlManager->route('/crud')?>">
+                            <i class="material-icons">view_list</i>
+                            <span>Cruds</span>
                         </a>
                     </li>
                     <li>

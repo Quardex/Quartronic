@@ -82,7 +82,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.26';
+        return '0.2.27';
     }
 
     function getLastVersion()
