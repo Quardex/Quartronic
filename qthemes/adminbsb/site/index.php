@@ -48,7 +48,7 @@ function initLoading() {
     <h2>DASHBOARD</h2>
 </div>
 
-<?php if (true || (QUpdater::ver2int($v = Q()->lastVersion)) > QUpdater::ver2int(Q()->version)) : ?>
+<?php if ((QUpdater::ver2int($v = Q()->lastVersion)) > QUpdater::ver2int(Q()->version)) : ?>
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="info-box bg-light-green hover-expand-effect card">

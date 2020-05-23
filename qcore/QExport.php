@@ -5,26 +5,30 @@ class QExport extends QSource
 {
     protected $_components;
 
-    public function getComponent($name) {
-        if (empty($this->_components[$name])) {
-            switch($name)
-            {
-                case 'news':
-                    $this->_components[$name] = new \quarsintex\quartronic\qcore\QModel('qnews');
-                    break;
-
-                default:
-                    return null;
-            }
-        }
-        return $this->_components[$name];
-    }
-
     protected function getConnectedProperties()
     {
         return [
             'user' => &self::$Q->user,
+            'autoStructure' => \quarsintex\quartronic\qcore\QCrud::getAutoStructure(),
         ];
+    }
+
+    public function getComponent($name)
+    {
+        if (empty($this->_components['models'][$name])) {
+            if (isset($this->autoStructure[$name])) {
+                try {
+                    $config = json_decode($this->autoStructure[$name], true);
+                } finally {
+                    $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($name);
+                }
+                $this->_components['models'][$name] = \quarsintex\quartronic\qcore\QCrud::initModel($modelName);
+            } else {
+                return null;
+            }
+
+        }
+        return $this->_components['models'][$name];
     }
 
     public function __get($name)

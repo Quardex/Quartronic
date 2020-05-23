@@ -23,6 +23,7 @@ namespace quarsintex\quartronic\qcore
                 'configDir' => &self::$Q->externManager->configDir,
                 'runtimeDir' => &self::$Q->externManager->runtimeDir,
                 'mode' => &self::$Q->mode,
+                'autoStructure' => \quarsintex\quartronic\qcore\QCrud::getAutoStructure(),
             ];
         }
 
@@ -101,7 +102,7 @@ namespace quarsintex\quartronic\qcore
         function checkAutoRoute(&$controllerClass, &$route)
         {
             if ($this->mode == self::$Q->getConst('MODE_WEB'))
-                foreach (\quarsintex\quartronic\qcore\QCrud::getAutoStructure() as $section => $data) {
+                foreach ($this->autoStructure as $section => $data) {
                     if ($section == $route[0]) {
                         $controllerClass = '\\quarsintex\\quartronic\\qcore\\QCrudController';
                         return true;

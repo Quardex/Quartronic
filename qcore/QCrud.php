@@ -19,16 +19,22 @@ class QCrud extends QSource
         ];
     }
 
+    static function initModel($modelName)
+    {
+        $controllerPath = self::$Q->router->qRootDir . 'qmodels/' . $modelName . '.php';
+        if (file_exists($controllerPath)) {
+            $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
+            $model = new $modelClass;
+        } else {
+            $model = new QModel(strtolower($modelName));
+        }
+        return $model;
+    }
+
     public function __construct($modelName)
     {
         $this->config = static::loadConfig();
-        $controllerPath = $this->qRootDir . 'qmodels/' . $modelName . '.php';
-        if (file_exists($controllerPath)) {
-            $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
-            $this->model = new $modelClass;
-        } else {
-            $this->model = new QModel(strtolower($modelName));
-        }
+        $this->model = static::initModel($modelName);
         $this->page = intval(self::$Q->request->getParam('page', $this->page));
     }
 
@@ -130,7 +136,6 @@ class QCrud extends QSource
             ];
             $cache = array_merge($native, self::loadConfig());
         }
-        //var_dump($cache);
         return $cache;
     }
 
