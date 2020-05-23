@@ -35,14 +35,15 @@ class QCrud extends QSource
     static function loadConfig()
     {
         $configPath = self::$Q->router->configDir.'qcrud.php';
-        $configFromFile = file_exists($configPath) ? include($configPath) : null;
+        $configFromFile = file_exists($configPath) ? include($configPath) : [];
         $configFromDB = [];
         try {
             foreach ((new QModel('qcrud'))->all as $model) {
                 $configFromDB[$model->name] = $model->fields;
             }
-        } catch (\Exception $e) {}
-        return array_merge($configFromFile, $configFromDB);
+        } finally {
+            return array_merge($configFromFile, $configFromDB);
+        }
     }
 
     public function getOffset()
