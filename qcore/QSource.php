@@ -5,13 +5,15 @@ class QSource
 {
     static protected $Q;
 
-    protected $_connectedProperties = false;
+    protected $_connectedProperties = [];
     private $__get;
 
-    protected function connectProperties($properties)
+    protected function connectProperties($targetNames = null)
     {
-        foreach ($properties as $name => $value) {
-            $this->_connectedProperties[$name] = $value;
+        $properties = $this->getConnectedProperties();
+        if ($targetNames === null) $targetNames = array_keys($properties);
+        foreach ($targetNames as $name) {
+            if (isset($properties[$name])) $this->_connectedProperties[$name] = $properties[$name];
         }
     }
 
@@ -28,7 +30,7 @@ class QSource
                 if (method_exists($this, $getter)) {
                     return $this->$getter();
                 } else {
-                    if ($this->_connectedProperties === false) $this->connectProperties($this->getConnectedProperties());
+                    if (!array_key_exists($name, $this->_connectedProperties)) $this->connectProperties([$name]);
                     if (array_key_exists($name, $this->_connectedProperties)) {
                         return $this->_connectedProperties[$name];
                     } elseif (method_exists($this, 'set' . $name)) {
@@ -63,7 +65,7 @@ class QSource
         } elseif ($name[0]!='_' && isset($this->$name)) {
             return $this->$name !== null;
         }
-        return false;
+        return array_key_exists($name, $this->getConnectedProperties());
     }
 
     public function __unset($name)
@@ -81,5 +83,5 @@ class QSource
         throw new \Exception('Calling unknown method: ' . get_class($this) . "::$closure()");
     }
 }
-    
+
 ?>

@@ -4,6 +4,7 @@ namespace quarsintex\quartronic\qcore;
 class QExport extends QSource
 {
     protected $_components;
+    protected $_crudModels;
 
     protected function getConnectedProperties()
     {
@@ -13,22 +14,32 @@ class QExport extends QSource
         ];
     }
 
-    public function getComponent($name)
-    {
-        if (empty($this->_components['models'][$name])) {
-            if (isset($this->autoStructure[$name])) {
-                try {
-                    $config = json_decode($this->autoStructure[$name], true);
-                } finally {
-                    $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($name);
-                }
-                $this->_components['models'][$name] = \quarsintex\quartronic\qcore\QCrud::initModel($modelName);
+    public function getCrudModel($crudAlias) {
+        if (empty($this->_crudModels[$crudAlias])) {
+            if (isset($this->autoStructure[$crudAlias])) {
+                $config = $this->autoStructure[$crudAlias];
+                $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($crudAlias);
+                $this->_crudModels[$crudAlias] = \quarsintex\quartronic\qcore\QCrud::initModel($modelName);
             } else {
                 return null;
             }
-
         }
-        return $this->_components['models'][$name];
+        return $this->_crudModels[$crudAlias];
+    }
+
+    public function getComponent($name) {
+        if (empty($this->_components[$name])) {
+            switch($name)
+            {
+                case 'news':
+                    $this->_components[$name] = new \quarsintex\quartronic\qcore\QModel('qnews');
+                    break;
+
+                default:
+                    return null;
+            }
+        }
+        return $this->_components[$name];
     }
 
     public function __get($name)
