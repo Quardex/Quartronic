@@ -27,11 +27,7 @@ class QPdo extends \Envms\FluentPDO\Query
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ));
-            if (!$dbExist) {
-                ob_start();
-                \quarsintex\quartronic\qcore\QCrud::restructDB();
-                ob_end_clean();
-            }
+            if (!$dbExist) \quarsintex\quartronic\qcore\QCrud::restructDB();
         }
         parent::__construct($pdo, $structure);
     }

@@ -142,11 +142,11 @@ class QCrud extends QSource
         return $cache;
     }
 
-    static function restructDB() {
+    static function restructDB($verbose = false) {
         foreach (self::getAutoStructure() as $name => $struct) {
-            echo "\n".'Preparing table for crud section "'.$name.'"...';
+            if ($verbose) echo "\n".'Preparing table for crud section "'.$name.'"...';
             self::$Q->sysDB->exec($struct['sql']);
-            echo "\nSuccess!\n";
+            if ($verbose) echo "\nSuccess!\n";
         }
     }
 }

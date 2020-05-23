@@ -17,10 +17,18 @@ class QCrudController extends QController
 
     function actIndex()
     {
+        try {
+            $countAll = $this->crud->model->countAll();
+        } catch (\PDOException $e) {
+            if (strpos($e->getMessage(),'no such table') !== false) {
+                \quarsintex\quartronic\qcore\QCrud::restructDB();
+                $countAll = $this->crud->model->countAll();
+            }
+        }
         return self::$Q->render->run('widgets/crud/list', [
             'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'crud' => $this->crud,
-            'countAll' => $this->crud->model->countAll(),
+            'countAll' => $countAll,
         ]);
     }
 
