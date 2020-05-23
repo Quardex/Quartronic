@@ -39,7 +39,7 @@ class QCrud extends QSource
         $configFromDB = [];
         try {
             foreach ((new QModel('qcrud'))->all as $model) {
-                $configFromDB[$model->name] = $model->fields;
+                $configFromDB[$model->alias] = json_decode($model->config, true);
             }
         } finally {
             return array_merge($configFromFile, $configFromDB);
@@ -124,21 +124,13 @@ class QCrud extends QSource
                 'crud' => ['sql' => '
                     CREATE TABLE IF NOT EXISTS `qcrud` (
                         id integer PRIMARY KEY AUTOINCREMENT,
-                        name varchar,
-                        sql varchar
-                    )'],
-                'news' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `qnews` (
-                        id integer PRIMARY KEY AUTOINCREMENT,
                         alias varchar,
-                        title varchar,
-                        short_text text,
-                        text text,
-                        created_at timestamp
+                        config varchar
                     )'],
             ];
             $cache = array_merge($native, self::loadConfig());
         }
+        //var_dump($cache);
         return $cache;
     }
 

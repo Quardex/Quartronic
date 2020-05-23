@@ -48,7 +48,7 @@ function initLoading() {
     <h2>DASHBOARD</h2>
 </div>
 
-<?php if ((QUpdater::ver2int($v = Q()->lastVersion)) > QUpdater::ver2int(Q()->version)) : ?>
+<?php if (true || (QUpdater::ver2int($v = Q()->lastVersion)) > QUpdater::ver2int(Q()->version)) : ?>
 <div class="row clearfix">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="info-box bg-light-green hover-expand-effect card">
@@ -57,7 +57,7 @@ function initLoading() {
             </div>
             <div class="content">
                 <div class="text">NEW VERSION IS AVAILABLE: <b><?=$v?></b></div>
-                <div class="text for-hide">Please press button "<b>UPDATE</b>" or run "<b>composer update</b>" from the concole</div>
+                <div class="text for-hide">Please make backup before start update</div>
                 <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"></div>
             </div>
             <div class="update-wrapper">

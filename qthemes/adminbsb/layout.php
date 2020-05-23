@@ -362,22 +362,24 @@ Answer GitHub questions
                     </li>
                     <li>
                         <a href="<?=Q()->urlManager->route('/section')?>">
-                            <i class="material-icons">view_module</i>
+                            <i class="material-icons">account_tree</i>
                             <span>Sections</span>
                         </a>
                     </li>
                     <li>
                         <a href="<?=Q()->urlManager->route('/crud')?>">
-                            <i class="material-icons">view_list</i>
+                            <i class="material-icons">vertical_split</i>
                             <span>Cruds</span>
                         </a>
                     </li>
+                    <?php foreach (\quarsintex\quartronic\qcore\QCrud::loadConfig() as $alias => $config) : ?>
                     <li>
-                        <a href="<?=Q()->urlManager->route('/news')?>">
-                            <i class="material-icons">art_track</i>
-                            <span>News</span>
+                        <a href="<?=Q()->urlManager->route('/'.$alias)?>">
+                            <i class="material-icons"><?=(!empty($config['icon']) ? $config['icon'] : 'toc')?></i>
+                            <span><?=!empty($config['name']) ? $config['name'] : ucfirst($alias)?></span>
                         </a>
                     </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
             <!-- #Menu -->
