@@ -371,15 +371,27 @@ Answer GitHub questions
                             <i class="material-icons">vertical_split</i>
                             <span>Cruds</span>
                         </a>
+                        <ul class="ml-menu" style="display: block;">
+                            <?php foreach (\quarsintex\quartronic\qcore\QCrud::loadConfig() as $alias => $config) : ?>
+                            <?php $link = Q()->urlManager->route('/'.$alias); ?>
+                            <li>
+                                <a href="<?=$link.'/settings'?>" class="settings">
+                                    <i class="material-icons">settings_applications</i>
+                                </a>
+                                <a href="<?=$link?>" class="sublink">
+                                    <i class="material-icons"><?=(!empty($config['icon']) ? $config['icon'] : 'toc')?></i>
+                                    <span><?=!empty($config['name']) ? $config['name'] : ucfirst($alias)?></span>
+                                </a>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
                     </li>
-                    <?php foreach (\quarsintex\quartronic\qcore\QCrud::loadConfig() as $alias => $config) : ?>
                     <li>
-                        <a href="<?=Q()->urlManager->route('/'.$alias)?>">
-                            <i class="material-icons"><?=(!empty($config['icon']) ? $config['icon'] : 'toc')?></i>
-                            <span><?=!empty($config['name']) ? $config['name'] : ucfirst($alias)?></span>
+                        <a href="<?=Q()->urlManager->route('/storage')?>">
+                            <i class="material-icons">sd_storage</i>
+                            <span>Storage</span>
                         </a>
                     </li>
-                    <?php endforeach; ?>
                 </ul>
             </div>
             <!-- #Menu -->

@@ -10,6 +10,7 @@ class QController extends QSource
         return [
             'requireAuth' => &self::$Q->params['requireAuth'],
             'currentUser' => &self::$Q->user,
+            'render' => &self::$Q->render,
         ];
     }
 

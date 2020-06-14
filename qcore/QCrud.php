@@ -9,7 +9,7 @@ class QCrud extends QSource
     protected $config;
 
     public $page = 1;
-    public $limit = 10;
+    public $pageSize = 10;
 
     protected function getConnectedProperties()
     {
@@ -36,6 +36,7 @@ class QCrud extends QSource
         $this->config = static::loadConfig();
         $this->model = static::initModel($modelName);
         $this->page = intval(self::$Q->request->getParam('page', $this->page));
+        $this->pageSize = $this->getSettings()->get('pageSize');
     }
 
     static function loadConfig()
@@ -54,7 +55,7 @@ class QCrud extends QSource
 
     public function getOffset()
     {
-        return $this->limit * ($this->page - 1);
+        return $this->pageSize * ($this->page - 1);
     }
 
     public function getModelFields()
@@ -65,8 +66,8 @@ class QCrud extends QSource
     public function getList()
     {
         $model = $this->model;
-        if ($this->limit) {
-            $model->query->limit($this->limit)->offset($this->offset);
+        if ($this->pageSize) {
+            $model->query->limit($this->pageSize)->offset($this->offset);
         }
         return $model->all;
     }
@@ -98,12 +99,16 @@ class QCrud extends QSource
         if ($this->model) $this->model->delete();
     }
 
-    static function getAutoStructure()
+    public function getSettings() {
+        return $this->dynUnit('settings', function() {
+            return new \quarsintex\quartronic\qcore\QCrudSettings($this->model->table);
+        });
+    }
+
+    static function getNativeStructure()
     {
-        static $cache;
-        if (!$cache) {
-            $native = [
-                'user' => ['sql' => '
+        return [
+            'user' => ['sql' => '
                     CREATE TABLE IF NOT EXISTS `quser` (
                         id INTEGER PRIMARY KEY,
                         username VARCHAR,
@@ -112,29 +117,42 @@ class QCrud extends QSource
                     );
                     INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (1,"Quardex", "megasounds@mail.ru", "$2y$10$4BjY5DHZuqngI3/JlnRH/egyCqiNy88YBx6cjUCnVaWNxhji1dwAG");
                     INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (2,"Admin", "admin@mail.com", "$2y$10$RneSIIYPJL/J5InEStZx9upSe01XFppg9dqhD19H8N.u0NBfq4Si.");'],
-                'group' => ['sql' => '
+            'group' => ['sql' => '
                     CREATE TABLE IF NOT EXISTS `qgroup` (
                         id integer PRIMARY KEY AUTOINCREMENT,
                         name varchar
                     )'],
-                'role' => ['sql' => '
+            'role' => ['sql' => '
                     CREATE TABLE IF NOT EXISTS `qrole` (
                         id integer PRIMARY KEY AUTOINCREMENT,
                         name varchar
                     )'],
-                'section' => ['sql' => '
+            'section' => ['sql' => '
                     CREATE TABLE IF NOT EXISTS `qsection` (
                         id integer PRIMARY KEY AUTOINCREMENT,
                         name varchar
                     )'],
-                'crud' => ['sql' => '
+            'crud' => ['sql' => '
                     CREATE TABLE IF NOT EXISTS `qcrud` (
                         id integer PRIMARY KEY AUTOINCREMENT,
                         alias varchar,
                         config varchar
                     )'],
-            ];
-            $cache = array_merge($native, self::loadConfig());
+            'storage' => ['sql' => '
+                    CREATE TABLE IF NOT EXISTS `qstorage` (
+                        id integer PRIMARY KEY AUTOINCREMENT,
+                        category varchar,
+                        key varchar,
+                        value varchar
+                    )'],
+        ];
+    }
+
+    static function getAutoStructure()
+    {
+        static $cache;
+        if (!$cache) {
+            $cache = array_merge(self::getNativeStructure(), self::loadConfig());
         }
         return $cache;
     }

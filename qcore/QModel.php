@@ -11,7 +11,7 @@ class QModel extends QSource
     protected $_rules = [];
     protected $_fieldList = [];
     protected $_primaryKeys = [];
-    protected $_query = [];
+    protected $_query;
     protected $new = true;
     protected $errors = [];
 
@@ -130,7 +130,8 @@ class QModel extends QSource
 
     function query($mode='from')
     {
-        return self::$Q->db->$mode($this->getTable());
+        if (!$this->_query) $this->_query = self::$Q->db->$mode($this->getTable());
+        return $this->_query;
     }
 
     function getQuery($mode='from')
@@ -144,16 +145,19 @@ class QModel extends QSource
             if (array_key_exists($fieldName, $this->_fields) && !$this->_fields[$fieldName]) unset($this->_fields[$fieldName]);
         }
         $this->query('insertInto')->values($this->_fields)->execute();
+        $this->_query = null;
     }
 
     protected function update()
     {
         $this->query('update')->set($this->_fields)->where($this->primaryKeys2SqlString)->execute();
+        $this->_query = null;
     }
 
     function delete()
     {
         $this->query('deleteFrom')->where($this->primaryKeys2SqlString)->execute();
+        $this->_query = null;
     }
 
     function save()
@@ -170,6 +174,7 @@ class QModel extends QSource
     function search($params='')
     {
         $row = $this->prepareQuery($params)->fetch();
+        $this->_query = null;
         if ($row) {
             $model = new static($this->getTable());
             $model->fields = $row;
@@ -218,13 +223,16 @@ class QModel extends QSource
 
     function getAll($params='')
     {
-        return $this->prepareModels($this->prepareQuery($params)->fetchAll());
+        $result = $this->prepareModels($this->prepareQuery($params)->fetchAll());
+        $this->_query = null;
+        return $result;
     }
 
     function countAll()
     {
         $query = isset($this) ? $this->query : static::query();
         $result = $query->select(null)->select('count(*)')->fetch();
+        $this->_query = null;
         return $result['count(*)'];
     }
 

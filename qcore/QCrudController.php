@@ -51,7 +51,7 @@ class QCrudController extends QController
             $this->redirect('./');
         }
         $this->crud->model->scenario = 'create';
-        return self::$Q->render->run('widgets/crud/create', [
+        return $this->render->run('widgets/crud/create', [
             'title' => basename(get_class($this->crud->model)),
             'model' => $this->crud->model,
         ]);
@@ -80,6 +80,20 @@ class QCrudController extends QController
         $backUrl = self::$Q->request->referer;
         if (strpos($backUrl, 'view') !== false) $backUrl = self::$Q->urlManager->route('./index');
         $this->redirect($backUrl,true);
+    }
+
+    function actSettings()
+    {
+        if (self::$Q->request->post) {
+            foreach (self::$Q->request->post as $key => $value) {
+                $this->crud->settings->save($key, $value);
+            }
+            $this->redirect(self::$Q->urlManager->route('./settings'), true);
+        }
+
+        return self::$Q->render->run('widgets/crud/settings', [
+            'fields' => $this->crud->settings->values,
+        ]);
     }
 }
 

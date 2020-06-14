@@ -1,71 +1,76 @@
 .sidebar .user-info {
-    background: url(../qimages/panel-bg.png) no-repeat no-repeat;
+  background: url('../qimages/panel-bg.png') no-repeat no-repeat;
+  border-top: 1px solid #134e5a;
 }
-
-.sidebar .user-info {
-    border-top: 1px solid #134e5a;
-}
-
 .sidebar .user-info .image img {
-    border: 2px solid #0d4558;
+  border: 2px solid #0d4558;
 }
-
-
+.sidebar .menu .list li {
+  position: relative;
+}
+.sidebar .menu .list li a.settings {
+  width: 33px;
+  position: absolute;
+  border-radius: 5px;
+  right: 3px;
+  top: 2px;
+  z-index: 2;
+  padding-left: 8px;
+}
+.sidebar .menu .list li a.settings i {
+  font-size: 21px;
+  margin-left: -2px;
+  margin-top: 0;
+}
+.sidebar .menu .list li a.sublink i {
+  margin-top: 3px;
+  font-size: 18px;
+  margin-left: -18px;
+}
 /*--------- site/index --------*/
-
 .info-box {
-    justify-content: space-between;
-    align-items: center;
-    height: auto;
-    min-height: 80px;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  min-height: 80px;
 }
-
-.update-wrapper {
-    position: relative;
-    flex-grow: 0;
-    flex-shrink: 0;
-    height: 40px;
-    margin-right: 21px;
-    width: 100px;
-    flex-basis: 100px;
-}
-
-.info-box .content .text {
-    margin: 6px 0;
-}
-
-.update-wrapper button {
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    position: absolute;
-    z-index: 1;
-}
-
 .info-box .content {
-    vertical-align: top;
-    padding-left: 15px;
-    flex-basis: 100%;
+  vertical-align: top;
+  padding-left: 15px;
+  flex-basis: 100%;
 }
-
+.info-box .content .text {
+  margin: 6px 0;
+}
 .info-box .icon {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
-
+.update-wrapper {
+  position: relative;
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 40px;
+  margin-right: 21px;
+  width: 100px;
+  flex-basis: 100px;
+}
+.update-wrapper button {
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: 1;
+}
+/*-----------------------------*/
 @media (max-width: 500px) {
-
-    .info-box .content .text.for-hide {
-        display: none;
-    }
+  .info-box .content .text.for-hide {
+    display: none;
+  }
 }
-
 @media (max-width: 370px) {
-
-    .info-box .icon {
-        display: none;
-    }
-
+  .info-box .icon {
+    display: none;
+  }
 }
-
 /*-----------------------------*/

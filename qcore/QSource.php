@@ -6,6 +6,7 @@ class QSource
     static protected $Q;
 
     protected $_connectedProperties = [];
+    protected $_dynComponents = [];
     private $__get;
 
     protected function connectProperties($targetNames = null)
@@ -81,6 +82,14 @@ class QSource
     public function __call($closure, $args)
     {
         throw new \Exception('Calling unknown method: ' . get_class($this) . "::$closure()");
+    }
+
+    public function dynUnit($name, $param)
+    {
+        if (!isset($this->_dynComponents[$name])) {
+            $this->_dynComponents[$name] = is_string($param) ? new $param() : $param();
+        }
+        return $this->_dynComponents[$name];
     }
 }
 

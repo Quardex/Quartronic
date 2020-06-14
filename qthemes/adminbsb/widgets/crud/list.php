@@ -65,7 +65,7 @@ $(function () {
                 <?php $this->widget('Pagination', [
                     'total' => $countAll,
                     'currentPage' => $crud->page,
-                    'pageSize' => $crud->limit,
+                    'pageSize' => $crud->pageSize,
                 ])?>
              </div>
         </div>
