@@ -4,17 +4,8 @@ namespace quarsintex\quartronic\qcore;
 class Quartronic extends QSource
 {
     protected $mode;
-
-    protected $sysDB;
-    protected $db;
-    protected $request;
-    protected $router;
-    protected $render;
-    protected $urlManager;
-    protected $export;
-    protected $externManager;
-
     protected $user;
+    protected $architect;
 
     const MODE_CONSOLE = 'console';
     const MODE_WEB = 'web';
@@ -28,6 +19,21 @@ class Quartronic extends QSource
         'returnRender' => false,
         'requireAuth' => true,
     ];
+
+    protected function getConnectedProperties()
+    {
+        if (!$this->_connectedProperties) $this->_connectedProperties = [
+            'router' => $this->architect->dynUnit('router'),
+            'db' => $this->dynUnit(function() {
+                return $this->sysDB;
+            }),
+            'externManager' => $this->architect->dynUnit('externManager'),
+            'export' => $this->architect->dynUnit('export'),
+            'render' => $this->architect->dynUnit('render'),
+            'urlManager' => $this->architect->dynUnit('urlManager'),
+        ];
+        return $this->_connectedProperties;
+    }
 
     function getQRootDir()
     {
@@ -51,30 +57,33 @@ class Quartronic extends QSource
 
     function __construct($params=[])
     {
+        self::$Q = $this;
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
         $customArchitecture = isset($this->params['customArchitecture']) ? $this->params['customArchitecture'] : [];
-        self::$Q = new \quarsintex\quartronic\qcore\QArchitect($this, $customArchitecture);
-        $this->sysDB = self::$Q->getUnit('db', ['sqlite:'.$this->params['runtimeDir'].'q.db:sys']);
-        $this->db = false ? self::$Q->getUnit('db') : $this->sysDB;
-        ($this->externManager = self::$Q->getUnit('externManager'))->initExtDirs();
-        $this->router = self::$Q->getUnit('router');
-        $this->export = self::$Q->getUnit('export');
+        $this->architect = new \quarsintex\quartronic\qcore\QArchitect($customArchitecture);
+        $this->getConnectedProperties();
+        $this->addConnectedProperty('sysDB', $this->dynUnit(function() {
+            return $this->architect->initUnit('db', ['sqlite:'.$this->params['runtimeDir'].'q.db:sys']);
+        }));
+        $this->externManager->initExtDirs();
     }
 
     function run($params=[])
     {
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
-        $this->render = self::$Q->getUnit('render');
-        $this->urlManager = self::$Q->getUnit('urlManager');
         $this->mode = isset($params['mode']) ? $params['mode'] : null;
         switch ($this->mode) {
             case self::MODE_CONSOLE:
-                $this->request = self::$Q->getUnit('consoleRequest');
+                $this->addConnectedProperty('request', $this->dynUnit(function() {
+                    return $this->architect->initUnit('consoleRequest');
+                }));
                 break;
 
             default:
                 $this->mode = self::MODE_WEB;
-                $this->request =  self::$Q->getUnit('webRequest');
+                $this->addConnectedProperty('request', $this->dynUnit(function() {
+                    return $this->architect->initUnit('webRequest');
+                }));
                 break;
         }
         return $this->router->run($this->request->route);
@@ -82,7 +91,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.35';
+        return '0.2.36';
     }
 
     function getLastVersion()

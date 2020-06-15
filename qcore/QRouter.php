@@ -30,8 +30,8 @@ namespace quarsintex\quartronic\qcore
         public function getRouteDir($key = '')
         {
             $list = [
-                self::$Q->getConst('MODE_WEB') => 'qcontrollers',
-                self::$Q->getConst('MODE_CONSOLE') => 'qconsole',
+                self::$Q::MODE_WEB => 'qcontrollers',
+                self::$Q::MODE_CONSOLE => 'qconsole',
             ];
             return $key ? $list[$key] : $list;
         }
@@ -39,8 +39,8 @@ namespace quarsintex\quartronic\qcore
         public function getDefaultController($key = '')
         {
             $list = [
-                self::$Q->getConst('MODE_WEB') => 'site',
-                self::$Q->getConst('MODE_CONSOLE') => 'qSystem',
+                self::$Q::MODE_WEB => 'site',
+                self::$Q::MODE_CONSOLE => 'qSystem',
             ];
             return $key ? $list[$key] : $list;
         }
@@ -57,7 +57,7 @@ namespace quarsintex\quartronic\qcore
 
         function execute($route)
         {
-            if ($this->mode != self::$Q->getConst('MODE_CONSOLE') && strpos('/'.$route, $this->webPath) === 0) $route = substr($route, strlen($this->webPath)-1);
+            if ($this->mode != self::$Q::MODE_CONSOLE && strpos('/'.$route, $this->webPath) === 0) $route = substr($route, strlen($this->webPath)-1);
             if (!is_array($route)) $route = explode('/', $route);
             if (empty($route[0])) $route[0] = $this->getDefaultController($this->mode);
             if (empty($route[1])) $route[1] = 'index';
@@ -71,7 +71,7 @@ namespace quarsintex\quartronic\qcore
             } else {
                 $controllerClass = '\\quarsintex\\quartronic\\' . $controllerClass;
             }
-            if ($this->mode == self::$Q->getConst('MODE_CONSOLE')) \quarsintex\quartronic\qcore\QConsoleController::init();
+            if ($this->mode == self::$Q::MODE_CONSOLE) \quarsintex\quartronic\qcore\QConsoleController::init();
             $controllerPath = $this->qRootDir . $routeDir . '/' . $controllerName . '.php';
             if (file_exists($controllerPath) || $this->checkAutoRoute($controllerClass, $route)) {
                 if (!class_exists($controllerClass)) require_once($controllerPath);
@@ -87,11 +87,11 @@ namespace quarsintex\quartronic\qcore
             }
             if (!empty($e404)) {
                 switch (self::$Q->mode) {
-                    case self::$Q->getConst('MODE_CONSOLE'):
+                    case self::$Q::MODE_CONSOLE:
                         echo "Action not found";
                         break;
 
-                    case self::$Q->getConst('MODE_WEB'):
+                    case self::$Q::MODE_WEB:
                         throw new \NotFoundException(404);
                         break;
                 }
@@ -101,7 +101,7 @@ namespace quarsintex\quartronic\qcore
 
         function checkAutoRoute(&$controllerClass, &$route)
         {
-            if ($this->mode == self::$Q->getConst('MODE_WEB'))
+            if ($this->mode == self::$Q::MODE_WEB)
                 foreach ($this->autoStructure as $section => $data) {
                     if ($section == $route[0]) {
                         $controllerClass = '\\quarsintex\\quartronic\\qcore\\QCrudController';

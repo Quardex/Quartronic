@@ -23,6 +23,11 @@ class QSource
         return $this->_connectedProperties;
     }
 
+    protected function addConnectedProperty($name, $value)
+    {
+        $this->_connectedProperties[$name] = $value;
+    }
+
     public function __get($name)
     {
         if (!$this->__get) {
@@ -33,10 +38,11 @@ class QSource
                 } else {
                     if (!array_key_exists($name, $this->_connectedProperties)) $this->connectProperties([$name]);
                     if (array_key_exists($name, $this->_connectedProperties)) {
-                        return $this->_connectedProperties[$name];
+                            if ($this->_connectedProperties[$name] instanceof QDynUnit) $this->_connectedProperties[$name] = $this->_connectedProperties[$name]->run();
+                            return $this->_connectedProperties[$name];
                     } elseif (method_exists($this, 'set' . $name)) {
                         throw new \Exception('Getting write-only property: ' . get_class($this) . '::' . $name);
-                    } elseif ($name[0] !== '_' && isset($this->$name)) {
+                    } elseif ($name[0] !== '_' && property_exists($this, $name)) {
                         return $this->$name;
                     }
                 }
@@ -63,7 +69,7 @@ class QSource
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter() !== null;
-        } elseif ($name[0]!='_' && isset($this->$name)) {
+        } elseif ($name[0]!='_' && property_exists($this, $name)) {
             return $this->$name !== null;
         }
         return array_key_exists($name, $this->getConnectedProperties());
@@ -84,12 +90,9 @@ class QSource
         throw new \Exception('Calling unknown method: ' . get_class($this) . "::$closure()");
     }
 
-    public function dynUnit($name, $param)
+    public function dynUnit($closure)
     {
-        if (!isset($this->_dynComponents[$name])) {
-            $this->_dynComponents[$name] = is_string($param) ? new $param() : $param();
-        }
-        return $this->_dynComponents[$name];
+        return new QDynUnit($closure);
     }
 }
 

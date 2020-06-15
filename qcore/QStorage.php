@@ -34,7 +34,7 @@ class QStorage extends QSource
     public function save($key, $value, $createEvenNotExist=false)
     {
         $model = new QModel('qstorage');
-        $model = $model->search(['where', 'category'=>$this->category, 'key' => $key]);
+        $model = $model->getOne(['where', 'category'=>$this->category, 'key' => $key]);
         if (!$model && $createEvenNotExist) {
             $model = new QModel('qstorage');
             $model->category = $this->category;

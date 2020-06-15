@@ -165,13 +165,25 @@ class QModel extends QSource
         $this->new ? $this->insert() : $this->update();
     }
 
-    static function find($where='')
+    static function findOne($where='')
     {
         if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
-        return (new static)->search($where);
+        return (new static)->getOne($where);
     }
 
-    function search($params='')
+    function prepareModels($allRows)
+    {
+        $models = [];
+        foreach ($allRows as $row) {
+            $model = new static($this->getTable());
+            $model->fields = $row;
+            $model->new = false;
+            $models[] = $model;
+        }
+        return $models;
+    }
+
+    function getOne($params='')
     {
         $row = $this->prepareQuery($params)->fetch();
         $this->_query = null;
@@ -187,10 +199,10 @@ class QModel extends QSource
     static function findByPk($where='')
     {
         if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
-        return (new static)->searchByPk($where);
+        return (new static)->getByPk($where);
     }
 
-    function searchByPk($where='')
+    function getByPk($where='')
     {
         $pkWhere = $where;
         if (is_array($where)) {
@@ -200,19 +212,7 @@ class QModel extends QSource
                 if (array_key_exists($fieldName, $where)) $pkWhere[$fieldName] = $where[$fieldName];
             }
         }
-        return $this->search(['where'=>$pkWhere]);
-    }
-
-    function prepareModels($allRows)
-    {
-        $models = [];
-        foreach ($allRows as $row) {
-            $model = new static($this->getTable());
-            $model->fields = $row;
-            $model->new = false;
-            $models[] = $model;
-        }
-        return $models;
+        return $this->getOne(['where'=>$pkWhere]);
     }
 
     static function findAll($where='')

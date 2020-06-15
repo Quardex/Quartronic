@@ -16,6 +16,9 @@ class QCrud extends QSource
         return [
             'qRootDir' => &self::$Q->router->qRootDir,
             'configDir' => &self::$Q->router->configDir,
+            'settings' => $this->dynUnit(function() {
+                return new \quarsintex\quartronic\qcore\QCrudSettings('settings.'.$this->model->table);
+            }),
         ];
     }
 
@@ -36,7 +39,7 @@ class QCrud extends QSource
         $this->config = static::loadConfig();
         $this->model = static::initModel($modelName);
         $this->page = intval(self::$Q->request->getParam('page', $this->page));
-        $this->pageSize = $this->getSettings()->get('pageSize');
+        $this->pageSize = $this->settings->get('pageSize');
     }
 
     static function loadConfig()
@@ -81,13 +84,13 @@ class QCrud extends QSource
     public function read($params)
     {
         if (empty($params['id'])) return null;
-        return $this->model->searchByPk($params);
+        return $this->model->getByPk($params);
     }
 
     public function update($params)
     {
         if (empty($params['id'])) return null;
-        $this->model = $this->model->searchByPk($params);
+        $this->model = $this->model->getByPk($params);
         $this->model->fields = $params;
         $this->model->save();
     }
@@ -95,14 +98,8 @@ class QCrud extends QSource
     public function delete($params)
     {
         if (empty($params['id'])) return null;
-        $this->model = $this->model->searchByPk($params);
+        $this->model = $this->model->getByPk($params);
         if ($this->model) $this->model->delete();
-    }
-
-    public function getSettings() {
-        return $this->dynUnit('settings', function() {
-            return new \quarsintex\quartronic\qcore\QCrudSettings($this->model->table);
-        });
     }
 
     static function getNativeStructure()
