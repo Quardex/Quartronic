@@ -10,8 +10,9 @@ class QStorage extends QSource
     {
         $this->category = $category;
         $model = new QModel('qstorage');
-        $list = $model->query->where(['category'=>$this->category])->fetchAll();
+        $list = $model->getAll(['where', 'category'=>$this->category]);
         foreach ($list as $row) {
+            $row = get_object_vars($row);
             $this->_values[$row['key']] = $row['value'];
         }
     }

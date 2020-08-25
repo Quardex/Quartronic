@@ -15,8 +15,17 @@ class QModel extends QSource
     protected $new = true;
     protected $errors = [];
 
+    protected function getConnectedProperties()
+    {
+        return [
+            'db' => self::$Q->db,
+        ];
+    }
+
     function __construct($table = null)
     {
+        self::$Q->db;
+
         if (defined('static::TABLE')) $this->_table = static::TABLE;
         if ($table) $this->_table = $table;
         $this->loadRules();
@@ -30,6 +39,8 @@ class QModel extends QSource
 
     function getPrimaryKey()
     {
+        return ['id'=>$this->id];
+
         $pk = [];
         $primaryKeys = $this->_primaryKeys ? $this->_primaryKeys : $this->fieldList;
         foreach ($primaryKeys as $name) {
@@ -50,16 +61,16 @@ class QModel extends QSource
 
     protected function loadStructure()
     {
-        $fields = self::$Q->db->query("PRAGMA table_info(`".$this->table."`);");
+        $fields = $this->db->schema->getColumnListing($this->table);
         foreach ($fields as $field) {
-            $this->_structure[$field['name']] = [
-                'type' => $field['type'],
-                'not_null' => $field['notnull'],
-                'default' => $field['dflt_value'],
-                'required' => $this->isRequiredField($field['name'], $field['notnull'])
+            $this->_structure[$field] = [
+                'type' => 'text',
+                'not_null' => true,
+                'default' => '',
+                'required' => false,
             ];
-            if ($field['pk']) $this->_primaryKeys[] = $field['name'];
         }
+        $this->_primaryKeys[] = 'id';
     }
 
     protected function loadRules()
@@ -128,47 +139,27 @@ class QModel extends QSource
         }
     }
 
-    function query($mode='from')
-    {
-        if (!$this->_query) $this->_query = self::$Q->db->$mode($this->getTable());
-        return $this->_query;
-    }
-
-    function getQuery($mode='from')
-    {
-        return $this->query($mode);
-    }
-
     protected function insert()
     {
         foreach ($this->_primaryKeys as $fieldName) {
             if (array_key_exists($fieldName, $this->_fields) && !$this->_fields[$fieldName]) unset($this->_fields[$fieldName]);
         }
-        $this->query('insertInto')->values($this->_fields)->execute();
-        $this->_query = null;
+        $this->db->insert($this);
     }
 
     protected function update()
     {
-        $this->query('update')->set($this->_fields)->where($this->primaryKeys2SqlString)->execute();
-        $this->_query = null;
+        $this->db->update($this);;
     }
 
     function delete()
     {
-        $this->query('deleteFrom')->where($this->primaryKeys2SqlString)->execute();
-        $this->_query = null;
+        $this->db->delete($this);
     }
 
     function save()
     {
         $this->new ? $this->insert() : $this->update();
-    }
-
-    static function findOne($where='')
-    {
-        if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
-        return (new static)->getOne($where);
     }
 
     function prepareModels($allRows)
@@ -185,8 +176,7 @@ class QModel extends QSource
 
     function getOne($params='')
     {
-        $row = $this->prepareQuery($params)->fetch();
-        $this->_query = null;
+        $row = $this->db->findOne($this, $params);
         if ($row) {
             $model = new static($this->getTable());
             $model->fields = $row;
@@ -196,10 +186,10 @@ class QModel extends QSource
         return null;
     }
 
-    static function findByPk($where='')
+    static function findOne($where='')
     {
         if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
-        return (new static)->getByPk($where);
+        return (new static)->getOne($where);
     }
 
     function getByPk($where='')
@@ -215,42 +205,26 @@ class QModel extends QSource
         return $this->getOne(['where'=>$pkWhere]);
     }
 
+    static function findByPk($where='')
+    {
+        if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
+        return (new static)->getByPk($where);
+    }
+
+    function getAll($params='') {
+        $result = $this->prepareModels($this->db->find($this, $params));
+        return $result;
+    }
+
     static function findAll($where='')
     {
         if (self::class == static::class) throw new \Exception('This method must be called from the inheritors of the class');
         return (new static)->getAll($where);
     }
 
-    function getAll($params='')
-    {
-        $result = $this->prepareModels($this->prepareQuery($params)->fetchAll());
-        $this->_query = null;
-        return $result;
-    }
-
     function countAll()
     {
-        $query = isset($this) ? $this->query : static::query();
-        $result = $query->select(null)->select('count(*)')->fetch();
-        $this->_query = null;
-        return $result['count(*)'];
-    }
-
-    protected function prepareQuery($params, $query=null)
-    {
-        if (!is_array($params)) $params['where'] = $params;
-        if (!$query) $query = $this->query();
-        foreach ($params as $param => $value) {
-            if ($param === 0) {
-                $method = $params[0];
-                unset($params[0]);
-                $query->$method($params);
-                break;
-            } else {
-                $query->$param($value);
-            }
-        }
-        return $query;
+        return $this->db->countAll($this);
     }
 }
 

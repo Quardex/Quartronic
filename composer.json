@@ -12,9 +12,9 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
-        "envms/fluentpdo": "dev-master",
         "quardex/adminbsb": "dev-master",
-        "quardex/quartronic-updater": "dev-master"
+        "quardex/quartronic-updater": "dev-master",
+        "illuminate/database": "^6.0"
     },
     "autoload": {
         "psr-4": {

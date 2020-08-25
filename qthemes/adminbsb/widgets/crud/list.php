@@ -39,6 +39,7 @@ $(function () {
                     <tr>
                         <?php
                         foreach ($crud->modelFields as $field) {
+                            if ($crud->isIgnoredFields($field)) continue;
                             echo "<th>".mb_convert_case(str_replace('_', ' ', $field), MB_CASE_TITLE, "UTF-8")."</th>";
                         }
                         ?>
@@ -48,7 +49,8 @@ $(function () {
                     <?php
                         $i = 0;
                         foreach ($crud->list as $model) {
-                            foreach ($model->fields as $item) {
+                            foreach ($model->fields as $fieldName => $item) {
+                                if ($crud->isIgnoredFields($fieldName)) continue;
                                 echo '<td>'.$item.'</td>';
                             }
                             echo '<td class="js-sweetalert" style="width:100px">'.

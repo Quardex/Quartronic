@@ -63,7 +63,7 @@ class Quartronic extends QSource
         $this->architect = new \quarsintex\quartronic\qcore\QArchitect($customArchitecture);
         $this->getConnectedProperties();
         $this->addConnectedProperty('sysDB', $this->dynUnit(function() {
-            return $this->architect->initUnit('db', ['sqlite:'.$this->params['runtimeDir'].'q.db:sys']);
+            return $this->architect->initUnit('db');
         }));
         $this->externManager->initExtDirs();
     }
@@ -91,7 +91,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.37';
+        return '0.2.38';
     }
 
     function getLastVersion()

@@ -12,7 +12,7 @@ class QArchitect extends QSource
     public function getDefaultArchitecture()
     {
         return [
-            'db' => '\quarsintex\quartronic\qcore\QPdo',
+            'db' => '\quarsintex\quartronic\qcore\QDbDriver',
             'router' => '\quarsintex\quartronic\qcore\QRouter',
             'render' => '\quarsintex\quartronic\qcore\QRender',
             'consoleRequest' => '\quarsintex\quartronic\qcore\QConsoleRequest',

@@ -1,7 +1,7 @@
 <?php
 namespace quarsintex\quartronic\qcore;
 
-use quarsintex\quartronic\qcore\QModel;
+use Illuminate\Database\Schema as Schema;
 
 class QCrud extends QSource
 {
@@ -14,6 +14,7 @@ class QCrud extends QSource
     protected function getConnectedProperties()
     {
         return [
+            'db' => self::$Q->db,
             'qRootDir' => &self::$Q->router->qRootDir,
             'configDir' => &self::$Q->router->configDir,
             'settings' => $this->dynUnit(function() {
@@ -70,7 +71,10 @@ class QCrud extends QSource
     {
         $model = $this->model;
         if ($this->pageSize) {
-            $model->query->limit($this->pageSize)->offset($this->offset);
+            $model->getAll([
+                'limit'=>$this->pageSize,
+                'offset'=>$this->offset,
+            ]);
         }
         return $model->all;
     }
@@ -105,43 +109,109 @@ class QCrud extends QSource
     static function getNativeStructure()
     {
         return [
-            'user' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `quser` (
-                        id INTEGER PRIMARY KEY,
-                        username VARCHAR,
-                        email VARCHAR,
-                        passhash VARCHAR
-                    );
-                    INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (1,"Quardex", "megasounds@mail.ru", "$2y$10$4BjY5DHZuqngI3/JlnRH/egyCqiNy88YBx6cjUCnVaWNxhji1dwAG");
-                    INSERT OR IGNORE INTO `quser` (id,username,email,passhash) values (2,"Admin", "admin@mail.com", "$2y$10$RneSIIYPJL/J5InEStZx9upSe01XFppg9dqhD19H8N.u0NBfq4Si.");'],
-            'group' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `qgroup` (
-                        id integer PRIMARY KEY AUTOINCREMENT,
-                        name varchar
-                    )'],
-            'role' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `qrole` (
-                        id integer PRIMARY KEY AUTOINCREMENT,
-                        name varchar
-                    )'],
-            'section' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `qsection` (
-                        id integer PRIMARY KEY AUTOINCREMENT,
-                        name varchar
-                    )'],
-            'crud' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `qcrud` (
-                        id integer PRIMARY KEY AUTOINCREMENT,
-                        alias varchar,
-                        config varchar
-                    )'],
-            'storage' => ['sql' => '
-                    CREATE TABLE IF NOT EXISTS `qstorage` (
-                        id integer PRIMARY KEY AUTOINCREMENT,
-                        category varchar,
-                        key varchar,
-                        value varchar
-                    )'],
+            'user' => [
+                'struct' => [
+                    'id' => [
+                        'pk',
+                    ],
+                    'username' => [
+                        'string',
+                        'length' => '255',
+                        'unique' => true,
+                    ],
+                    'email' => [
+                        'string',
+                        'null' => true,
+                    ],
+                    'passhash' => [
+                        'string',
+                    ],
+                ],
+                'default' => [
+                    [
+                        'id' => 1,
+                        'username' => 'Quardex',
+                        'email' => 'megasounds@mail.ru',
+                        'passhash' => '$2y$10$4BjY5DHZuqngI3/JlnRH/egyCqiNy88YBx6cjUCnVaWNxhji1dwA',
+
+                    ],
+                    [
+                        'id' => 2,
+                        'username' => 'Admin',
+                        'email' => 'admin@mail.com',
+                        'passhash' => '$2y$10$RneSIIYPJL/J5InEStZx9upSe01XFppg9dqhD19H8N.u0NBfq4Si.',
+                    ],
+                ],
+            ],
+            'group' => [
+                'struct' => [
+                    'id' => [
+                        'pk',
+                    ],
+                    'name' => [
+                        'string',
+                        'length' => '255',
+                        'unique' => true,
+                    ],
+                ],
+            ],
+            'role' => [
+                'struct' => [
+                    'id' => [
+                        'pk',
+                    ],
+                    'name' => [
+                        'string',
+                        'length' => '255',
+                        'unique' => true,
+                    ],
+                ],
+            ],
+            'section' => [
+                'struct' => [
+                    'id' => [
+                        'pk',
+                    ],
+                    'name' => [
+                        'string',
+                        'length' => '255',
+                        'unique' => true,
+                    ],
+                ],
+            ],
+            'crud' => [
+                'struct' => [
+                    'id' => [
+                        'pk',
+                    ],
+                    'alias' => [
+                        'string',
+                        'length' => '255',
+                        'unique' => true,
+                    ],
+                    'config' => [
+                        'text',
+                    ],
+                ],
+            ],
+            'storage' => [
+                'struct' => [
+                    'id' => [
+                        'pk',
+                    ],
+                    'category' => [
+                        'string',
+                        'length' => '255',
+                    ],
+                    'key' => [
+                        'string',
+                        'length' => '255',
+                    ],
+                    'value' => [
+                        'string',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -155,11 +225,45 @@ class QCrud extends QSource
     }
 
     static function restructDB($verbose = false) {
-        foreach (self::getAutoStructure() as $name => $struct) {
+        foreach (self::getAutoStructure() as $name => $info) {
             if ($verbose) echo "\n".'Preparing table for crud section "'.$name.'"...';
-            self::$Q->sysDB->exec($struct['sql']);
+            $schema = self::$Q->db->schema;
+            $tableName = 'q'.$name;
+            if (!empty($info['struct']) && !$schema->hasTable($tableName)) {
+                $schema->create($tableName, function ($table) use($info) {
+                    foreach ($info['struct'] as $fieldName => $fieldInfo) {
+                        $filedType = $fieldInfo[0] == 'pk' ? 'increments' :  $fieldInfo[0];
+                        $field = empty($fieldInfo['length']) ? $table->$filedType($fieldName) : $table->$filedType($fieldName, $fieldInfo['length']);
+                        unset($fieldInfo[0]);
+                        if (!empty($fieldInfo['null'])) {
+                            $fieldInfo['nullable'] = $fieldInfo['null'];
+                            unset($fieldInfo['null']);
+                        }
+
+                        foreach ($fieldInfo as $key => $value) {
+                            $field->$key($value);
+                        }
+                    }
+                    $table->timestamp('created_at')->useCurrent();
+                    $table->timestamp('updated_at')->useCurrent();
+                });
+                if (!empty($info['default'])) {
+                    foreach ($info['default'] as $row) {
+                        self::$Q->db->getOrm($tableName)->insert($row);
+                    }
+                }
+            }
             if ($verbose) echo "\nSuccess!\n";
         }
+    }
+
+    public function isIgnoredFields($name) {
+        $ignoredFields = [
+            'created_at',
+            'updated_at',
+        ];
+        $ignoredFields = array_flip($ignoredFields);
+        return isset($ignoredFields[$name]);
     }
 }
 
