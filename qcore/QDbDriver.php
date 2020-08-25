@@ -55,7 +55,11 @@ class QDbDriver extends QSource
                 $orm->$method($params);
                 break;
             } else {
-                $orm->$param($value);
+                if (is_array($value)) {
+                    call_user_func_array(array($orm, $param), $value);
+                } else {
+                    $orm->$param($value);
+                }
             }
         }
         return $orm->get();
