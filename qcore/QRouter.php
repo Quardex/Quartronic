@@ -88,7 +88,7 @@ namespace quarsintex\quartronic\qcore
             if (!empty($e404)) {
                 switch (self::$Q->mode) {
                     case self::$Q::MODE_CONSOLE:
-                        echo "Action not found";
+                        echo "Action not found\n";
                         break;
 
                     case self::$Q::MODE_WEB:

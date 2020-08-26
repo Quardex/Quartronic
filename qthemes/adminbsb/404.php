@@ -16,7 +16,7 @@ Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/css/style.css', self::PO
     <?=Q()->render->attachResources(self::POSITION_HEAD_BEGIN)?>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>404 | Bootstrap Based Admin Template - Material Design</title>
+    <title>404 | Quartronic CMS</title>
     <!-- Favicon-->
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
 
