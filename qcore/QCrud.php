@@ -132,7 +132,7 @@ class QCrud extends QSource
                         'id' => 1,
                         'username' => 'Quardex',
                         'email' => 'megasounds@mail.ru',
-                        'passhash' => '$2y$10$4BjY5DHZuqngI3/JlnRH/egyCqiNy88YBx6cjUCnVaWNxhji1dwA',
+                        'passhash' => '$2y$10$9z01egnSwmaxxnH9w10v4O6QtMpTCZ8wi7zs1oiHJODVvJD/Pfmhm',
 
                     ],
                     [
