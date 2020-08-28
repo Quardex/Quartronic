@@ -35,8 +35,9 @@ class Quartronic extends QSource
     protected function loadConnectedProperties()
     {
         $this->_connectedProperties = [
-            'router' => $this->architect->dynUnit('router'),
             'sysDB'=> $this->architect->dynUnit('db'),
+            'db' => $this->architect->dynUnit('db', [$this->params['db']]),
+            'router' => $this->architect->dynUnit('router'),
             'externManager' => $this->architect->dynUnit('externManager'),
             'export' => $this->architect->dynUnit('export'),
             'render' => $this->architect->dynUnit('render'),
@@ -94,7 +95,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.45';
+        return '0.2.46';
     }
 
     function getLastVersion()
