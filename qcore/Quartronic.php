@@ -37,7 +37,6 @@ class Quartronic extends QSource
         $this->_connectedProperties = [
             'router' => $this->architect->dynUnit('router'),
             'sysDB'=> $this->architect->dynUnit('db'),
-            'db' => $this->architect->dynUnit('db', [$this->params['db']]),
             'externManager' => $this->architect->dynUnit('externManager'),
             'export' => $this->architect->dynUnit('export'),
             'render' => $this->architect->dynUnit('render'),
@@ -78,19 +77,16 @@ class Quartronic extends QSource
     function run($params=[])
     {
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
+        $this->addConnectedProperty('db', $this->architect->dynUnit('db', [$this->params['db']]));
         $this->mode = isset($params['mode']) ? $params['mode'] : null;
         switch ($this->mode) {
             case self::MODE_CONSOLE:
-                $this->addConnectedProperty('request', $this->dynUnit(function() {
-                    return $this->architect->initUnit('consoleRequest');
-                }));
+                $this->addConnectedProperty('request', $this->architect->dynUnit('consoleRequest'));
                 break;
 
             default:
                 $this->mode = self::MODE_WEB;
-                $this->addConnectedProperty('request', $this->dynUnit(function() {
-                    return $this->architect->initUnit('webRequest');
-                }));
+                $this->addConnectedProperty('request', $this->architect->dynUnit('webRequest'));
                 break;
         }
         return $this->router->run($this->request->route);
@@ -98,7 +94,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.44';
+        return '0.2.45';
     }
 
     function getLastVersion()
