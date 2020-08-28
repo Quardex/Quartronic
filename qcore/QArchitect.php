@@ -36,10 +36,10 @@ class QArchitect extends QSource
         return $obj;
     }
 
-    public function dynUnit($uid)
+    public function dynUnit($uid, $params=[])
     {
-        return parent::dynUnit(function() use($uid) {
-            return $this->initUnit($uid);
+        return parent::dynUnit(function() use($uid, $params) {
+            return $this->initUnit($uid, $params);
         });
     }
 }

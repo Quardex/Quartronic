@@ -5,6 +5,13 @@ class QUser extends \quarsintex\quartronic\qcore\QModel
 {
   const TABLE = 'quser';
 
+  protected function getConnectedProperties()
+  {
+    return [
+        'db' => self::$Q->sysDB,
+    ];
+  }
+
   public function authorize($modelData)
   {
       $user = $this->findOne(['where'=>['username'=>$modelData['username']]]);

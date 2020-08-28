@@ -3,6 +3,7 @@ namespace quarsintex\quartronic\qcore;
 
 class QModel extends QSource
 {
+    private $db;
     public $scenario = '';
 
     protected $_table;
@@ -15,21 +16,34 @@ class QModel extends QSource
     protected $new = true;
     protected $errors = [];
 
-    protected function getConnectedProperties()
+    function isNative()
     {
-        return [
-            'db' => self::$Q->db,
-        ];
+        static $cache;
+        if (!$cache) {
+            $cache = \quarsintex\quartronic\qcore\QCrud::getNativeStructure();
+        }
+        return isset($cache[preg_replace('/^q/', '', $this->_table)]);
     }
 
-    function __construct($table = null)
+    protected function getDefaultDB()
     {
-        self::$Q->db;
+        //ugly
+        return $this->isNative() ? self::$Q->sysDB : self::$Q->db;
+    }
 
+    function __construct($table = null, $db = null)
+    {
         if (defined('static::TABLE')) $this->_table = static::TABLE;
         if ($table) $this->_table = $table;
+
+        $this->db = $db ? $db : $this->getDefaultDB();
+
         $this->loadRules();
         $this->loadStructure();
+    }
+
+    function getDb() {
+        return $this->db;
     }
 
     function getTable()
@@ -211,7 +225,8 @@ class QModel extends QSource
         return (new static)->getByPk($where);
     }
 
-    function getAll($params='') {
+    function getAll($params='')
+    {
         $result = $this->prepareModels($this->db->find($this, $params));
         return $result;
     }

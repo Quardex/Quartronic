@@ -1,8 +1,6 @@
 <?php
 namespace quarsintex\quartronic\qcore;
 
-use Illuminate\Database\Schema as Schema;
-
 class QCrud extends QSource
 {
     protected $model;
@@ -225,9 +223,11 @@ class QCrud extends QSource
     }
 
     static function restructDB($verbose = false) {
+        $ns = self::getNativeStructure();
         foreach (self::getAutoStructure() as $name => $info) {
             if ($verbose) echo "\n".'Preparing table for crud section "'.$name.'"...';
-            $schema = self::$Q->db->schema;
+            $db = isset($ns[$name]) ? self::$Q->sysDB : self::$Q->db;
+            $schema = $db->schema;
             $tableName = 'q'.$name;
             if (!empty($info['struct']) && !$schema->hasTable($tableName)) {
                 $schema->create($tableName, function ($table) use($info) {
@@ -249,7 +249,7 @@ class QCrud extends QSource
                 });
                 if (!empty($info['default'])) {
                     foreach ($info['default'] as $row) {
-                        self::$Q->db->getOrm($tableName)->insert($row);
+                        $db->getOrm($tableName)->insert($row);
                     }
                 }
             }

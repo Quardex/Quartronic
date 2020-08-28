@@ -19,34 +19,28 @@ class QDbDriver extends QSource
         return [
             'driver'    => 'sqlite',
             'database'  => $this->dbDir.'q.db',
-//            'host'      => 'localhost',
-//            'username'  => 'root',
-//            'password'  => '',
-//            'charset'   => 'utf8',
-//            'collation' => 'utf8_unicode_ci',
-//            'prefix'    => '',
         ];
     }
 
     public function __construct($params=[])
     {
-        $this->capsula = $capsule = new Capsule;
+        $this->capsula = new Capsule;
 
         $config = array_merge($this->getDefaultParams(), $params);
 
-        $capsule->addConnection($config);
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
-
-        $this->schema = $this->capsula::getSchemaBuilder();
+        $this->capsula->addConnection($config);
+        //$capsule->setAsGlobal();
+        $this->capsula->bootEloquent();
+        $this->schema = $this->capsula->getConnection()->getSchemaBuilder();
     }
 
     public function getOrm($table) {
-        return $this->capsula::table($table);
+        return $this->capsula->getConnection()->table($table);
     }
 
     public function find($model, $params=[]) {
         $orm = $this->getOrm($model->table);
+
         if (!is_array($params)) $params['where'] = $params;
         if (isset($params[0]) && is_string($params[0])) $params = [$params];
         foreach ($params as $param => $value) {

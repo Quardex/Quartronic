@@ -18,21 +18,31 @@ class Quartronic extends QSource
         'runtimeDir' => __DIR__.'/../../../../runtime/',
         'returnRender' => false,
         'requireAuth' => true,
+        'db' => [
+//          'driver'    => 'sqlite',
+//          'database'  => $this->dbDir.'q.db',
+//          'driver'    => 'mysql',
+//          'database'  => 'testbase',
+//          'host'      => 'localhost',
+//          'username'  => 'root',
+//          'password'  => '',
+//          'charset'   => 'utf8',
+//          'prefix'    => '',
+//          'collation' => 'utf8mb4_unicode_ci',
+        ],
     ];
 
-    protected function getConnectedProperties()
+    protected function loadConnectedProperties()
     {
-        if (!$this->_connectedProperties) $this->_connectedProperties = [
+        $this->_connectedProperties = [
             'router' => $this->architect->dynUnit('router'),
-            'db' => $this->dynUnit(function() {
-                return $this->sysDB;
-            }),
+            'sysDB'=> $this->architect->dynUnit('db'),
+            'db' => $this->architect->dynUnit('db', [$this->params['db']]),
             'externManager' => $this->architect->dynUnit('externManager'),
             'export' => $this->architect->dynUnit('export'),
             'render' => $this->architect->dynUnit('render'),
             'urlManager' => $this->architect->dynUnit('urlManager'),
         ];
-        return $this->_connectedProperties;
     }
 
     function getQRootDir()
@@ -61,10 +71,7 @@ class Quartronic extends QSource
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
         $customArchitecture = isset($this->params['customArchitecture']) ? $this->params['customArchitecture'] : [];
         $this->architect = new \quarsintex\quartronic\qcore\QArchitect($customArchitecture);
-        $this->getConnectedProperties();
-        $this->addConnectedProperty('sysDB', $this->dynUnit(function() {
-            return $this->architect->initUnit('db');
-        }));
+        $this->loadConnectedProperties();
         $this->externManager->initExtDirs();
     }
 
@@ -91,7 +98,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.43';
+        return '0.2.44';
     }
 
     function getLastVersion()

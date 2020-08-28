@@ -6,8 +6,6 @@ namespace
 
 namespace quarsintex\quartronic\qcore
 {
-    use function Spatie\SslCertificate\length;
-
     class QRouter extends QSource
     {
         protected $controller;
