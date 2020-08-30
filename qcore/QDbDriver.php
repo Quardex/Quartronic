@@ -65,8 +65,8 @@ class QDbDriver extends QSource
 
     public function insert($model) {
         $fields = $model->getFields();
-        unset($fields['created_at']);
-        unset($fields['updated_at']);
+        if (empty($fields['created_at'])) unset($fields['created_at']);
+        if (empty($fields['updated_at'])) unset($fields['updated_at']);
         $this->getOrm($model->table)->insert($fields);
     }
 
