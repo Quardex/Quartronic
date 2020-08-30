@@ -78,7 +78,6 @@ class Quartronic extends QSource
     function run($params=[])
     {
         if ($params && is_array($params)) $this->params = array_merge($this->params, $params);
-        $this->addConnectedProperty('db', $this->architect->dynUnit('db', [$this->params['db']]));
         $this->mode = isset($params['mode']) ? $params['mode'] : null;
         switch ($this->mode) {
             case self::MODE_CONSOLE:
@@ -95,7 +94,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.46';
+        return '0.2.47';
     }
 
     function getLastVersion()
