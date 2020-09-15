@@ -38,7 +38,7 @@ class QCrudController extends QController
         if (empty($model->id)) throw new \NotFoundException;
 
         return self::$Q->render->run('widgets/crud/view', [
-            'title' => basename(get_class($this->crud->model)),
+            'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'model' => $model,
         ]);
     }
@@ -69,7 +69,7 @@ class QCrudController extends QController
 
         $model->scenario = 'update';
         return self::$Q->render->run('widgets/crud/update', [
-            'title' => basename(get_class($this->crud->model)),
+            'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'model' => $model,
         ]);
     }

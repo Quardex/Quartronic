@@ -51,7 +51,7 @@ $(function () {
                         foreach ($crud->list as $model) {
                             foreach ($model->fields as $fieldName => $item) {
                                 if ($crud->isIgnoredFields($fieldName)) continue;
-                                echo '<td>'.$item.'</td>';
+                                echo '<td>'.mb_strimwidth(strip_tags($item), 0, 150, "...").'</td>';
                             }
                             echo '<td class="js-sweetalert" style="width:100px">'.
                                 '<a href="'.Q()->urlManager->route('view', $model->primaryKey).'"><i class="material-icons">visibility</i></a>&nbsp;'.

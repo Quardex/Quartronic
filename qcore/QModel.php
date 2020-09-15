@@ -16,25 +16,35 @@ class QModel extends QSource
     protected $new = true;
     protected $errors = [];
 
+    protected function getDefaultConnectedProperties()
+    {
+        return [
+            'sysDB' => self::$Q->sysDB,
+            'curDB' => self::$Q->db,
+            'nativeStructure' => \quarsintex\quartronic\qcore\QCrud::getNativeStructure(),
+        ];
+    }
+
     function isNative()
     {
         static $cache;
         if (!$cache) {
-            $cache = \quarsintex\quartronic\qcore\QCrud::getNativeStructure();
+            $cache = $this->nativeStructure;
         }
         return isset($cache[preg_replace('/^q/', '', $this->_table)]);
     }
 
     protected function getDefaultDB()
     {
-        //ugly
-        return $this->isNative() ? self::$Q->sysDB : self::$Q->db;
+        return $this->isNative() ? $this->sysDB : $this->curDB;
     }
 
     function __construct($table = null, $db = null)
     {
         if (defined('static::TABLE')) $this->_table = static::TABLE;
         if ($table) $this->_table = $table;
+
+        $this->_connectedProperties = array_merge($this->getDefaultConnectedProperties(), $this->getConnectedProperties());
 
         $this->db = $db ? $db : $this->getDefaultDB();
 
@@ -54,13 +64,6 @@ class QModel extends QSource
     function getPrimaryKey()
     {
         return ['id'=>$this->id];
-
-        $pk = [];
-        $primaryKeys = $this->_primaryKeys ? $this->_primaryKeys : $this->fieldList;
-        foreach ($primaryKeys as $name) {
-          $pk[$name] = $this->_fields[$name];
-        }
-        return $pk;
     }
 
     function getPrimaryKeys2SqlString()
@@ -78,7 +81,7 @@ class QModel extends QSource
         $fields = $this->db->schema->getColumnListing($this->table);
         foreach ($fields as $field) {
             $this->_structure[$field] = [
-                'type' => 'text',
+                'type' => $this->db->schema->getColumnType($this->table, $field),
                 'not_null' => true,
                 'default' => '',
                 'required' => false,
