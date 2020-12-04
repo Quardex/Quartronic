@@ -12,6 +12,7 @@ class QDbDriver extends QSource
     {
         return [
             'dbDir' => &self::$Q->params['runtimeDir'],
+            'rootDir' => &self::$Q->qRootDir,
         ];
     }
 
@@ -22,11 +23,17 @@ class QDbDriver extends QSource
         ];
     }
 
+    public function initDBFile($path) {
+        if (!file_exists($path)) copy($this->rootDir.'empty.db', $path);
+    }
+
     public function __construct($params=[])
     {
         $this->capsula = new Capsule;
 
         $config = array_merge($this->getDefaultParams(), $params);
+
+        if ($config['driver'] == 'sqlite') $this->initDBFile($config['database']);
 
         $this->capsula->addConnection($config);
         //$capsule->setAsGlobal();
