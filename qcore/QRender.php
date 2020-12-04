@@ -54,7 +54,7 @@ namespace quarsintex\quartronic\qcore
 
         public function getSources()
         {
-            if (!$this->_sources) $this->_sources = new QAssetBundle($this->webDir, $this->webPath);
+            if (!$this->_sources) $this->_sources = new QAssetBundle($this->webDir, $this->webPath, $this->subWebPath);
             return $this->_sources;
         }
 
