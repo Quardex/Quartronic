@@ -20,7 +20,6 @@ class QController extends QSource
             $action = $action[1];
         }
         $action = strtolower($action);
-
         if ($this->requireAuth && $action != 'signin') {
             $qtoken = isset(self::$Q->request->cookie['qtoken']) ? self::$Q->request->cookie['qtoken'] : '';
             $needAuth = true;

@@ -91,12 +91,12 @@ class Quartronic extends QSource
                 $this->addConnectedProperty('request', $this->architect->dynUnit('webRequest'));
                 break;
         }
-        return $this->router->run($this->params['route']);
+        return $this->router->run($this->params['route'] ?: $this->request->route);
     }
 
     function getVersion()
     {
-        return '0.2.55';
+        return '0.2.56';
     }
 
     function getLastVersion()
