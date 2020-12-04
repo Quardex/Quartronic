@@ -17,6 +17,7 @@ class Quartronic extends QSource
         'appDir' => '',
         'configDir' => __DIR__.'/../../../../config/',
         'runtimeDir' => __DIR__.'/../../../../runtime/',
+        'route' => '',
         'returnRender' => false,
         'requireAuth' => true,
         'db' => [
@@ -90,12 +91,12 @@ class Quartronic extends QSource
                 $this->addConnectedProperty('request', $this->architect->dynUnit('webRequest'));
                 break;
         }
-        return $this->router->run($this->request->route);
+        return $this->router->run($this->params['route']);
     }
 
     function getVersion()
     {
-        return '0.2.54';
+        return '0.2.55';
     }
 
     function getLastVersion()
