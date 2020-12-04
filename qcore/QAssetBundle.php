@@ -5,6 +5,7 @@ class QAssetBundle extends QSource
 {
     protected $webDir;
     protected $webPath;
+    protected $subWebPath;
     protected $_assetsDir;
     protected $_assetsPath;
     protected $_fileList = [];
