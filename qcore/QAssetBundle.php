@@ -10,10 +10,11 @@ class QAssetBundle extends QSource
     protected $_fileList = [];
     protected $_dirList = [];
 
-    public function __construct($webDir, $webPath)
+    public function __construct($webDir, $webPath, $subWebPath = '')
     {
         $this->webDir = $webDir;
         $this->webPath = $webPath;
+        $this->subWebPath = $subWebPath;
     }
 
     public function getAssetsSubDir()
@@ -32,7 +33,7 @@ class QAssetBundle extends QSource
     public function getAssetsPath()
     {
         if (!$this->_assetsPath) {
-            $this->_assetsPath = $this->webPath.$this->assetsSubDir;
+            $this->_assetsPath = str_replace($this->subWebPath, '', $this->webPath).$this->assetsSubDir;
         }
         return $this->_assetsPath;
     }

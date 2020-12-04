@@ -13,6 +13,7 @@ class Quartronic extends QSource
     protected $params = [
         'webDir' => '',
         'webPath' =>  '/',
+        'subWebPath' => '',
         'appDir' => '',
         'configDir' => __DIR__.'/../../../../config/',
         'runtimeDir' => __DIR__.'/../../../../runtime/',
@@ -94,7 +95,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.49';
+        return '0.2.50';
     }
 
     function getLastVersion()

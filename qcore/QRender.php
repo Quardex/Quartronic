@@ -37,6 +37,7 @@ namespace quarsintex\quartronic\qcore
                 'appDir' => &self::$Q->router->appDir,
                 'webDir' => &self::$Q->router->webDir,
                 'webPath' => &self::$Q->router->webPath,
+                'subWebPath' => &self::$Q->router->subWebPath,
                 'qRootDir' => &self::$Q->router->qRootDir,
             ];
         }

@@ -52,7 +52,7 @@ class QCrudController extends QController
         }
         $this->crud->model->scenario = 'create';
         return $this->render->run('widgets/crud/create', [
-            'title' => basename(get_class($this->crud->model)),
+            'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'model' => $this->crud->model,
         ]);
     }

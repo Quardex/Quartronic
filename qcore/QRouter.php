@@ -10,19 +10,31 @@ namespace quarsintex\quartronic\qcore
     {
         protected $controller;
         protected $route;
+        protected $_appDir;
 
         protected function getConnectedProperties()
         {
             return [
                 'returnRender' => &self::$Q->params['returnRender'],
-                'appDir' => &self::$Q->params['appDir'],
+                'globalAppDir' => &self::$Q->params['appDir'],
                 'webPath' => &self::$Q->params['webPath'],
+                'subWebPath' => &self::$Q->params['subWebPath'],
                 'webDir' => &self::$Q->params['webDir'],
                 'configDir' => &self::$Q->externManager->configDir,
                 'runtimeDir' => &self::$Q->externManager->runtimeDir,
                 'mode' => &self::$Q->mode,
                 'autoStructure' => \quarsintex\quartronic\qcore\QCrud::getAutoStructure(),
             ];
+        }
+
+        public function getAppDir()
+        {
+            return $this->_appDir ? $this->_appDir : $this->globalAppDir;
+        }
+
+        public function setAppDir($value)
+        {
+            $this->_appDir = $value;
         }
 
         public function getRouteDir($key = '')
