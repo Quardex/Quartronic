@@ -163,7 +163,6 @@ $(function () {
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-orange">
                                                 <i class="material-icons">mode_edit</i>
-                                                <i class="material-icons">mode_edit</i>
                                             </div>
                                             <div class="menu-info">
                                                 <h4><b>Nancy</b> changed name</h4>
@@ -336,6 +335,14 @@ Answer GitHub questions
             <div class="menu">
                 <ul class="list">
                     <li class="header">MENU</li>
+                    <?php if (Q()->router->subWebPath) : ?>
+                    <li>
+                        <a href="<?=str_replace(Q()->router->subWebPath, '', Q()->urlManager->route('/'))?>">
+                            <i class="material-icons">arrow_back</i>
+                            <span>Back</span>
+                        </a>
+                    </li>
+                    <?php endif; ?>
                     <li><!-- class="active"-->
                         <a href="<?=Q()->urlManager->route('/')?>">
                             <i class="material-icons">home</i>
