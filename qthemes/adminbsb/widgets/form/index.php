@@ -4,14 +4,14 @@
 <form id="form_validation" method="POST">
 
     <?php
-    foreach ($this->fields as $key => $value) {
+    foreach ($this->fields as $field) {
         echo '
                 <div class="form-group form-float">
                     <div class="form-line">
-                        <input type="text" class="form-control" name="'.$key.'" value="'.htmlspecialchars($value).'">
-                        <label class="form-label">'.mb_convert_case(str_replace('_', ' ', $key), MB_CASE_TITLE, "UTF-8").'</label>
+                        <input type="text" class="form-control" name="'.$field->key.'" value="'.htmlspecialchars($field->value).'"'.($field->required ? ' required':'').'>
+                        <label class="form-label">'.mb_convert_case(str_replace('_', ' ', $field->key), MB_CASE_TITLE, "UTF-8").'</label>
                     </div>
-                    <!--label id="id-error" class="error" for="'.$key.'">This field is required.</label-->
+                    <!--label id="id-error" class="error" for="'.$field->key.'">This field is required.</label-->
                 </div>';
     }
     ?>

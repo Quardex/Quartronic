@@ -15,7 +15,7 @@
                 <h2>Settings</h2>
             </div>
             <div class="body">
-                <?php $this->widget('Form', [
+                <?php $this->widget('QForm', [
                     'fields' => $fields,
                 ])?>
             </div>

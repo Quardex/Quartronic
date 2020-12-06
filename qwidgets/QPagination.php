@@ -1,12 +1,11 @@
 <?php
 namespace quarsintex\quartronic\qwidgets;
 
-class Pagination extends \quarsintex\quartronic\qcore\QWidget
+class QPagination extends \quarsintex\quartronic\qcore\QWidget
 {
-    protected $name = 'Pagination';
     public $total;
     public $currentPage;
-    public $pageSize = 1;
+    public $pageSize = 10;
 
     public function run()
     {

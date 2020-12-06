@@ -15,7 +15,7 @@
                 <h2>Edit <?=$title?></h2>
             </div>
             <div class="body">
-                <?php include('_form.php')?>
+                <?php $this->widget('QForm', ['model' => $model])?>
             </div>
         </div>
     </div>

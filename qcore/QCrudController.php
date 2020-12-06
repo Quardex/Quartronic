@@ -91,8 +91,17 @@ class QCrudController extends QController
             $this->redirect(self::$Q->urlManager->route('./settings'), true);
         }
 
+        $fields = $this->crud->settings->values;
+
+        array_walk($fields, function(&$value, $key) {
+           $value = new \quarsintex\quartronic\qwidgets\QField([
+              'key' => $key,
+              'value' => $value,
+           ]);
+        });
+
         return self::$Q->render->run('widgets/crud/settings', [
-            'fields' => $this->crud->settings->values,
+            'fields' => $fields,
         ]);
     }
 }

@@ -64,7 +64,7 @@ $(function () {
                     </tbody>
                 </table>
                 <div class="dataTables_info" id="DataTables_Table_1_info" role="status" aria-live="polite">Showing <?=$countAll ? $crud->offset+1 : 0?> to <?=count($crud->list)?> of <?=$countAll?> entries</div>
-                <?php $this->widget('Pagination', [
+                <?php $this->widget('QPagination', [
                     'total' => $countAll,
                     'currentPage' => $crud->page,
                     'pageSize' => $crud->pageSize,
