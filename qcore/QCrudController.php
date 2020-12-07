@@ -25,7 +25,7 @@ class QCrudController extends QController
                 $countAll = $this->crud->model->countAll();
             }
         }
-        return self::$Q->render->run('widgets/qcrud/list', [
+        return self::$Q->render->run('widgets/qCrud/list', [
             'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'crud' => $this->crud,
             'countAll' => $countAll,
@@ -37,7 +37,7 @@ class QCrudController extends QController
         $model = $this->crud->read(self::$Q->request->request);
         if (empty($model->id)) throw new \NotFoundException;
 
-        return self::$Q->render->run('widgets/qcrud/view', [
+        return self::$Q->render->run('widgets/qCrud/view', [
             'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'model' => $model,
         ]);
@@ -51,7 +51,7 @@ class QCrudController extends QController
             $this->redirect('./');
         }
         $this->crud->model->scenario = 'create';
-        return $this->render->run('widgets/qcrud/create', [
+        return $this->render->run('widgets/qCrud/create', [
             'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'model' => $this->crud->model,
         ]);
@@ -68,7 +68,7 @@ class QCrudController extends QController
         if (empty($model->id)) throw new \NotFoundException;
 
         $model->scenario = 'update';
-        return self::$Q->render->run('widgets/qcrud/update', [
+        return self::$Q->render->run('widgets/qCrud/update', [
             'title' => basename(str_replace('\\', '/', get_class($this->crud->model))),
             'model' => $model,
         ]);
@@ -100,7 +100,7 @@ class QCrudController extends QController
            ]);
         });
 
-        return self::$Q->render->run('widgets/qcrud/settings', [
+        return self::$Q->render->run('widgets/qCrud/settings', [
             'fields' => $fields,
         ]);
     }

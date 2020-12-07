@@ -33,15 +33,19 @@ class QWidget extends QSource
 
     public function run() {}
 
-    public function render()
+    public function render($return = true)
     {
         foreach ($this->renderValues as $name => $value) {
             $$name = $value;
         }
         $widgetPath = self::$Q->qRootDir . 'qthemes/adminbsb/widgets/';
         ob_start();
-        include($widgetPath.strtolower($this->name).'/index.php');
-        return ob_get_clean();
+        include($widgetPath.lcfirst($this->name).'/index.php');
+        if ($return) {
+            return ob_get_clean();
+        } else {
+            echo ob_get_clean();
+        }
     }
 }
 
