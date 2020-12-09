@@ -104,6 +104,14 @@ namespace quarsintex\quartronic\qcore
             }
         }
 
+        public function registerFile($from, $category = '', $pos = self::POSITION_BODY_END)
+        {
+            $registred = $this->sources->register($category.'/'.basename($from), $from);
+            foreach ($registred as $targetPath => $sourcePath) {
+                $this->_jsFiles[$pos][] = $this->sources->assetsPath . $targetPath;
+            }
+        }
+
         public function registerDir($sourcePath, $targetPath)
         {
             $this->sources->register($targetPath, $sourcePath, true);

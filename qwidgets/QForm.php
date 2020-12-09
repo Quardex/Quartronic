@@ -12,21 +12,26 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
         if (isset($params['model'])) {
             $model = $params['model'];
             $this->fields = array_map(function ($key) use ($model) {
-                $className = '\\quarsintex\\quartronic\\qwidgets\\'.$this->fieldTypeToClass($model->structure[$key]['type']);
-                return new $className([
+                $initParams = $this->getInitParamsByFieldType($model->structure[$key]['type']);
+                if (!is_array($initParams)) $initParams = [$initParams];
+                $className = '\\quarsintex\\quartronic\\qwidgets\\'.$initParams[0];
+                unset($initParams[0]);
+                return new $className(array_merge([
                     'key' => $key,
                     'value' => $model->$key,
                     'type' => $model->structure[$key]['type'],
-                ]);
+                ], $initParams));
             }, $model->fieldList);
         }
     }
 
-    protected function fieldTypeToClass($type)
+    protected function getInitParamsByFieldType($type)
     {
         switch ($type) {
             case 'text':
-                $className = 'QFieldText';
+                $className = ['QFieldWysiwyg',
+                    'editor'=>'TinyMCE',
+                ];
                 break;
 
             default:

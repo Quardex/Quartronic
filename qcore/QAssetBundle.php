@@ -65,8 +65,10 @@ class QAssetBundle extends QSource
             }
             $d->close();
         } else {
-            if (!file_exists($to) || $rewrite)
+            if (!file_exists($to) || $rewrite) {
+                @mkdir(dirname($to), 0777, true);
                 copy($from, $to);
+            }
         }
     }
 
@@ -88,6 +90,12 @@ class QAssetBundle extends QSource
             @mkdir($webDir, 0777, true);
             usleep(50);
         }
+        foreach ($this->_dirList as $subPath => $sourcePath) {
+            $curTargetPath = $webDir . $subPath;
+            if (!file_exists($curTargetPath)) {
+                $this->copydir($sourcePath, $curTargetPath);
+            }
+        }
         foreach ($this->_fileList as $subPath => $sourcePath) {
             $curTargetPath = $webDir . $subPath;
             if (!file_exists($curTargetPath) || isset(self::$Q->request->get['refresh'])) {
@@ -95,12 +103,6 @@ class QAssetBundle extends QSource
                     @mkdir($dirname, 0777, true);
                 }
                 copy($sourcePath, $curTargetPath);
-            }
-        }
-        foreach ($this->_dirList as $subPath => $sourcePath) {
-            $curTargetPath = $webDir . $subPath;
-            if (!file_exists($curTargetPath)) {
-                $this->copydir($sourcePath, $curTargetPath);
             }
         }
 

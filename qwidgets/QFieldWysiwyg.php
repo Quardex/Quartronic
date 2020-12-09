@@ -1,12 +1,14 @@
 <?php
 namespace quarsintex\quartronic\qwidgets;
 
-class QField extends \quarsintex\quartronic\qcore\QWidget
+class QFieldWysiwyg extends \quarsintex\quartronic\qwidgets\QFieldText
 {
-    public $key;
-    public $value;
-    public $type = 'varchar';
-    public $required = false;
+    public $editor = 'TinyMCE';
+
+    public function getCount() {
+        static $count;
+        return ++$count;
+    }
 }
 
 ?>
