@@ -7,6 +7,7 @@ class QField extends \quarsintex\quartronic\qcore\QWidget
     public $value;
     public $type = 'varchar';
     public $required = false;
+    public $error;
 }
 
 ?>

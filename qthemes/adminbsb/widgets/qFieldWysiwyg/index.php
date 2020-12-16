@@ -37,9 +37,11 @@ if (($editor = strtolower($this->editor)) == 'tinymce') {
 ?>
 
 <div class="form-group form-float">
-    <div class="form-line">
+    <div class="form-line<?=$this->error?' error':''?>">
         <label class="form-label" style="position:unset"><?=mb_convert_case(str_replace('_', ' ', $this->key), MB_CASE_TITLE, "UTF-8")?></label>
         <textarea id="<?=$editor.($totalCount = $this->count)?>" name="<?=$this->key?>" class="form-control <?=$editor?>"><?=htmlspecialchars($this->value)?></textarea>
     </div>
-    <!--label id="id-error" class="error" for="'.$key.'">This field is required.</label-->
+    <?php if ($this->error) : ?>
+        <label id="id-error-<?=$this->key?>" class="error" for="<?=$this->key?>"><?=$this->error?></label>
+    <?php endif ?>
 </div>
