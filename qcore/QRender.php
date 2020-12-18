@@ -156,6 +156,7 @@ namespace quarsintex\quartronic\qcore
             if ($view) $this->view = $view;
             if (isset($layout)) $this->layout = $layout;
 
+            $content = '';
             foreach ($data as $var => $value) {
                 $$var = $value;
             }

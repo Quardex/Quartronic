@@ -48,7 +48,10 @@ class QDbDriver extends QSource
     public function find($model, $params=[]) {
         $orm = $this->getOrm($model->table);
 
-        if (!is_array($params)) $params['where'] = $params;
+        if (!is_array($where = $params)) {
+            $params = [];
+            $params['where'] = $params;
+        }
         if (isset($params[0]) && is_string($params[0])) $params = [$params];
         foreach ($params as $param => $value) {
             if (is_int($param)) {

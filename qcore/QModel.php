@@ -118,6 +118,7 @@ class QModel extends QSource
     function __get($name)
     {
         if (array_key_exists($name, $this->_structure)) {
+            if (!array_key_exists($name, $this->_fields)) $this->_fields[$name] = null;
             return $this->_fields[$name];
         }
         return parent::__get($name);
