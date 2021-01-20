@@ -76,7 +76,7 @@ namespace quarsintex\quartronic\qcore
             $controllerName = ucfirst($route[0]) . 'Controller';
             $controllerClass = $routeDir . '\\' . $controllerName;
             if ($this->appDir) {
-                $routeDir = $this->appDir . '/' . $routeDir;
+                $routeDir = '../../../' . $this->appDir . '/' . $routeDir;
                 $controllerClass = basename($this->appDir) . '\\' . $controllerClass;
             } else {
                 $controllerClass = '\\quarsintex\\quartronic\\' . $controllerClass;
