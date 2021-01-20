@@ -12,7 +12,7 @@ class QConsoleController extends QController
     function __construct($action)
     {
         parent::__construct($action);
-        if (method_exists($this, 'act'.$action)) echo 'Initialization: '.self::$Q->router->route."\n";
+        if (method_exists($this, 'act'.$this->action)) echo 'Initialization: '.self::$Q->router->route."\n";
     }
 }
 

@@ -4,7 +4,6 @@ require_once(__DIR__.'/../../autoload.php');
 
 $Q = new \quarsintex\quartronic\qcore\Quartronic;
 $Q->run([
-    'route'=>$route,
     'mode'=>'console',
     'requireAuth'=>false,
 ]);
