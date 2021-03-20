@@ -27,6 +27,19 @@
   font-size: 18px;
   margin-left: -18px;
 }
+.form-dropdown {
+  padding-top: 5px;
+}
+.form-dropdown .btn:not(.btn-link):not(.btn-circle) {
+  font-size: 14px;
+  padding: 6px 0 3px;
+}
+.form-dropdown .btn:not(.btn-link):not(.btn-circle) span.filter-option {
+  margin: 0;
+}
+.form-dropdown .form-control {
+  height: 30px;
+}
 /*--------- site/index --------*/
 .info-box {
   justify-content: space-between;

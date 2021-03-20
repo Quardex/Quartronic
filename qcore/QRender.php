@@ -46,7 +46,7 @@ namespace quarsintex\quartronic\qcore
         {
             if (!$this->_viewDir) {
                 $this->_viewDir = $this->qRootDir;
-                if ($this->appDir) $this->_viewDir.= $this->appDir.'/';
+                if ($this->appDir) $this->_viewDir.= '../../../'.$this->appDir.'/';
                 $this->_viewDir.= 'qthemes/adminbsb/';
             }
             return $this->_viewDir;
@@ -87,7 +87,7 @@ namespace quarsintex\quartronic\qcore
         {
             $registred = $this->sources->register('js/' . basename($path), $path);
             foreach ($registred as $targetPath => $sourcePath) {
-                $this->_jsFiles[$pos][] = $this->sources->assetsPath . $targetPath;
+                $this->_jsFiles[$pos][md5($targetPath)] = $this->sources->assetsPath . $targetPath;
             }
         }
 
@@ -100,16 +100,27 @@ namespace quarsintex\quartronic\qcore
         {
             $registred = $this->sources->register('css/' . basename($path), $path);
             foreach ($registred as $targetPath => $sourcePath) {
-                $this->_cssFiles[$pos][] = $this->sources->assetsPath . $targetPath;
+                $this->_cssFiles[$pos][md5($targetPath)] = $this->sources->assetsPath . $targetPath;
             }
         }
 
-        public function registerFile($from, $category = '', $pos = self::POSITION_BODY_END)
+        public function registerFile($from, $category = '', $type = '', $pos = self::POSITION_BODY_END)
         {
-            $registred = $this->sources->register($category.'/'.basename($from), $from);
-            foreach ($registred as $targetPath => $sourcePath) {
-                $this->_jsFiles[$pos][] = $this->sources->assetsPath . $targetPath;
+            if ($category) $category.= '/';
+            $storage = '';
+            switch ($type) {
+                case 'js':
+                    $storage = &$this->_jsFiles;
+                    break;
+
+                case 'css':
+                    $storage = &$this->_cssFiles;
+                    break;
             }
+            $targetPath = $category.basename($from);
+            if ($storage)
+                $storage[$pos][md5($targetPath)] = $this->sources->assetsPath . $targetPath;
+            $this->sources->register($targetPath, $from);
         }
 
         public function registerDir($sourcePath, $targetPath)
@@ -122,7 +133,7 @@ namespace quarsintex\quartronic\qcore
             $output = '';
             if (!empty($this->_cssFiles[$pos])) {
                 foreach ($this->_cssFiles[$pos] as $file) {
-                    $output .= '<link rel="stylesheet" type="text/css" href="' . $file . '">';
+                    $output .= "\n".'<link rel="stylesheet" type="text/css" href="' . $file . '">';
                 }
             }
 
@@ -136,7 +147,7 @@ namespace quarsintex\quartronic\qcore
 
             if (!empty($this->_jsFiles[$pos])) {
                 foreach ($this->_jsFiles[$pos] as $file) {
-                    $output .= '<script src="' . $file . '"></script>';
+                    $output .= "\n".'<script src="' . $file . '"></script>';
                 }
             }
 

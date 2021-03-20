@@ -59,12 +59,11 @@ class QCrudController extends QController
 
     function actEdit()
     {
-        if (self::$Q->request->post) {
-            $this->crud->update(self::$Q->request->request);
+        if (self::$Q->request->post && $this->crud->update(self::$Q->request->request)) {
             $this->redirect(self::$Q->urlManager->route('./view', ['id'=>$this->crud->model->id]), true);
         }
 
-        $model = $this->crud->read(self::$Q->request->request);
+        $model = ($this->crud->model->id) ? $this->crud->model : $this->crud->read(self::$Q->request->request);
         if (empty($model->id)) throw new \NotFoundException;
 
         $model->scenario = 'update';

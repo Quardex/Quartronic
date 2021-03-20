@@ -23,12 +23,18 @@ class QCrud extends QSource
 
     static function initModel($modelName)
     {
-        $controllerPath = self::$Q->router->qRootDir . 'qmodels/' . $modelName . '.php';
+        $controllerPath = self::$Q->router->qRootDir . '../../../' . self::$Q->appDir . 'qmodels/' . $modelName . '.php';
         if (file_exists($controllerPath)) {
-            $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
+            $modelClass = basename(self::$Q->appDir) . '\\qmodels\\'.$modelName;
             $model = new $modelClass;
         } else {
-            $model = new QModel(strtolower($modelName));
+            $controllerPath = self::$Q->router->qRootDir . 'qmodels/' . $modelName . '.php';
+            if (file_exists($controllerPath)) {
+                $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
+                $model = new $modelClass;
+            } else {
+                $model = new QModel(strtolower($modelName));
+            }
         }
         return $model;
     }
@@ -94,7 +100,9 @@ class QCrud extends QSource
         if (empty($params['id'])) return null;
         $this->model = $this->model->getByPk($params);
         $this->model->fields = $params;
+        if (!$this->model->validate()) return false;
         $this->model->save();
+        return true;
     }
 
     public function delete($params)
@@ -218,6 +226,7 @@ class QCrud extends QSource
         static $cache;
         if (!$cache) {
             $cache = array_merge(self::getNativeStructure(), self::loadConfig());
+            QModel::$autoStructure = $cache;
         }
         return $cache;
     }
@@ -229,31 +238,48 @@ class QCrud extends QSource
             $db = isset($ns[$name]) ? self::$Q->sysDB : self::$Q->db;
             $schema = $db->schema;
             $tableName = 'q'.$name;
-            if (!empty($info['struct']) && !$schema->hasTable($tableName)) {
-                $schema->create($tableName, function ($table) use($info) {
-                    foreach ($info['struct'] as $fieldName => $fieldInfo) {
-                        $filedType = $fieldInfo[0] == 'pk' ? 'increments' :  $fieldInfo[0];
-                        $field = empty($fieldInfo['length']) ? $table->$filedType($fieldName) : $table->$filedType($fieldName, $fieldInfo['length']);
-                        unset($fieldInfo[0]);
-                        if (!empty($fieldInfo['null'])) {
-                            $fieldInfo['nullable'] = $fieldInfo['null'];
-                            unset($fieldInfo['null']);
-                        }
+            if (!empty($info['struct'])) {
+                if (!$schema->hasTable($tableName)) {
+                    $schema->create($tableName, function ($table) use ($info) {
+                        foreach ($info['struct'] as $fieldName => $fieldInfo) {
+                            switch ($fieldInfo[0]) {
+                                case 'dropdown':
+                                    $filedType = 'integer';
+                                    break;
 
-                        foreach ($fieldInfo as $key => $value) {
-                            $field->$key($value);
+                                case 'pk':
+                                    $filedType = 'increments';
+                                    break;
+
+                                default:
+                                    $filedType = $fieldInfo[0];
+                                    break;
+                            }
+                            $field = empty($fieldInfo['length']) ? $table->$filedType($fieldName) : $table->$filedType($fieldName, $fieldInfo['length']);
+                            unset($fieldInfo[0]);
+                            if (!empty($fieldInfo['null'])) {
+                                $fieldInfo['nullable'] = $fieldInfo['null'];
+                                unset($fieldInfo['null']);
+                            }
+
+                            foreach ($fieldInfo as $key => $value) {
+                                $field->$key($value);
+                            }
                         }
-                    }
-                    $table->timestamp('created_at')->useCurrent();
-                    $table->timestamp('updated_at')->useCurrent();
-                });
-                if (!empty($info['default'])) {
-                    foreach ($info['default'] as $row) {
-                        $db->getOrm($tableName)->insert($row);
+                        $table->timestamp('created_at')->useCurrent();
+                        $table->timestamp('updated_at')->useCurrent();
+                    });
+                    if (!empty($info['default'])) {
+                        foreach ($info['default'] as $row) {
+                            $db->getOrm($tableName)->insert($row);
+                        }
                     }
                 }
+                if ($verbose) echo "\nSuccess!\n";
+            } else {
+                if ($verbose) echo "\nStructure not found!\n";
             }
-            if ($verbose) echo "\nSuccess!\n";
+
         }
     }
 

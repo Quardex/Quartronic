@@ -16,6 +16,7 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                 if (!is_array($initParams)) $initParams = [$initParams];
                 $className = '\\quarsintex\\quartronic\\qwidgets\\'.$initParams[0];
                 unset($initParams[0]);
+                if (isset($model->errors[$key])) $initParams['error'] = $model->errors[$key]['message'];
                 return new $className(array_merge([
                     'key' => $key,
                     'value' => $model->$key,
@@ -32,6 +33,14 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                 $className = ['QFieldWysiwyg',
                     'editor'=>'TinyMCE',
                 ];
+                break;
+
+            case 'textarea':
+                $className = 'qFieldText';
+                break;
+
+            case 'dropdown':
+                $className = 'Q'.ucfirst($type);
                 break;
 
             default:

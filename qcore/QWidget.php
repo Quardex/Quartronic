@@ -40,7 +40,7 @@ class QWidget extends QSource
         }
         $widgetPath = self::$Q->qRootDir . 'qthemes/adminbsb/widgets/';
         ob_start();
-        include($widgetPath.lcfirst($this->name).'/index.php');
+        include($widgetPath.strtolower($this->name).'/index.php');
         if ($return) {
             return ob_get_clean();
         } else {

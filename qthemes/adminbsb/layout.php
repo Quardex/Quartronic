@@ -11,8 +11,7 @@ Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/plugins/sweetalert/sweet
 Q()->render->registerCssFile(Q()->qRootDir.'../adminbsb/css/style.css', self::POSITION_HEAD_BEGIN);
 
 Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery/jquery.min.js', self::POSITION_HEAD_BEGIN);
-Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js');
-Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap-select/js/bootstrap-select.js');
+Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/bootstrap/js/bootstrap.js', self::POSITION_HEAD_END);
 Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js');
 Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/node-waves/waves.js');
 Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/jquery-countto/jquery.countTo.js');
@@ -31,6 +30,7 @@ Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/js/admin.js');
 //Q()->render->registerJsFile(Q()->rootDir.'../adminbsb/js/demo.js');
 
 Q()->render->registerDir(Q()->qRootDir.'../adminbsb/images', 'images');
+Q()->render->registerDir(Q()->qRootDir.'../adminbsb/plugins/bootstrap/fonts', 'fonts');
 
 Q()->render->registerCssFile(Q()->qRootDir.'qthemes/adminbsb/assets/css/qstyle.css');
 Q()->render->registerDir(Q()->qRootDir.'qthemes/adminbsb/assets/images', 'qimages');

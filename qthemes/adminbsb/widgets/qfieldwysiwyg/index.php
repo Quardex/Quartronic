@@ -1,5 +1,5 @@
 <?php
-if (($editor = strtolower($this->editor)) == 'ckeditor') {
+if (($editor = mb_strtolower($this->editor)) == 'ckeditor') {
     Q()->render->registerFile(Q()->qRootDir . '../adminbsb/plugins/ckeditor/ckeditor.js', 'ckeditor');
     Q()->render->registerDir(Q()->qRootDir . '../adminbsb/plugins/ckeditor', 'ckeditor');
     Q()->render->registerJs('initEditor', "
@@ -13,15 +13,15 @@ if (($editor = strtolower($this->editor)) == 'ckeditor') {
     ");
 }
 
-if (($editor = strtolower($this->editor)) == 'tinymce') {
-    Q()->render->registerFile(Q()->qRootDir . '../adminbsb/plugins/tinymce/tinymce.js', 'tinymce');
+if (($editor = mb_strtolower($this->editor)) == 'tinymce') {
+    Q()->render->registerFile(Q()->qRootDir . '../adminbsb/plugins/tinymce/tinymce.js', 'tinymce', 'js');
     Q()->render->registerDir(Q()->qRootDir . '../adminbsb/plugins/tinymce', 'tinymce');
     Q()->render->registerJs('initEditor', "
         tinymce.init({
             selector: 'textarea.tinymce',
             theme: 'modern',
             height: 300,
-            plugins: [
+            plugins: [ 
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
                 'searchreplace wordcount visualblocks visualchars code fullscreen',
                 'insertdatetime media nonbreaking save table contextmenu directionality',

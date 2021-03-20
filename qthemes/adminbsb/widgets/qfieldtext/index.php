@@ -1,5 +1,5 @@
 <?php if ($this->autoHeight) {
-    Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/tinymce/tinymce.js');
+    Q()->render->registerJsFile(Q()->qRootDir.'../adminbsb/plugins/autosize/autosize.js');
     Q()->render->registerJs('inputAutosize', "$(function () {autosize($('textarea.auto-growth'));})");
 }?>
 

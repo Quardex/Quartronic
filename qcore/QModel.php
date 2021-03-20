@@ -16,6 +16,8 @@ class QModel extends QSource
     protected $new = true;
     protected $errors = [];
 
+    static $autoStructure;
+
     protected function getDefaultConnectedProperties()
     {
         return [
@@ -25,13 +27,18 @@ class QModel extends QSource
         ];
     }
 
+    protected function getAlias()
+    {
+        return preg_replace('/^q/', '', $this->_table);
+    }
+
     function isNative()
     {
         static $cache;
         if (!$cache) {
             $cache = $this->nativeStructure;
         }
-        return isset($cache[preg_replace('/^q/', '', $this->_table)]);
+        return isset($cache[$this->getAlias()]);
     }
 
     protected function getDefaultDB()
@@ -43,6 +50,7 @@ class QModel extends QSource
     {
         if (defined('static::TABLE')) $this->_table = static::TABLE;
         if ($table) $this->_table = $table;
+        if (!$this->_table) $this->_table = mb_strtolower(basename(static::class));
 
         $this->_connectedProperties = array_merge($this->getDefaultConnectedProperties(), $this->getConnectedProperties());
 
@@ -82,21 +90,36 @@ class QModel extends QSource
         foreach ($fields as $field) {
             $this->_structure[$field] = [
                 'type' => $this->db->schema->getColumnType($this->table, $field),
-                'not_null' => true,
                 'default' => '',
                 'required' => false,
+                'unique' => false,
             ];
         }
         $this->_primaryKeys[] = 'id';
+        if (self::$autoStructure && isset(self::$autoStructure[$this->getAlias()]['struct'])) {
+            foreach (self::$autoStructure[$this->getAlias()]['struct'] as $alias => $field) {
+                $this->_structure[$alias] = [
+                    'type' => $field[0],
+                    'default' => isset($field['default']) ? : '',
+                    'required' => isset($field['required']) ? : true,
+                    'unique' => isset($field['unique']) ? : false,
+                ];
+            }
+        }
     }
 
     protected function loadRules()
     {
         foreach ($this->rules as $rule) {
+            switch ($rule[1]) {
+                case 'required':
+                    $value = true;
+                    break;
+            }
             foreach (explode(',', $rule[0]) as $name) {
-                $fileds[$name] = $name;
+
+                $this->_structure[$name][$rule[0]] = $value;
             };
-            $this->_rules[$rule[1]] = $fileds;
         }
     }
 
@@ -105,9 +128,16 @@ class QModel extends QSource
         return [];
     }
 
-    protected function isRequiredField($field, $isRequired)
+    protected function isRequiredField($field, $isRequired = false)
     {
-        return isset($this->_rules['required']) && isset($this->_rules['required'][$field]) ? $this->_rules['required'][$field] : $isRequired;
+        return isset($this->_structure[$field]['required']) ? $this->_structure[$field]['required'] : $isRequired;
+    }
+
+    function validate() {
+        foreach ($this->_structure as $field => $attrs) {
+            if ($this->isRequiredField($field) && $this->$field==='') $this->errors[$field]['message'] = 'This field is required';
+        }
+        return !$this->errors;
     }
 
     function getStructure()

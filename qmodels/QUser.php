@@ -3,8 +3,6 @@ namespace quarsintex\quartronic\qmodels;
 
 class QUser extends \quarsintex\quartronic\qcore\QModel
 {
-  const TABLE = 'quser';
-
   protected function getConnectedProperties()
   {
     return [
