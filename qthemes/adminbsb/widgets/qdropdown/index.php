@@ -19,13 +19,13 @@ Q()->render->registerJs('initDropdown', "
     ");
 ?>
 
-<div class="form-group form-float">
+<div class="form-group form-float" xmlns="http://www.w3.org/1999/html">
     <div class="form-line<?= $this->error ? ' error' : '' ?>">
         <div class="form-dropdown">
             <select class="form-control show-tick" name="<?=$this->key?>">
                 <option value="">--- Please select ---</option>
                 <?php foreach($this->options as $key => $option): ?>
-                <option value="<?=$key?>"<?php if ($this->current===$key) echo ' selected';?>><?=$option?></option>
+                <option value="<?=$key?>"<?php if ($this->current !== '' && $this->current==$key) echo ' selected';?>><?=$option?></option>
                 <?php endforeach; ?>
             </select>
         </div>

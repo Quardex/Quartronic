@@ -1,6 +1,8 @@
 <?php
 namespace quarsintex\quartronic\qwidgets;
 
+use quarsintex\quartronic\qcore\QModel;
+
 class QForm extends \quarsintex\quartronic\qcore\QWidget
 {
     protected $model;
@@ -12,43 +14,54 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
         if (isset($params['model'])) {
             $model = $params['model'];
             $this->fields = array_map(function ($key) use ($model) {
-                $initParams = $this->getInitParamsByFieldType($model->structure[$key]['type']);
+                $initParams = $this->getInitParamsByFieldType($model->structure[$key]);
                 if (!is_array($initParams)) $initParams = [$initParams];
                 $className = '\\quarsintex\\quartronic\\qwidgets\\'.$initParams[0];
                 unset($initParams[0]);
                 if (isset($model->errors[$key])) $initParams['error'] = $model->errors[$key]['message'];
                 return new $className(array_merge([
                     'key' => $key,
-                    'value' => $model->$key,
+                    'value' => (string)$model->$key,
                     'type' => $model->structure[$key]['type'],
                 ], $initParams));
             }, $model->fieldList);
         }
     }
 
-    protected function getInitParamsByFieldType($type)
+    protected function getInitParamsByFieldType($field)
     {
-        switch ($type) {
+        switch ($field['type']) {
             case 'text':
-                $className = ['QFieldWysiwyg',
+                $initParams = ['QFieldWysiwyg',
                     'editor'=>'TinyMCE',
                 ];
                 break;
 
             case 'textarea':
-                $className = 'qFieldText';
+                $initParams = 'QFieldText';
                 break;
 
+            case 'relation':
+                if (empty($field['titleTarget'])) {
+                    throw new \Exception('Attribute "titleTarget" can\'t be empty');
+                }
+                if (empty($field['target'])) {
+                    throw new \Exception('Attribute "target" can\'t be empty');
+                }
+                foreach (QModel::initModel('q'.$field['table'])->getAll() as $model) {
+                    $initParams['options'][$model->{$field['target']}] = $model->{$field['titleTarget']};
+                }
             case 'dropdown':
-                $className = 'Q'.ucfirst($type);
+                $initParams[0] = 'QDropdown';
+                if (isset($field['options'])) $initParams['options'] = $field['options'];
                 break;
 
             default:
-                $className = 'QField';
+                $initParams = 'QField';
                 break;
 
         }
-        return $className;
+        return $initParams;
 
     }
 }

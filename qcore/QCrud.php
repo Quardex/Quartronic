@@ -21,28 +21,15 @@ class QCrud extends QSource
         ];
     }
 
-    static function initModel($modelName)
-    {
-        $controllerPath = self::$Q->router->qRootDir . '../../../' . self::$Q->appDir . 'qmodels/' . $modelName . '.php';
-        if (file_exists($controllerPath)) {
-            $modelClass = basename(self::$Q->appDir) . '\\qmodels\\'.$modelName;
-            $model = new $modelClass;
-        } else {
-            $controllerPath = self::$Q->router->qRootDir . 'qmodels/' . $modelName . '.php';
-            if (file_exists($controllerPath)) {
-                $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
-                $model = new $modelClass;
-            } else {
-                $model = new QModel(strtolower($modelName));
-            }
-        }
-        return $model;
+    static function getModelDB($modelName) {
+        $as = self::getAutoStructure();
+        if (!empty($info['db'])) $db = self::$Q->{$info['db']};
     }
 
     public function __construct($modelName)
     {
         $this->config = static::loadConfig();
-        $this->model = static::initModel($modelName);
+        $this->model = QModel::initModel($modelName);
         $this->page = intval(self::$Q->request->getParam('page', $this->page));
         $this->pageSize = $this->settings->get('pageSize');
     }
@@ -86,7 +73,9 @@ class QCrud extends QSource
     public function create($params)
     {
         $this->model->fields = $params;
+        if (!$this->model->validate(true)) return false;
         $this->model->save();
+        return true;
     }
 
     public function read($params)
@@ -236,27 +225,42 @@ class QCrud extends QSource
         foreach (self::getAutoStructure() as $name => $info) {
             if ($verbose) echo "\n".'Preparing table for crud section "'.$name.'"...';
             $db = isset($ns[$name]) ? self::$Q->sysDB : self::$Q->db;
+            if (!empty($info['db'])) $db = self::$Q->{$info['db']};
             $schema = $db->schema;
             $tableName = 'q'.$name;
             if (!empty($info['struct'])) {
                 if (!$schema->hasTable($tableName)) {
                     $schema->create($tableName, function ($table) use ($info) {
                         foreach ($info['struct'] as $fieldName => $fieldInfo) {
-                            switch ($fieldInfo[0]) {
-                                case 'dropdown':
-                                    $filedType = 'integer';
-                                    break;
-
+                            if (empty($fieldInfo['type'])) $fieldInfo['type'] = $fieldInfo[0];
+                            switch ($fieldInfo['type']) {
                                 case 'pk':
                                     $filedType = 'increments';
                                     break;
 
+                                case 'dropdown':
+                                    $filedType = 'integer';
+                                    break;
+
+                                case 'relation':
+                                    $filedType = 'unsignedInteger';
+                                    $fieldInfo['unique'] = true;
+                                    $fieldInfo['null'] = false;
+                                    break;
+
                                 default:
-                                    $filedType = $fieldInfo[0];
+                                    $filedType = $fieldInfo['type'];
                                     break;
                             }
                             $field = empty($fieldInfo['length']) ? $table->$filedType($fieldName) : $table->$filedType($fieldName, $fieldInfo['length']);
+                            if ($fieldInfo['type'] == 'relation') {
+                                if (empty($fieldInfo['onDelete'])) $fieldInfo['onDelete'] = 'CASCADE';
+                                if (empty($fieldInfo['onUpdate'])) $fieldInfo['onUpdate'] = 'CASCADE';
+                                $table->foreign($fieldName)->references($fieldInfo['target'])->on('q'.$fieldInfo['table'])->onDelete($fieldInfo['onDelete'])->onUpdate($fieldInfo['onUpdate']);
+                            }
+
                             unset($fieldInfo[0]);
+                            unset($fieldInfo['type']);
                             if (!empty($fieldInfo['null'])) {
                                 $fieldInfo['nullable'] = $fieldInfo['null'];
                                 unset($fieldInfo['null']);
@@ -266,6 +270,7 @@ class QCrud extends QSource
                                 $field->$key($value);
                             }
                         }
+
                         $table->timestamp('created_at')->useCurrent();
                         $table->timestamp('updated_at')->useCurrent();
                     });

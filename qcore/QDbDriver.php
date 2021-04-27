@@ -18,8 +18,8 @@ class QDbDriver extends QSource
 
     protected function getDefaultParams() {
         return [
-            'driver'    => 'sqlite',
-            'database'  => $this->dbDir.'q.db',
+            'driver'   => 'sqlite',
+            'database' => $this->dbDir.'q.db',
         ];
     }
 
@@ -39,6 +39,7 @@ class QDbDriver extends QSource
         //$capsule->setAsGlobal();
         $this->capsula->bootEloquent();
         $this->schema = $this->capsula->getConnection()->getSchemaBuilder();
+        $this->schema->enableForeignKeyConstraints();
     }
 
     public function getOrm($table) {

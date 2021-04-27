@@ -46,8 +46,7 @@ class QCrudController extends QController
     function actAdd($modelData = [])
     {
         if (!$modelData) $modelData = self::$Q->request->post;
-        if ($modelData) {
-            $this->crud->create($modelData);
+        if ($modelData && $this->crud->create($modelData)) {
             $this->redirect('./');
         }
         $this->crud->model->scenario = 'create';

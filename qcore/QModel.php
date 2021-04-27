@@ -16,34 +16,33 @@ class QModel extends QSource
     protected $new = true;
     protected $errors = [];
 
+    static $nativeStructure;
     static $autoStructure;
 
     protected function getDefaultConnectedProperties()
     {
         return [
-            'sysDB' => self::$Q->sysDB,
-            'curDB' => self::$Q->db,
-            'nativeStructure' => \quarsintex\quartronic\qcore\QCrud::getNativeStructure(),
         ];
     }
 
-    protected function getAlias()
+    static function getAlias($modelName)
     {
-        return preg_replace('/^q/', '', $this->_table);
+        return preg_replace('/^q/', '', $modelName);
     }
 
-    function isNative()
+    static protected function getDefaultDB($modelName)
     {
-        static $cache;
-        if (!$cache) {
-            $cache = $this->nativeStructure;
+        if ($modelName == 'qcrud') return self::$Q->sysDB;
+        if (!self::$autoStructure) {
+            self::$autoStructure = QCrud::getAutoStructure();
         }
-        return isset($cache[$this->getAlias()]);
-    }
-
-    protected function getDefaultDB()
-    {
-        return $this->isNative() ? $this->sysDB : $this->curDB;
+        if (!self::$nativeStructure) {
+            self::$nativeStructure = QCrud::getNativeStructure();
+        }
+        $alias = self::getAlias($modelName);
+        $db = isset(self::$nativeStructure[$alias]) ? 'sysDB' : 'db';
+        if (!empty(self::$autoStructure[$alias]['db'])) $db = self::$autoStructure[$alias]['db'];
+        return self::$Q->$db;
     }
 
     function __construct($table = null, $db = null)
@@ -54,13 +53,15 @@ class QModel extends QSource
 
         $this->_connectedProperties = array_merge($this->getDefaultConnectedProperties(), $this->getConnectedProperties());
 
-        $this->db = $db ? $db : $this->getDefaultDB();
+        $this->db = $db ? $db : self::getDefaultDB($this->_table);
 
         $this->loadRules();
         $this->loadStructure();
+        $this->loadRelations();
     }
 
-    function getDb() {
+    function getDb()
+    {
         return $this->db;
     }
 
@@ -71,7 +72,7 @@ class QModel extends QSource
 
     function getPrimaryKey()
     {
-        return ['id'=>$this->id];
+        return ['id' => $this->id];
     }
 
     function getPrimaryKeys2SqlString()
@@ -79,9 +80,27 @@ class QModel extends QSource
         $pkv = $this->primaryKey;
         $str = [];
         foreach ($pkv as $name => $value) {
-            $str[] = $name.' = "'.$value.'"';
+            $str[] = $name . ' = "' . $value . '"';
         }
         return implode(' AND ', $str);
+    }
+
+    static function initModel($modelName)
+    {
+        $controllerPath = self::$Q->router->qRootDir . '../../../' . self::$Q->appDir . 'qmodels/' . $modelName . '.php';
+        if (file_exists($controllerPath)) {
+            $modelClass = basename(self::$Q->appDir) . '\\qmodels\\'.$modelName;
+            $model = new $modelClass;
+        } else {
+            $controllerPath = self::$Q->router->qRootDir . 'qmodels/' . $modelName . '.php';
+            if (file_exists($controllerPath)) {
+                $modelClass = '\\quarsintex\\quartronic\\qmodels\\'.$modelName;
+                $model = new $modelClass;
+            } else {
+                $model = new QModel(strtolower($modelName));
+            }
+        }
+        return $model;
     }
 
     protected function loadStructure()
@@ -96,14 +115,29 @@ class QModel extends QSource
             ];
         }
         $this->_primaryKeys[] = 'id';
-        if (self::$autoStructure && isset(self::$autoStructure[$this->getAlias()]['struct'])) {
-            foreach (self::$autoStructure[$this->getAlias()]['struct'] as $alias => $field) {
-                $this->_structure[$alias] = [
-                    'type' => $field[0],
-                    'default' => isset($field['default']) ? : '',
-                    'required' => isset($field['required']) ? : true,
-                    'unique' => isset($field['unique']) ? : false,
+        $alias = self::getAlias($this->table);
+        if (self::$autoStructure && isset(self::$autoStructure[$alias]['struct'])) {
+            foreach (self::$autoStructure[$alias]['struct'] as $fieldName => $field) {
+                $this->_structure[$fieldName] = [
+                    'type' => $field[!empty($field['type']) ? 'type' : 0],
+                    'default' => isset($field['default']) ?: '',
+                    'required' => isset($field['required']) ?: true,
+                    'unique' => isset($field['unique']) ?: false,
                 ];
+                foreach ($field as $key => $value) {
+                    $this->_structure[$fieldName][$key] = $value;
+                }
+            }
+        }
+    }
+
+    protected function loadRelations()
+    {
+        foreach ($this->_structure as $key => $field) {
+            if ($field['type'] == 'relation') {
+                if (!empty($this->_fields[$key]) && !is_object($this->_fields[$key])) $this->_fields[$key] = new QRelation(function() use($key, $field) {
+                    return self::initModel('q'.$field['table'])->getByPk($this->_fields[$key]);
+                }, $field['target']);
             }
         }
     }
@@ -133,9 +167,12 @@ class QModel extends QSource
         return isset($this->_structure[$field]['required']) ? $this->_structure[$field]['required'] : $isRequired;
     }
 
-    function validate() {
+    function validate($skipPk = false) {
+        $pks = array_keys($this->getPrimaryKey());
         foreach ($this->_structure as $field => $attrs) {
+            if ($skipPk && in_array($field, $pks)) continue;
             if ($this->isRequiredField($field) && $this->$field==='') $this->errors[$field]['message'] = 'This field is required';
+            if ($this->_structure[$field]['unique'] && $this->getOne(['where'=>[$field=>$this->$field]])) $this->errors[$field]['message'] = 'This field must be unique';
         }
         return !$this->errors;
     }

@@ -10,8 +10,9 @@ class QDynUnit extends QSource
     }
 
     public function run() {
-        $closure = $this->_closure;
-        return $closure();
+        $check = new \ReflectionFunction($this->_closure);
+        if ($check->isClosure()) $this->_closure = ($this->_closure)();
+        return $this->_closure;
     }
 }
 

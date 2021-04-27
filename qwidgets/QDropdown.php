@@ -7,7 +7,7 @@ class QDropdown extends \quarsintex\quartronic\qwidgets\QField
     public $autoHeight = true;
     public $type = 'integer';
 
-    public $options = ['1','2'];
+    public $options = [];
 
     protected $_current;
 
