@@ -19,7 +19,7 @@ class QExport extends QSource
             if (isset($this->autoStructure[$crudAlias])) {
                 $config = $this->autoStructure[$crudAlias];
                 $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($crudAlias);
-                $this->_crudModels[$crudAlias] = \quarsintex\quartronic\qcore\QCrud::initModel($modelName);
+                $this->_crudModels[$crudAlias] = \quarsintex\quartronic\qcore\QModel::initModel($modelName);
             } else {
                 return null;
             }
