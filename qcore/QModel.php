@@ -113,7 +113,7 @@ class QModel extends QSource
             $this->_structure[$field] = [
                 'type' => $fieldInfo->getType()->getName(),
                 'default' => $fieldInfo->getDefault(),
-                'required' => $fieldInfo->getNotNull() && !$fieldInfo->getDefault(),
+                'required' => $fieldInfo->getNotNull() && $fieldInfo->getDefault() === null,
                 'unique' => !empty($indexes[$uniqueIndexName]) ? $indexes[$uniqueIndexName]->isUnique() : false,
                 'length' => $fieldInfo->getLength(),
                 'autoincrement' => $fieldInfo->getAutoincrement(),
@@ -174,7 +174,7 @@ class QModel extends QSource
         foreach ($this->_structure as $field => $attrs) {
             if ($this->scenario == 'update' && in_array($field, $pks)) continue;
             if ($this->isRequiredField($field) && $this->$field==='') $this->errors[$field]['message'] = 'This field is required';
-            if ($this->scenario != 'update' && $this->_structure[$field]['unique'] && $this->getOne(['where'=>[$field=>$this->$field]])) $this->errors[$field]['message'] = 'This field must be unique';
+            if ($this->_structure[$field]['unique'] && $this->getOne([['where', [$field=>$this->$field]], ['where', 'id', '!=', $this->id]])) $this->errors[$field]['message'] = 'This field must be unique';
         }
         return !$this->errors;
     }
