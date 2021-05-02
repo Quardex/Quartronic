@@ -23,6 +23,11 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                     'key' => $key,
                     'value' => (string)$model->$key,
                     'type' => $model->structure[$key]['type'],
+                    'required' => $model->structure[$key]['required'],
+                    'unique' => $model->structure[$key]['unique'],
+                    'autoincrement' => $model->structure[$key]['autoincrement'],
+                    'default' => $model->structure[$key]['default'],
+                    'length' => $model->structure[$key]['length'],
                 ], $initParams));
             }, $model->fieldList);
         }

@@ -4,7 +4,8 @@
 <form id="form_validation" method="POST">
     <?php
     foreach ($this->fields as $field) {
-        $field->render(false);
+        if ($this->model->scenario != 'create' || !$field->renderValues['autoincrement'])
+            $field->render(false);
     }
     ?>
     <button class="btn bg-orange waves-effect" type="submit">SUBMIT</button>

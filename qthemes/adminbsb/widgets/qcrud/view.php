@@ -26,6 +26,12 @@ $(function () {
         <div class="card">
             <div class="header js-sweetalert">
                 <div style="float:right; margin: -9px -9px 0 0">
+                    <a href="<?=Q()->urlManager->route('./index')?>" type="button" class="btn btn-info waves-effect">
+                        <i class="material-icons">list</i>
+                        <span>List</span>
+                    </a>
+                </div>
+                <div style="float:right; margin: -9px 10px 0 0">
                     <button class="btn btn-danger waves-effect" data-type="confirm" data-link="<?=Q()->urlManager->route('./delete',['id'=>$model->id])?>">
                         <i class="material-icons">delete</i>
                         <span>Delete</span>

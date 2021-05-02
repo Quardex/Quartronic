@@ -105,25 +105,27 @@ class QModel extends QSource
 
     protected function loadStructure()
     {
-        $fields = $this->db->schema->getColumnListing($this->table);
-        foreach ($fields as $field) {
+        $tableInfo = $this->db->connection->getDoctrineSchemaManager()->listTableDetails($this->table);
+        $fields = $tableInfo->getColumns();
+        $indexes = $tableInfo->getIndexes();
+        foreach ($fields as $field => $fieldInfo) {
+            $uniqueIndexName = $this->table.'_'.$field.'_unique';
             $this->_structure[$field] = [
-                'type' => $this->db->schema->getColumnType($this->table, $field),
-                'default' => '',
-                'required' => false,
-                'unique' => false,
+                'type' => $fieldInfo->getType()->getName(),
+                'default' => $fieldInfo->getDefault(),
+                'required' => $fieldInfo->getNotNull() && !$fieldInfo->getDefault(),
+                'unique' => !empty($indexes[$uniqueIndexName]) ? $indexes[$uniqueIndexName]->isUnique() : false,
+                'length' => $fieldInfo->getLength(),
+                'autoincrement' => $fieldInfo->getAutoincrement(),
             ];
         }
         $this->_primaryKeys[] = 'id';
+        if (!empty($indexes['primary'])) $this->_primaryKeys = $indexes['primary']->getColumns();
+        if (count($this->_primaryKeys) == 1) $this->_structure[$this->_primaryKeys[0]]['unique'] = true;
         $alias = self::getAlias($this->table);
         if (self::$autoStructure && isset(self::$autoStructure[$alias]['struct'])) {
             foreach (self::$autoStructure[$alias]['struct'] as $fieldName => $field) {
-                $this->_structure[$fieldName] = [
-                    'type' => $field[!empty($field['type']) ? 'type' : 0],
-                    'default' => isset($field['default']) ?: '',
-                    'required' => isset($field['required']) ?: true,
-                    'unique' => isset($field['unique']) ?: false,
-                ];
+                $this->_structure[$fieldName]['type'] = $field[!empty($field['type']) ? 'type' : 0];
                 foreach ($field as $key => $value) {
                     $this->_structure[$fieldName][$key] = $value;
                 }
@@ -167,12 +169,12 @@ class QModel extends QSource
         return isset($this->_structure[$field]['required']) ? $this->_structure[$field]['required'] : $isRequired;
     }
 
-    function validate($skipPk = false) {
+    function validate() {
         $pks = array_keys($this->getPrimaryKey());
         foreach ($this->_structure as $field => $attrs) {
-            if ($skipPk && in_array($field, $pks)) continue;
+            if ($this->scenario == 'update' && in_array($field, $pks)) continue;
             if ($this->isRequiredField($field) && $this->$field==='') $this->errors[$field]['message'] = 'This field is required';
-            if ($this->_structure[$field]['unique'] && $this->getOne(['where'=>[$field=>$this->$field]])) $this->errors[$field]['message'] = 'This field must be unique';
+            if ($this->scenario != 'update' && $this->_structure[$field]['unique'] && $this->getOne(['where'=>[$field=>$this->$field]])) $this->errors[$field]['message'] = 'This field must be unique';
         }
         return !$this->errors;
     }

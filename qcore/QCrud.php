@@ -21,11 +21,6 @@ class QCrud extends QSource
         ];
     }
 
-    static function getModelDB($modelName) {
-        $as = self::getAutoStructure();
-        if (!empty($info['db'])) $db = self::$Q->{$info['db']};
-    }
-
     public function __construct($modelName)
     {
         $this->config = static::loadConfig();
@@ -73,7 +68,8 @@ class QCrud extends QSource
     public function create($params)
     {
         $this->model->fields = $params;
-        if (!$this->model->validate(true)) return false;
+        $this->model->scenario = 'create';
+        if (!$this->model->validate()) return false;
         $this->model->save();
         return true;
     }
@@ -89,6 +85,7 @@ class QCrud extends QSource
         if (empty($params['id'])) return null;
         $this->model = $this->model->getByPk($params);
         $this->model->fields = $params;
+        $this->model->scenario = 'update';
         if (!$this->model->validate()) return false;
         $this->model->save();
         return true;
@@ -226,11 +223,11 @@ class QCrud extends QSource
             if ($verbose) echo "\n".'Preparing table for crud section "'.$name.'"...';
             $db = isset($ns[$name]) ? self::$Q->sysDB : self::$Q->db;
             if (!empty($info['db'])) $db = self::$Q->{$info['db']};
-            $schema = $db->schema;
+            $dbBuilder = $db->builder;
             $tableName = 'q'.$name;
             if (!empty($info['struct'])) {
-                if (!$schema->hasTable($tableName)) {
-                    $schema->create($tableName, function ($table) use ($info) {
+                if (!$dbBuilder->hasTable($tableName)) {
+                    $dbBuilder->create($tableName, function ($table) use ($info) {
                         foreach ($info['struct'] as $fieldName => $fieldInfo) {
                             if (empty($fieldInfo['type'])) $fieldInfo['type'] = $fieldInfo[0];
                             switch ($fieldInfo['type']) {

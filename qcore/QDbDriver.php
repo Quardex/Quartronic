@@ -5,8 +5,9 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 class QDbDriver extends QSource
 {
-    protected $capsula;
-    protected $schema;
+    protected $capsule;
+    protected $connection;
+    protected $builder;
 
     protected function getConnectedProperties()
     {
@@ -29,21 +30,22 @@ class QDbDriver extends QSource
 
     public function __construct($params=[])
     {
-        $this->capsula = new Capsule;
+        $this->capsule = new Capsule;
 
         $config = array_merge($this->getDefaultParams(), $params);
 
         if ($config['driver'] == 'sqlite') $this->initDBFile($config['database']);
 
-        $this->capsula->addConnection($config);
-        //$capsule->setAsGlobal();
-        $this->capsula->bootEloquent();
-        $this->schema = $this->capsula->getConnection()->getSchemaBuilder();
-        $this->schema->enableForeignKeyConstraints();
+        $this->capsule->addConnection($config);
+        //$this->capsule->setAsGlobal();
+        $this->capsule->bootEloquent();
+        $this->connection = $this->capsule->getConnection();
+        $this->builder = $this->capsule->getConnection()->getSchemaBuilder();
+        $this->builder->enableForeignKeyConstraints();
     }
 
     public function getOrm($table) {
-        return $this->capsula->getConnection()->table($table);
+        return $this->connection->table($table);
     }
 
     public function find($model, $params=[]) {

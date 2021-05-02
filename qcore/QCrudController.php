@@ -20,7 +20,7 @@ class QCrudController extends QController
         try {
             $countAll = $this->crud->model->countAll();
         } catch (\PDOException $e) {
-            if (!$this->crud->model->db->schema->hasTable($this->crud->model->getTable())) { //ugly
+            if (!$this->crud->model->db->builder->hasTable($this->crud->model->getTable())) { //ugly
                 \quarsintex\quartronic\qcore\QCrud::restructDB();
                 $countAll = $this->crud->model->countAll();
             }
