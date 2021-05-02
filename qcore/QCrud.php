@@ -113,7 +113,7 @@ class QCrud extends QSource
                     ],
                     'email' => [
                         'string',
-                        'null' => true,
+                        'required' => false,
                     ],
                     'passhash' => [
                         'string',
@@ -242,7 +242,7 @@ class QCrud extends QSource
                                 case 'relation':
                                     $filedType = 'unsignedInteger';
                                     $fieldInfo['unique'] = true;
-                                    $fieldInfo['null'] = false;
+                                    $fieldInfo['required'] = true;
                                     break;
 
                                 default:
@@ -258,9 +258,9 @@ class QCrud extends QSource
 
                             unset($fieldInfo[0]);
                             unset($fieldInfo['type']);
-                            if (!empty($fieldInfo['null'])) {
-                                $fieldInfo['nullable'] = $fieldInfo['null'];
-                                unset($fieldInfo['null']);
+                            if (!empty($fieldInfo['required'])) {
+                                $fieldInfo['nullable'] = !$fieldInfo['required'];
+                                unset($fieldInfo['required']);
                             }
 
                             foreach ($fieldInfo as $key => $value) {
