@@ -156,7 +156,8 @@ class QModel extends QSource
         foreach ($this->_structure as $key => $field) {
             if ($field['type'] == 'relation') {
                 if (!empty($this->_fields[$key]) && !is_object($this->_fields[$key])) $this->_fields[$key] = new QRelation(function() use($key, $field) {
-                    return self::initModel('q'.$field['table'])->getByPk($this->_fields[$key]);
+                    $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
+                    return self::initModel($field['table'], $prefix)->getByPk($this->_fields[$key]);
                 }, $field['target']);
             }
         }
