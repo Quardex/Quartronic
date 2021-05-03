@@ -9,7 +9,7 @@ class QStorage extends QSource
     public function __construct($category)
     {
         $this->category = $category;
-        $model = new QModel('qstorage');
+        $model = new QModel('qstorage', 'q');
         $list = $model->getAll(['where' => ['category'=>$this->category]]);
         foreach ($list as $row) {
             $this->_values[$row->fields['key']] = $row->fields['value'];
@@ -33,7 +33,7 @@ class QStorage extends QSource
 
     public function save($key, $value, $createEvenNotExist=false)
     {
-        $model = new QModel('qstorage');
+        $model = new QModel('qstorage', 'q');
         $model = $model->getOne([
             'where' => [
                 'category'=>$this->category,
@@ -41,7 +41,7 @@ class QStorage extends QSource
             ]
         ]);
         if (!$model && $createEvenNotExist) {
-            $model = new QModel('qstorage');
+            $model = new QModel('qstorage', 'q');
             $model->category = $this->category;
             $model->key = $key;
         }

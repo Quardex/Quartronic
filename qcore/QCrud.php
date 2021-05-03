@@ -23,8 +23,19 @@ class QCrud extends QSource
 
     public function __construct($modelName)
     {
-        $this->config = static::loadConfig();
-        $this->model = QModel::initModel($modelName);
+        $this->config = self::loadConfig();
+        $ns = self::getNativeStructure();
+        $modelName = strtolower($modelName);
+        $alias = QModel::getAlias($modelName, 'q');
+        if (isset($ns[$alias])) {
+            $prefix = 'q';
+            $table = $modelName;
+        } else {
+            $prefix = '';
+            $table = $alias;
+        }
+        if (isset($this->config[$alias]['prefix'])) $prefix = $this->config[$alias]['prefix'];
+        $this->model = QModel::initModel($table, $prefix);
         $this->page = intval(self::$Q->request->getParam('page', $this->page));
         $this->pageSize = $this->settings->get('pageSize');
     }
@@ -35,7 +46,7 @@ class QCrud extends QSource
         $configFromFile = file_exists($configPath) ? include($configPath) : [];
         $configFromDB = [];
         try {
-            foreach ((new QModel('qcrud'))->all as $model) {
+            foreach ((new QModel('qcrud', 'q'))->all as $model) {
                 $configFromDB[$model->alias] = json_decode($model->config, true);
             }
         } finally {
@@ -100,7 +111,9 @@ class QCrud extends QSource
 
     static function getNativeStructure()
     {
-        return [
+        static $cache;
+        if (!$cache)
+            $cache = [
             'user' => [
                 'struct' => [
                     'id' => [
@@ -205,6 +218,7 @@ class QCrud extends QSource
                 ],
             ],
         ];
+        return $cache;
     }
 
     static function getAutoStructure()
@@ -221,10 +235,17 @@ class QCrud extends QSource
         $ns = self::getNativeStructure();
         foreach (self::getAutoStructure() as $name => $info) {
             if ($verbose) echo "\n".'Preparing table for crud section "'.$name.'"...';
-            $db = isset($ns[$name]) ? self::$Q->sysDB : self::$Q->db;
+            if (isset($ns[$name])) {
+                $db = self::$Q->sysDB;
+                $prefix = 'q';
+            } else {
+                $db = self::$Q->db;
+                $prefix = '';
+            }
             if (!empty($info['db'])) $db = self::$Q->{$info['db']};
             $dbBuilder = $db->builder;
-            $tableName = 'q'.$name;
+            if (isset($info['prefix'])) $prefix = $info['prefix'];
+            $tableName = $prefix.$name;
             if (!empty($info['struct'])) {
                 if (!$dbBuilder->hasTable($tableName)) {
                     $dbBuilder->create($tableName, function ($table) use ($info) {
