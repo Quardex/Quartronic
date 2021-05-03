@@ -53,7 +53,8 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                 if (empty($field['target'])) {
                     throw new \Exception('Attribute "target" can\'t be empty');
                 }
-                foreach (QModel::initModel('q'.$field['table'])->getAll() as $model) {
+                $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
+                foreach (QModel::initModel($field['table'], $prefix)->getAll() as $model) {
                     $initParams['options'][$model->{$field['target']}] = $model->{$field['titleTarget']};
                 }
             case 'dropdown':

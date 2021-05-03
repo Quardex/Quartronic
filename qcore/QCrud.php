@@ -274,7 +274,7 @@ class QCrud extends QSource
                             if ($fieldInfo['type'] == 'relation') {
                                 if (empty($fieldInfo['onDelete'])) $fieldInfo['onDelete'] = 'CASCADE';
                                 if (empty($fieldInfo['onUpdate'])) $fieldInfo['onUpdate'] = 'CASCADE';
-                                $table->foreign($fieldName)->references($fieldInfo['target'])->on('q'.$fieldInfo['table'])->onDelete($fieldInfo['onDelete'])->onUpdate($fieldInfo['onUpdate']);
+                                $table->foreign($fieldName)->references($fieldInfo['target'])->on($fieldInfo['table'])->onDelete($fieldInfo['onDelete'])->onUpdate($fieldInfo['onUpdate']);
                             }
 
                             unset($fieldInfo[0]);

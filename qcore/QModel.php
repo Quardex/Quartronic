@@ -157,7 +157,7 @@ class QModel extends QSource
             if ($field['type'] == 'relation') {
                 if (!empty($this->_fields[$key]) && !is_object($this->_fields[$key])) $this->_fields[$key] = new QRelation(function() use($key, $field) {
                     $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
-                    return self::initModel($field['table'], $prefix)->getByPk($this->_fields[$key]);
+                    return QModel::initModel($field['table'], $prefix)->getByPk($this->_fields[$key]);
                 }, $field['target']);
             }
         }
