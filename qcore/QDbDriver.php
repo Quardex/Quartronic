@@ -77,14 +77,14 @@ class QDbDriver extends QSource
     }
 
     public function insert($model) {
-        $fields = $model->getFields();
+        $fields = $model->getFields(true);
         if (empty($fields['created_at'])) unset($fields['created_at']);
         if (empty($fields['updated_at'])) unset($fields['updated_at']);
         $this->getOrm($model->table)->insert($fields);
     }
 
     public function update($model) {
-        $this->getOrm($model->table)->where($model->getPrimaryKey())->update($model->getFields());
+        $this->getOrm($model->table)->where($model->getPrimaryKey())->update($model->getFields(true));
     }
 
     public function delete($model) {

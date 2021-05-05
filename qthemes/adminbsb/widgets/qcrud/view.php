@@ -55,8 +55,9 @@ $(function () {
                     </thead>
                     <tbody>
                     <?php
-                        foreach ($model->fieldList as $field) {
-                            echo "<tr></tr><td>".mb_convert_case(str_replace('_', ' ', $field), MB_CASE_TITLE, "UTF-8")."</td><td>".$model->$field."</td></td>";
+                        foreach ($model->getFieldList(true) as $fieldName) {
+                            $item = ($model->$fieldName instanceof \quarsintex\quartronic\qcore\QRelation) ? $model->$fieldName->run()->{$model->$fieldName->titleField} : $model->$fieldName;
+                            echo "<tr></tr><td>".mb_convert_case(str_replace('_', ' ', $fieldName), MB_CASE_TITLE, "UTF-8")."</td><td>".$item."</td></td>";
                         }
                     ?>
                     </tbody>

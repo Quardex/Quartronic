@@ -34,7 +34,10 @@ class QCrud extends QSource
             $prefix = '';
             $table = $alias;
         }
-        if (isset($this->config[$alias]['prefix'])) $prefix = $this->config[$alias]['prefix'];
+        if (isset($this->config[$alias]['prefix'])) {
+            $prefix = $this->config[$alias]['prefix'];
+            $table = $prefix.$table;
+        }
         $this->model = QModel::initModel($table, $prefix);
         $this->page = intval(self::$Q->request->getParam('page', $this->page));
         $this->pageSize = $this->settings->get('pageSize');
@@ -261,9 +264,10 @@ class QCrud extends QSource
                                     break;
 
                                 case 'relation':
+                                    $fieldName = $fieldName.'_id';
                                     $filedType = 'unsignedInteger';
                                     $fieldInfo['unique'] = true;
-                                    $fieldInfo['required'] = true;
+                                    if (!isset($fieldInfo['required'])) $fieldInfo['required'] = true;
                                     break;
 
                                 default:
@@ -279,7 +283,7 @@ class QCrud extends QSource
 
                             unset($fieldInfo[0]);
                             unset($fieldInfo['type']);
-                            if (!empty($fieldInfo['required'])) {
+                            if (isset($fieldInfo['required'])) {
                                 $fieldInfo['nullable'] = !$fieldInfo['required'];
                                 unset($fieldInfo['required']);
                             }
