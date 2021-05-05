@@ -151,9 +151,9 @@ class QModel extends QSource
                 unset($field[0]);
 
                 if ($field['type'] == 'relation') {
-                    $keyID = $fieldName.'_id';
-                    $num = array_search($keyID, array_keys($this->_structure))+1;
-                    $this->_structure = array_slice($this->_structure, 0, $num, true) + [$fieldName => []] + array_slice($this->_structure, $num, count($this->_structure) - $num, true);
+                    $keyWithoutID = str_replace('_id', '', $fieldName);
+                    $num = array_search($fieldName, array_keys($this->_structure))+1;
+                    $this->_structure = array_slice($this->_structure, 0, $num, true) + [$keyWithoutID => []] + array_slice($this->_structure, $num, count($this->_structure) - $num, true);
                 }
 
                 foreach ($field as $key => $value) {
@@ -166,19 +166,23 @@ class QModel extends QSource
     protected function loadRelations()
     {
         foreach ($this->_structure as $key => $field) {
-            if ($field['type'] == 'relation') {
+            if (in_array($field['type'], ['relation', 'relation_id'])) {
+                $keyWithoutID = str_replace('_id', '', $key);
                 $keyID = $key.'_id';
-                if (array_key_exists($key, $this->_fields)) $this->_fields[$keyID] = $this->_fields[$key];
-                if (!empty($this->_fields[$keyID])) {
-                    $value = $this->_fields[$keyID];
-                    $this->_fields[$key] = new QRelation(function() use($keyID, $field, $value) {
+                if (array_key_exists($keyWithoutID, $this->_fields)) $this->_fields[$key] = $this->_fields[$keyWithoutID];
+                if (array_key_exists($keyID, $this->_fields)) $this->_fields[$key] = $this->_fields[$keyID];
+                if (!empty($this->_fields[$key])) {
+                    $value = $this->_fields[$key];
+                    $this->_fields[$keyWithoutID] = new QRelation(function () use ($field, $value) {
                         $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
                         return QModel::initModel($field['table'], $prefix)->getByPk($value);
                     }, $field['target'], $field['titleTarget']);
                 }
-                $this->_structure[$key] = array_merge($this->_structure[$keyID], $this->_structure[$key]);
-                $this->_structure[$keyID]['type'] = 'relation_id';
-                $this->_structure[$keyID]['required'] = false;
+                if ($key != $keyWithoutID && $field['type'] == 'relation') {
+                    $this->_structure[$keyWithoutID] = $this->_structure[$key];
+                    $this->_structure[$key]['type'] = 'relation_id';
+                    $this->_structure[$key]['required'] = false;
+                }
             }
         }
     }

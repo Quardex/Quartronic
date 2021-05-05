@@ -264,7 +264,6 @@ class QCrud extends QSource
                                     break;
 
                                 case 'relation':
-                                    $fieldName = $fieldName.'_id';
                                     $filedType = 'unsignedInteger';
                                     $fieldInfo['unique'] = true;
                                     if (!isset($fieldInfo['required'])) $fieldInfo['required'] = true;
