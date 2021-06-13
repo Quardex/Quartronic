@@ -150,7 +150,7 @@ class QModel extends QSource
                 $this->_structure[$fieldName]['type'] = $field[!empty($field['type']) ? 'type' : 0];
                 unset($field[0]);
 
-                if ($field['type'] == 'relation') {
+                if ($this->_structure[$fieldName]['type'] == 'relation') {
                     $keyWithoutID = str_replace('_id', '', $fieldName);
                     $num = array_search($fieldName, array_keys($this->_structure))+1;
                     $this->_structure = array_slice($this->_structure, 0, $num, true) + [$keyWithoutID => []] + array_slice($this->_structure, $num, count($this->_structure) - $num, true);
