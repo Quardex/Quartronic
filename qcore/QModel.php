@@ -306,6 +306,7 @@ class QModel extends QSource
 
     protected function update()
     {
+        if (isset($this->updated_at)) $this->updated_at = date('Y-m-d H:i:s');
         $this->db->update($this);
     }
 
