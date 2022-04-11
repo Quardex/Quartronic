@@ -20,6 +20,7 @@ class Quartronic extends QSource
         'route' => '',
         'returnRender' => false,
         'requireAuth' => true,
+        'sysDB' => [],
         'db' => [
 //          'driver'    => 'sqlite',
 //          'database'  => $this->dbDir.'q.db',
@@ -37,7 +38,7 @@ class Quartronic extends QSource
     protected function loadConnectedProperties()
     {
         $this->_connectedProperties = [
-            'sysDB'=> $this->architect->dynUnit('db'),
+            'sysDB'=> $this->architect->dynUnit('db', [$this->params['sysDB']]),
             'db' => $this->architect->dynUnit('db', [$this->params['db']]),
             'router' => $this->architect->dynUnit('router'),
             'externManager' => $this->architect->dynUnit('externManager'),
@@ -96,7 +97,7 @@ class Quartronic extends QSource
 
     function getVersion()
     {
-        return '0.2.78';
+        return '0.2.79';
     }
 
     function getLastVersion()

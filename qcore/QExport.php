@@ -4,7 +4,7 @@ namespace quarsintex\quartronic\qcore;
 class QExport extends QSource
 {
     protected $_components;
-    protected $_crudModels;
+    protected $_models;
 
     protected function getConnectedProperties()
     {
@@ -14,17 +14,17 @@ class QExport extends QSource
         ];
     }
 
-    public function getCrudModel($crudAlias) {
-        if (empty($this->_crudModels[$crudAlias])) {
-            if (isset($this->autoStructure[$crudAlias])) {
-                $config = $this->autoStructure[$crudAlias];
-                $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($crudAlias);
-                $this->_crudModels[$crudAlias] = \quarsintex\quartronic\qcore\QModel::initModel($modelName, 'q');
+    public function getModel($alias) {
+        if (empty($this->_models[$alias])) {
+            if (isset($this->autoStructure[$alias])) {
+                $config = $this->autoStructure[$alias];
+                $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($alias);
+                $this->_models[$alias] = \quarsintex\quartronic\qcore\QModel::initModel($modelName, 'q');
             } else {
                 return null;
             }
         }
-        return $this->_crudModels[$crudAlias];
+        return $this->_models[$alias];
     }
 
     public function getComponent($name) {
