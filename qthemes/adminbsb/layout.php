@@ -325,7 +325,7 @@ Answer GitHub questions
                             <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
                             <li-- role="separator" class="divider"></li-->
-                            <li><a id="logout" href="<?=Q()->urlManager->route('/site/logout')?>"><i class="material-icons">input</i>Sign Out</a></li>
+                            <li><a id="logout" href="<?=str_replace(Q()->router->subWebPath, '', Q()->urlManager->route('/site/logout'))?>"><i class="material-icons">input</i>Sign Out</a></li>
                         </ul>
                     </div>
                 </div>
