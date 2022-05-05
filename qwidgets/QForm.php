@@ -47,15 +47,15 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                 break;
 
             case 'relation':
-                if (empty($field['titleTarget'])) {
-                    throw new \Exception('Attribute "titleTarget" can\'t be empty');
+                if (empty($field['titleField'])) {
+                    throw new \Exception('Attribute "titleField" can\'t be empty');
                 }
                 if (empty($field['target'])) {
                     throw new \Exception('Attribute "target" can\'t be empty');
                 }
                 $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
                 foreach (QModel::initModel($field['table'], $prefix)->getAll() as $model) {
-                    $initParams['options'][$model->{$field['target']}] = $model->{$field['titleTarget']};
+                    $initParams['options'][$model->{$field['target']}] = $model->{$field['titleField']};
                 }
             case 'dropdown':
                 $initParams[0] = 'QDropdown';

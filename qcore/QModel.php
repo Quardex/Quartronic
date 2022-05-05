@@ -176,7 +176,7 @@ class QModel extends QSource
                     $this->_fields[$keyWithoutID] = new QRelation(function () use ($field, $value) {
                         $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
                         return QModel::initModel($field['table'], $prefix)->getByPk($value);
-                    }, $field['target'], $field['titleTarget']);
+                    }, $field['target'], $field['titleField']);
                 }
                 if ($key != $keyWithoutID && $field['type'] == 'relation') {
                     $this->_structure[$keyWithoutID] = $this->_structure[$key];
