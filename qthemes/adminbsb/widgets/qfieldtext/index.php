@@ -10,10 +10,10 @@
     <?php else : ?>
         <textarea rows="1" name="<?=$this->key?>" class="form-control no-resize auto-growth" style="overflow: hidden; overflow-wrap: break-word; height: 32px;"><?=htmlspecialchars($this->value)?></textarea>
     <?php endif; ?>
-        <label class="form-label"><?=mb_convert_case(str_replace('_', ' ', $this->key), MB_CASE_TITLE, "UTF-8")?></label>
+        <label class="form-label"><?=mb_convert_case(str_replace('_', ' ', $this->title), MB_CASE_TITLE, "UTF-8")?></label>
     </div>
     <?php if ($this->error) : ?>
-        <label id="id-error-<?=$this->key?>" class="error" for="<?=$this->key?>"><?=$this->error?></label>
+        <label id="id-error-<?=$this->key?>" class="error" for="<?= $this->key ?>"><?=$this->error?></label>
     <?php endif ?>
 </div>
 

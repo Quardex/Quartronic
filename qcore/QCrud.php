@@ -265,7 +265,6 @@ class QCrud extends QSource
 
                                 case 'relation':
                                     $filedType = 'unsignedInteger';
-                                    $fieldInfo['unique'] = true;
                                     if (!isset($fieldInfo['required'])) $fieldInfo['required'] = true;
                                     break;
 

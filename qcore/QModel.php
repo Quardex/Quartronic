@@ -150,12 +150,6 @@ class QModel extends QSource
                 $this->_structure[$fieldName]['type'] = $field[!empty($field['type']) ? 'type' : 0];
                 unset($field[0]);
 
-                if ($this->_structure[$fieldName]['type'] == 'relation') {
-                    $keyWithoutID = str_replace('_id', '', $fieldName);
-                    $num = array_search($fieldName, array_keys($this->_structure))+1;
-                    $this->_structure = array_slice($this->_structure, 0, $num, true) + [$keyWithoutID => []] + array_slice($this->_structure, $num, count($this->_structure) - $num, true);
-                }
-
                 foreach ($field as $key => $value) {
                     $this->_structure[$fieldName][$key] = $value;
                 }
@@ -166,22 +160,14 @@ class QModel extends QSource
     protected function loadRelations()
     {
         foreach ($this->_structure as $key => $field) {
-            if (in_array($field['type'], ['relation', 'relation_id'])) {
+            if ($field['type'] == 'relation') {
                 $keyWithoutID = str_replace('_id', '', $key);
-                $keyID = $key.'_id';
-                if (array_key_exists($keyWithoutID, $this->_fields)) $this->_fields[$key] = $this->_fields[$keyWithoutID];
-                if (array_key_exists($keyID, $this->_fields)) $this->_fields[$key] = $this->_fields[$keyID];
                 if (!empty($this->_fields[$key])) {
                     $value = $this->_fields[$key];
                     $this->_fields[$keyWithoutID] = new QRelation(function () use ($field, $value) {
                         $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
                         return QModel::initModel($field['table'], $prefix)->getByPk($value);
                     }, $field['target'], $field['titleField']);
-                }
-                if ($key != $keyWithoutID && $field['type'] == 'relation') {
-                    $this->_structure[$keyWithoutID] = $this->_structure[$key];
-                    $this->_structure[$key]['type'] = 'relation_id';
-                    $this->_structure[$key]['required'] = false;
                 }
             }
         }
@@ -217,11 +203,11 @@ class QModel extends QSource
         foreach ($this->_structure as $field => $attrs) {
             if ($this->isRequiredField($field) && (
                     array_key_exists($field, $pks) && $this->$field === '' ||
-                    !array_key_exists($field, $pks) && strlen((string)$this->$field) == 0
+                    !array_key_exists($field, $pks) && strlen($this->$field) == 0
                 )
-            ) $this->errors[$field]['message'] = 'This field is required';
-            if ($this->$field && $attrs['unique'] && $this->getOne([['where', [$field=>$this->$field]], ['where', 'id', '!=', $this->id]])) {
-                if ($attrs['type'] == 'relation_id') $field = str_replace('_id', '', $field);
+            ) {
+                $this->errors[$field]['message'] = 'This field is required';
+            } elseif ($this->$field && $attrs['unique'] && $this->getOne([['where', [$field=>$this->$field]], ['where', 'id', '!=', $this->id]])) {
                 $this->errors[$field]['message'] = 'This field must be unique';
             }
         }
@@ -236,9 +222,6 @@ class QModel extends QSource
     function __get($name)
     {
         if (array_key_exists($name, $this->_structure)) {
-            if ($this->_structure[$name]['type'] == 'relation_id') {
-                $this->$name = (string)$this->_fields[str_replace('_id', '', $name)];
-            }
             if (!array_key_exists($name, $this->_fields)) $this->_fields[$name] = null;
             return $this->_fields[$name];
         }
@@ -247,7 +230,7 @@ class QModel extends QSource
 
     function __set($name, $value)
     {
-        if (!empty($this->_structure[$name]['type']) && $this->_structure[$name]['type'] == 'relation_id' && $value === '') $value = null;
+        if (!empty($this->_structure[$name]['type']) && $this->_structure[$name]['type'] == 'relation' && $value === '') $value = null;
         array_key_exists($name, $this->_structure) ?
             $this->_fields[$name] = $value :
             parent::__set($name, $value);
@@ -261,15 +244,13 @@ class QModel extends QSource
         return parent::__isset($name);
     }
 
-    function getFieldList($ignoreRelationID = false)
+    function getFieldList($ignoreRelation = false)
     {
         if (!$this->_fieldList) $this->_fieldList = array_keys($this->_structure);
-        if ($ignoreRelationID) {
+        if ($ignoreRelation) {
             $tempFieldList = $this->_fieldList;
-            foreach ($this->_structure as $name => $value) {
-                if ($value['type'] == 'relation_id') {
-                    unset($tempFieldList[array_search($name, $tempFieldList)]);
-                }
+            foreach ($tempFieldList as $key => $value) {
+                if (is_object($value)) unset($tempFieldList[$key]);
             }
             return $tempFieldList;
         }
@@ -280,8 +261,8 @@ class QModel extends QSource
     {
         if ($ignoreRelation) {
             $tempFields = $this->_fields;
-            foreach ($this->_structure as $name => $value) {
-                if ($value['type'] == 'relation') unset($tempFields[$name]);
+            foreach ($tempFields as $key => $value) {
+                if (is_object($value)) unset($tempFields[$key]);
             }
             return $tempFields;
         }

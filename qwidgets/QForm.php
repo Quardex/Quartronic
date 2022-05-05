@@ -21,13 +21,14 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                 if (isset($model->errors[$key])) $initParams['error'] = $model->errors[$key]['message'];
                 return new $className(array_merge([
                     'key' => $key,
-                    'value' => (string)$model->$key,
+                    'value' => $model->$key,
                     'type' => $model->structure[$key]['type'],
                     'required' => $model->structure[$key]['required'],
                     'unique' => $model->structure[$key]['unique'],
                     'autoincrement' => $model->structure[$key]['autoincrement'],
                     'default' => $model->structure[$key]['default'],
                     'length' => $model->structure[$key]['length'],
+                    'title' => !empty($model->structure[$key]['title']) ? $model->structure[$key]['title'] : str_replace('_id', '', $key),
                 ], $initParams));
             }, $model->fieldList);
         }

@@ -19,10 +19,7 @@ class QDropdown extends \quarsintex\quartronic\qwidgets\QField
 
     public function getCurrent()
     {
-        if ($this->_current === null) {
-            reset($this->options);
-            $this->_current = count($this->options) > 0 ? key($this->options) : null;
-        }
+        if ($this->_current === null) return '';
         return $this->_current;
     }
 
