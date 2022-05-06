@@ -14,8 +14,8 @@ class QRelation extends QDynUnit
 
     public function __toString()
     {
-        if (!is_string($this->run()->{$this->target})) return '';
-        return $this->run()->{$this->target};
+        if (!is_string($result = $this->run()->{$this->titleField})) return '';
+        return $result;
     }
 }
 

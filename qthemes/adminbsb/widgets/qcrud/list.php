@@ -38,7 +38,7 @@ $(function () {
                     <thead>
                     <tr>
                         <?php
-                        foreach ($crud->model->getFieldList(true) as $field) {
+                        foreach ($crud->model->getTitleList(true) as $field) {
                             if ($crud->isIgnoredFields($field)) continue;
                             echo "<th>".mb_convert_case(str_replace('_', ' ', $field), MB_CASE_TITLE, "UTF-8")."</th>";
                         }
@@ -51,7 +51,8 @@ $(function () {
                         foreach ($crud->list as $model) {
                             foreach ($crud->model->getFieldList(true) as $fieldName) {
                                 if ($crud->isIgnoredFields($fieldName)) continue;
-                                $item = ($model->$fieldName instanceof \quarsintex\quartronic\qcore\QRelation) ? $model->$fieldName->run()->{$model->$fieldName->titleField} : $model->$fieldName;
+                                if ($model->structure[$fieldName]['type'] == 'relation') $fieldName = preg_replace('/_id$/', '', $fieldName);
+                                $item = $model->$fieldName;
                                 echo '<td>'.mb_strimwidth(strip_tags($item), 0, 150, "...").'</td>';
                             }
                             echo '<td class="js-sweetalert" style="width:100px">'.

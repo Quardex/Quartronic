@@ -10,9 +10,11 @@ class QModel extends QSource
     protected $_table;
     protected $_alias;
     protected $_fields = [];
+    protected $_relations = [];
     protected $_structure = [];
     protected $_rules = [];
     protected $_fieldList = [];
+    protected $_titleList = [];
     protected $_primaryKeys = [];
     protected $_query;
     protected $new = true;
@@ -62,12 +64,6 @@ class QModel extends QSource
         if (!$this->prefix && isset(self::$nativeStructure[self::getAlias($this->_table, 'q')])) $this->prefix = 'q';
 
         $this->_alias = self::getAlias($this->_table, $this->prefix);
-//
-//        if (!empty(self::$autoStructure[$this->_alias]['prefix'])) {
-//            $oldPrefix = $this->prefix;
-//            $this->prefix = self::$autoStructure[$this->_alias]['prefix'];
-//            if ($this->prefix != $oldPrefix) $this->_table = $this->prefix . $this->_alias;
-//        }
 
         $this->_connectedProperties = array_merge($this->getDefaultConnectedProperties(), $this->getConnectedProperties());
 
@@ -161,10 +157,10 @@ class QModel extends QSource
     {
         foreach ($this->_structure as $key => $field) {
             if ($field['type'] == 'relation') {
-                $keyWithoutID = str_replace('_id', '', $key);
-                if (!empty($this->_fields[$key])) {
+                $keyWithoutID = preg_replace('/_id$/', '', $key);
+                if (!empty($this->_fields[$key]) && $keyWithoutID != $key) {
                     $value = $this->_fields[$key];
-                    $this->_fields[$keyWithoutID] = new QRelation(function () use ($field, $value) {
+                    $this->_relations[$keyWithoutID] = new QRelation(function () use ($field, $value) {
                         $prefix = !empty($field['prefix']) ? $field['prefix'] : '';
                         return QModel::initModel($field['table'], $prefix)->getByPk($value);
                     }, $field['target'], $field['titleField']);
@@ -224,6 +220,8 @@ class QModel extends QSource
         if (array_key_exists($name, $this->_structure)) {
             if (!array_key_exists($name, $this->_fields)) $this->_fields[$name] = null;
             return $this->_fields[$name];
+        } elseif (array_key_exists($name, $this->_relations)) {
+            return $this->_relations[$name];
         }
         return parent::__get($name);
     }
@@ -255,6 +253,18 @@ class QModel extends QSource
             return $tempFieldList;
         }
         return $this->_fieldList;
+    }
+
+    function getTitleList($ignoreRelation = false)
+    {
+        if (!$this->_titleList) {
+            $this->_titleList = array_flip($this->getFieldList($ignoreRelation));
+            foreach ($this->_titleList as $field => &$title) {
+                $title = $this->_structure[$field]['title'] ?? $field;     
+                if ($this->_structure[$field]['type'] == 'relation') $title = preg_replace('/_id$/', '', $title); 
+            }
+        }
+        return $this->_titleList;
     }
 
     function getFields($ignoreRelation = false)

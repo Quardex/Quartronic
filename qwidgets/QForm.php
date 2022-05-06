@@ -28,7 +28,7 @@ class QForm extends \quarsintex\quartronic\qcore\QWidget
                     'autoincrement' => $model->structure[$key]['autoincrement'],
                     'default' => $model->structure[$key]['default'],
                     'length' => $model->structure[$key]['length'],
-                    'title' => !empty($model->structure[$key]['title']) ? $model->structure[$key]['title'] : str_replace('_id', '', $key),
+                    'title' => $model->titleList[$key],
                 ], $initParams));
             }, $model->fieldList);
         }
