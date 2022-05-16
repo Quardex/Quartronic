@@ -285,6 +285,9 @@ class QCrud extends QSource
                                 $fieldInfo['nullable'] = !$fieldInfo['required'];
                                 unset($fieldInfo['required']);
                             }
+                            if (isset($fieldInfo['default']) && ($fieldInfo['default'] === null || $fieldInfo['default'] === false)) {
+                                unset($fieldInfo['default']);
+                            }
 
                             foreach ($fieldInfo as $key => $value) {
                                 $field->$key($value);
