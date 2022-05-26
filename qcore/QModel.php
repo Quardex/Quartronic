@@ -236,7 +236,7 @@ class QModel extends QSource
 
     function __isset($name)
     {
-        if (isset($this->_structure[$name])) {
+        if (isset($this->_structure[$name]) || isset($this->_relations[$name])) {
             return true;
         }
         return parent::__isset($name);
@@ -350,8 +350,7 @@ class QModel extends QSource
             foreach ($pks as $fieldName) {
                 if (array_key_exists($fieldName, $where)) $pkWhere[$fieldName] = $where[$fieldName];
             }
-        }
-        if (ctype_digit($pkWhere)) $pkWhere = [$this->_primaryKeys[0] => $pkWhere];
+        } elseif (ctype_digit((string)$pkWhere)) $pkWhere = [$this->_primaryKeys[0] => $pkWhere];
         return $this->getOne(['where'=>$pkWhere]);
     }
 

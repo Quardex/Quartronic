@@ -52,8 +52,7 @@ $(function () {
                             foreach ($crud->model->getFieldList(true) as $fieldName) {
                                 if ($crud->isIgnoredFields($fieldName)) continue;
                                 if ($model->structure[$fieldName]['type'] == 'relation') $fieldName = preg_replace('/_id$/', '', $fieldName);
-                                $item = $model->$fieldName;
-                                echo '<td>'.mb_strimwidth(strip_tags($item), 0, 150, "...").'</td>';
+                                echo '<td>'.(isset($model->$fieldName) ? mb_strimwidth(strip_tags($model->$fieldName), 0, 150, "...") : '<span style="color:red">Null</span>').'</td>';
                             }
                             echo '<td class="js-sweetalert" style="width:100px">'.
                                 '<a href="'.Q()->urlManager->route('view', $model->primaryKey).'"><i class="material-icons">visibility</i></a>&nbsp;'.
