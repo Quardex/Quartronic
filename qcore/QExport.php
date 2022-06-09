@@ -9,7 +9,7 @@ class QExport extends QSource
     protected function getConnectedProperties()
     {
         return [
-            'user' => &self::$Q->user,
+            'user' => self::$Q->user,
             'autoStructure' => \quarsintex\quartronic\qcore\QCrud::getAutoStructure(),
         ];
     }
