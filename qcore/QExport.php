@@ -19,7 +19,7 @@ class QExport extends QSource
             if (isset($this->autoStructure[$alias])) {
                 $config = $this->autoStructure[$alias];
                 $modelName = isset($config['modelName']) ? $config['modelName'] : 'Q'.ucfirst($alias);
-                $this->_models[$alias] = \quarsintex\quartronic\qcore\QModel::initModel($modelName, 'q');
+                $this->_models[$alias] = \quarsintex\quartronic\qcore\QModel::initModel($modelName);
             } else {
                 return null;
             }
