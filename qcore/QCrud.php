@@ -1,6 +1,8 @@
 <?php
 namespace quarsintex\quartronic\qcore;
 
+use Illuminate\Support\Fluent;
+
 class QCrud extends QSource
 {
     protected $model;
@@ -253,6 +255,7 @@ class QCrud extends QSource
                 if (!$dbBuilder->hasTable($tableName)) {
                     $dbBuilder->create($tableName, function ($table) use ($info) {
                         foreach ($info['struct'] as $fieldName => $fieldInfo) {
+                            $field = null;
                             if (empty($fieldInfo['type'])) $fieldInfo['type'] = $fieldInfo[0];
                             switch ($fieldInfo['type']) {
                                 case 'pk':
@@ -268,11 +271,15 @@ class QCrud extends QSource
                                     if (!isset($fieldInfo['required'])) $fieldInfo['required'] = true;
                                     break;
 
+                                case 'decimal':
+                                    if (is_array($fieldInfo['length'])) $field = $table->decimal($fieldName, $fieldInfo['length'][0], $fieldInfo['length'][1]);
+                                    break;
+
                                 default:
                                     $filedType = $fieldInfo['type'];
                                     break;
                             }
-                            $field = empty($fieldInfo['length']) ? $table->$filedType($fieldName) : $table->$filedType($fieldName, $fieldInfo['length']);
+                            if (!$field) $field = empty($fieldInfo['length']) ? $table->$filedType($fieldName) : $table->$filedType($fieldName, $fieldInfo['length']);
                             if ($fieldInfo['type'] == 'relation') {
                                 if (empty($fieldInfo['onDelete'])) $fieldInfo['onDelete'] = 'CASCADE';
                                 if (empty($fieldInfo['onUpdate'])) $fieldInfo['onUpdate'] = 'CASCADE';
