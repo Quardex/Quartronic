@@ -94,6 +94,7 @@ class QCrudController extends QController
         array_walk($fields, function(&$value, $key) {
            $value = new \quarsintex\quartronic\qwidgets\QField([
               'key' => $key,
+              'title' => $key,
               'value' => $value,
            ]);
         });

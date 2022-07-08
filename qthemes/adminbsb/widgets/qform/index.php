@@ -4,7 +4,8 @@
 <form id="form_validation" method="POST">
     <?php
     foreach ($this->fields as $field) {
-        if ($this->model->scenario != 'create' || !$field->renderValues['autoincrement'])
+
+        if (isset($this->model) && $this->model->scenario != 'create' || empty($field->renderValues['autoincrement']))
             $field->render(false);
     }
     ?>

@@ -72,13 +72,12 @@ class QCrud extends QSource
     public function getList()
     {
         $model = $this->model;
+        $params = [];
         if ($this->pageSize) {
-            $model->getAll([
-                'limit'=>$this->pageSize,
-                'offset'=>$this->offset,
-            ]);
+            $params['limit'] = $this->pageSize;
+            $params['offset'] = $this->offset;
         }
-        return $model->all;
+        return $model->getAll($params);
     }
 
     public function create($params)
