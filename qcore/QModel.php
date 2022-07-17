@@ -145,7 +145,7 @@ class QModel extends QSource
             if (!is_array(self::$autoStructure[$alias]['struct'])) self::$autoStructure[$alias]['struct'] = [self::$autoStructure[$alias]['struct']];
             foreach (self::$autoStructure[$alias]['struct'] as $fieldName => $field) {
                 $this->_structure[$fieldName]['type'] = $field[!empty($field['type']) ? 'type' : 0];
-                unset($field[0]);
+                if (isset($field[0])) unset($field[0]);
 
                 foreach ($field as $key => $value) {
                     $this->_structure[$fieldName][$key] = $value;
