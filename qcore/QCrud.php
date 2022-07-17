@@ -251,11 +251,11 @@ class QCrud extends QSource
             if (isset($info['prefix'])) $prefix = $info['prefix'];
             $tableName = $prefix.$name;
             if (!empty($info['struct'])) {
-                if (!is_array($info['struct'])) $info['struct'] = [$info['struct']];
                 if (!$dbBuilder->hasTable($tableName)) {
                     $dbBuilder->create($tableName, function ($table) use ($info) {
                         foreach ($info['struct'] as $fieldName => $fieldInfo) {
                             $field = null;
+                            if (!is_array($fieldInfo)) $fieldInfo = [$fieldInfo];
                             if (empty($fieldInfo['type'])) $fieldInfo['type'] = $fieldInfo[0];
                             switch ($fieldInfo['type']) {
                                 case 'pk':

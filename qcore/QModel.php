@@ -142,10 +142,10 @@ class QModel extends QSource
         if (count($this->_primaryKeys) == 1) $this->_structure[$this->_primaryKeys[0]]['unique'] = true;
         $alias = $this->_alias;
         if (self::$autoStructure && isset(self::$autoStructure[$alias]['struct'])) {
-            if (!is_array(self::$autoStructure[$alias]['struct'])) self::$autoStructure[$alias]['struct'] = [self::$autoStructure[$alias]['struct']];
             foreach (self::$autoStructure[$alias]['struct'] as $fieldName => $field) {
+                if (!is_array($field)) $field = [$field];
                 $this->_structure[$fieldName]['type'] = $field[!empty($field['type']) ? 'type' : 0];
-                if (isset($field[0])) unset($field[0]);
+                unset($field[0]);
 
                 foreach ($field as $key => $value) {
                     $this->_structure[$fieldName][$key] = $value;
