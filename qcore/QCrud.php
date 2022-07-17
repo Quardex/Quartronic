@@ -52,7 +52,7 @@ class QCrud extends QSource
         $configFromDB = [];
         foreach ((new QModel('qcrud', 'q'))->all as $model) {
             $configFromDB[$model->alias] = json_decode($model->config, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE && preg_match('/'.$model->alias.'$/', $_SERVER["REQUEST_URI"])) {
                 throw new \Exception('Invalid JSON format in the "'.$model->alias.'" model config');
             }
         }
