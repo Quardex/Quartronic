@@ -50,13 +50,13 @@ class QCrud extends QSource
         $configPath = self::$Q->router->configDir.'qcrud.php';
         $configFromFile = file_exists($configPath) ? include($configPath) : [];
         $configFromDB = [];
-        try {
-            foreach ((new QModel('qcrud', 'q'))->all as $model) {
-                $configFromDB[$model->alias] = json_decode($model->config, true);
+        foreach ((new QModel('qcrud', 'q'))->all as $model) {
+            $configFromDB[$model->alias] = json_decode($model->config, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Invalid JSON format in the "'.$model->alias.'" model config');
             }
-        } finally {
-            return array_merge($configFromFile, $configFromDB);
         }
+        return array_merge($configFromFile, $configFromDB);
     }
 
     public function getOffset()
