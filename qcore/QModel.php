@@ -58,7 +58,7 @@ class QModel extends QSource
 
         if (defined('static::TABLE')) $this->_table = static::TABLE;
         if ($table) $this->_table = $table;
-        if (!$this->_table) $this->_table = mb_strtolower(basename(static::class));
+        if (!$this->_table) $this->_table = mb_strtolower(basename(str_replace('\\', '/', static::class)));
 
         if (!$this->prefix) $this->prefix = $prefix;
         if (!$this->prefix && isset(self::$nativeStructure[self::getAlias($this->_table, 'q')])) $this->prefix = 'q';
