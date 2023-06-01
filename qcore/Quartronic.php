@@ -95,9 +95,9 @@ class Quartronic extends QSource
         return $this->router->run($this->params['route'] ?: $this->request->route);
     }
 
-    function getVersion()
+    function defineUser($user)
     {
-        return '0.2.98';
+        $this->user = $user;
     }
 
     function getLastVersion()
@@ -107,9 +107,9 @@ class Quartronic extends QSource
         return isset($found[1]) ? $found[1] : 0;
     }
 
-    function defineUser($user)
+    function getVersion()
     {
-        $this->user = $user;
+        return '0.2.99';
     }
 }
 
