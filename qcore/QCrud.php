@@ -27,8 +27,7 @@ class QCrud extends QSource
     {
         $this->config = self::loadConfig();
         $ns = self::getNativeStructure();
-        $modelName = strtolower($modelName);
-        $alias = QModel::getAlias($modelName, 'q');
+        $alias = QModel::getAlias(strtolower($modelName), 'q');
         if (isset($ns[$alias])) {
             $prefix = 'q';
             $table = $modelName;
@@ -50,12 +49,14 @@ class QCrud extends QSource
         $configPath = self::$Q->router->configDir.'qcrud.php';
         $configFromFile = file_exists($configPath) ? include($configPath) : [];
         $configFromDB = [];
-        foreach ((new QModel('qcrud', 'q'))->all as $model) {
-            $configFromDB[$model->alias] = json_decode($model->config, true);
-            if (json_last_error() !== JSON_ERROR_NONE && preg_match('/'.$model->alias.'$/', $_SERVER["REQUEST_URI"])) {
-                throw new \Exception('Invalid JSON format in the "'.$model->alias.'" model config');
+        try {
+            foreach ((new QModel('qcrud', 'q'))->all as $model) {
+                $configFromDB[$model->alias] = json_decode($model->config, true);
+                if (json_last_error() !== JSON_ERROR_NONE && preg_match('/'.$model->alias.'$/', $_SERVER["REQUEST_URI"])) {
+                    throw new \Exception('Invalid JSON format in the "'.$model->alias.'" model config');
+                }
             }
-        }
+        } catch (\PDOException $e) {}
         return array_merge($configFromFile, $configFromDB);
     }
 

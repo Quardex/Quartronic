@@ -10,8 +10,8 @@ class QCrudController extends QController
     {
         parent::__construct(ucfirst($action[1]));
 
-        if (defined('static::MODEL')) $this->model = static::MODEL;
         $this->model = $model ? $model : 'Q'.ucfirst($action[0]);
+        if (defined('static::MODEL')) $this->model = static::MODEL;
         $this->crud = new \quarsintex\quartronic\qcore\QCrud($this->model);
     }
 
