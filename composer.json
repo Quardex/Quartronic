@@ -14,7 +14,7 @@
         "php": ">=7.4",
         "quardex/adminbsb": "dev-master",
         "quardex/quartronic-updater": "dev-master",
-        "illuminate/database": "^8.0",
+        "illuminate/database": "^9.0",
         "doctrine/dbal": "^2.5@dev"
     },
     "autoload": {
